@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required Meta Tags -->        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="{{pages.page_meta_description}}">
+        <meta name="author" content="Rizen Digital">
+        <meta name="Keywords" content="{{pages.page_meta_keyword}}">
+        <title>{{pages.page_meta_title}}</title>
+	    <link rel="icon" href="{% static 'app/img/favicon.png' %}" sizes="16x16">
+	    <meta name="robots" content="INDEX,FOLLOW"/>
+	
+	    <!-- OG Meta Tags -->
+	    <meta property="og:title" content= "{{pages.page_meta_title}}" />
+	    <meta property="og:description" content="{{pages.page_meta_description}}" />
+	    <meta property="og:url" content="https://www.rizendigital.com/" />
+	    <meta name="og:site_name" content="cashupgift"/>
+	    <meta property="og:locale" content="en_US" />
+	    <meta property="og:type" content="website" />	
+	    <meta property="og:image" content="{% static 'assets/img/logo.png' %}" />
+	    <meta name="twitter:card" content="summary_large_image" />
+	    <meta name="twitter:title" content="{{pages.page_meta_title}}" />
+	    <meta name="twitter:description" content="{{pages.page_meta_description}}" />
+	    <meta name="twitter:image" content="{% static 'assets/img/logo.png' %}" />
+        
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet"> 
+        <!-- Owl Carousel CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}" rel="stylesheet">
+        <!-- Magnific Popup CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.min.css' %}" rel="stylesheet">
+        <!-- Animate Min CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet">
+        <!-- Boxicons CSS --> 
+        <link rel="stylesheet" href="{% static 'assets/css/boxicons.min.css' %}" rel="stylesheet">
+        <!-- Flaticon CSS -->
+        <link rel="stylesheet" href="{% static 'assets/fonts/flaticon.css' %}" rel="stylesheet">
+        <!-- Meanmenu CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}" rel="stylesheet">
+        <!-- Style CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+        <!-- Responsive CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
+        <!-- Theme Dark CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/theme-dark.css' %}" rel="stylesheet">
+
+        <!-- Title -->       
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png' %}" href="{% static 'assets/img/favicon.png' %}">
+    </head>
+    <body>
+        <!-- Start Preloader -->
+        <div class="preloader">
+            <div class="preloader-wave"></div>
+        </div>
+        <!-- End Preloader -->
+
+        <!-- Header Area -->
+        <header class="header-area">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-8 col-md-9">
+                        <div class="header-content-right">
+                            <ul class="header-contact">
+                               
+                                <li><a href="mailto:admin@rizendigital.com"><i class="flaticon-paper-plane"></i> admin@rizendigital.com</a></li>
+                                <li><a href="tel:+11234567890"><i class="flaticon-call"></i> +1 123 456 7890</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-3">
+                        <div class="header-content-right">
+                            <ul class="header-social">
+                                <li>
+                                    <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank"><i class='bx bxl-youtube'></i></a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank"><i class='bx bxl-instagram' ></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- End Header Area -->
+
+        <!-- Start Navbar Area -->
+        <div class="navbar-area">
+            <!-- Menu For Mobile Device -->
+             <div class="mobile-nav">
+                <a href="{% url 'home' %}" class="logo">
+                    <img src="{% static 'assets/img/logo.png' %}" class="logo-one" alt="Rizen Digital -logo" title="Rizen Digital- Digital Marketing Company">
+                    <img src="{% static 'assets/img/sticky-logo.png' %}" class="logo-two" alt="Rizen Digital -logo" title="Rizen Digital- Internet Marketing Company near me">
+                </a>
+            </div>
+
+            <!-- Menu For Desktop Device -->
+            <div class="main-nav top-nav">
+                <div class="container">
+                    <nav class="navbar navbar-expand-md navbar-light ">
+                        <a class="navbar-brand" href="{% url 'home' %}">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                        </a>
+                        <a class="navbar-brand-sticky" href="index.html">
+                            <img src="{% static 'assets/img/sticky-logo.png' %}" alt="Logo">
+                        </a>
+
+                        <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                            <ul class="navbar-nav m-auto">
+                                <li class="nav-item">
+                                    <a href="{% url 'home' %}" class="nav-link active">
+                                        Home                                         
+                                    </a>
+                                    <!-- <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            <a href="index.html" class="nav-link">
+                                                Home One 
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="index-two.html" class="nav-link active">
+                                                Home Two
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="index-three.html" class="nav-link">
+                                                Home Three
+                                            </a>
+                                        </li>
+                                    </ul> -->
+                                </li>
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link">
+                                        Services 
+                                        <i class='bx bxs-chevron-right'></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        {% for service in services %}
+                                                <li class="nav-item">
+                                                    <a href="{% url 'page_detail' service.page.page_tag %}" class="nav-link">
+                                                        {{ service.name }}
+                                                        {% if service.subservices.exists %}
+                                                            <i class="bx bx-chevron-right"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                    
+                                                    {% if service.subservices.exists %}
+                                                        <ul class="dropdown-menu">
+                                                            {% for subservice in service.subservices.all %}
+                                                                <li class="nav-item">
+                                                                    <a href="{{ subservice.get_absolute_url }}" class="nav-link">
+                                                                        {{ subservice.name }}
+                                                                    </a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+
+                                        
+                                        <li class="nav-item">
+                                            <a href="{% url 'terms_condition' %}" class="nav-link">Terms & Conditions</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{% url 'privacy' %}" class="nav-link">Privacy Policy</a>
+                                        </li>
+                                    </ul>
+                                    
+
+                                    
+                                    
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        Services 
+                                        <i class='bx bxs-chevron-right'></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            <a href="services.html" class="nav-link">
+                                                Services 
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="service-details.html" class="nav-link">
+                                                Service Details 
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a href="{% url 'about' %}" class="nav-link">
+                                        About
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link">
+                                        Blog 
+                                        <i class='bx bxs-chevron-right'></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            <a href="{% url 'blog' %}" class="nav-link">
+                                                Blog
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{% url 'blog' %}" class="nav-link">
+                                                Blog Details 
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'terms_condition' %}" class="nav-link">
+                                        Terms & Conditions
+                                    </a>
+                                </li>
+                                
+                                <li class="nav-item">
+                                    <a href="{% url 'contact' %}" class="nav-link">
+                                        Contact
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- Button Trigger -->
+                                <div class="menu-btn">
+                                    <a href="javascript:void(0);" class="seo-btn" onclick="openModal()">Get Touch with Us</a>
+                                </div>
+
+                                <!-- Popup Modal -->
+                               
+                                    <div class="modal" id="contactModal">
+                                        <div class="modal-content">
+                                        <span class="close-btn" onclick="closeModal()">&times;</span>
+                                        <h3>Get in Touch</h3>
+                                        <form method="post">
+                                            <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <input class="form-control" type="text" id="name" name="name" placeholder="Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <input class="form-control" type="text" id="phone" name="phone" placeholder="Phone" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <input class="form-control" type="text" id="company" name="company" placeholder="Company Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <input class="form-control" type="url" id="website" name="website" placeholder="Website URL (optional)">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <label for="services">Services Required:</label>
+                                                <select class="form-control" id="services" name="services" required>
+                                                    <option value="" disabled selected>Select your service</option>
+                                                    <option value="seo">Search Engine Optimization</option>
+                                                    <option value="google_local">Google Local Listing</option>
+                                                    <option value="adwords">Google Adwords</option>
+                                                    <option value="web_design">Website Design & Development</option>
+                                                    <option value="wordpress">WordPress Website</option>
+                                                    <option value="ecommerce">eCommerce Website</option>
+                                                    <option value="social_media">Social Media Marketing</option>
+                                                    <option value="facebook_ads">Facebook Ads</option>
+                                                    <option value="youtube_ads">YouTube Ads</option>
+                                                    <option value="others">Others</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center">
+                                                <button class="default-btn btn-two" type="submit">Submit</button>
+                                            </div>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- End Navbar Area -->
+
+{% block main %}
+
+{% endblock %}
+
+<!-- Footer Area Another -->
+<footer class="footer-area-another">
+    <div class="footer-top-2 pt-100 pb-70">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-single-2">
+                        <div class="footer-single-content-2">
+                            <a href="index.html">
+                                <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo1" alt="Logo">
+                                <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo2" alt="Logo">
+                            </a>
+                            <p>RizenDigital specializes in SEO, digital marketing, and web development, helping businesses grow their online presence effectively. Our expert team delivers tailored solutions for measurable success.</p>
+                        </div>
+                        <ul class="footer-social">
+                            <li>
+                                <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank"><i class='bx bxl-youtube'></i></a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank"><i class='bx bxl-instagram' ></i></a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-list-2 ml-50">
+                        <h3>Services</h3>
+                        <ul>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html">SEO Optimization</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html">Social Marketing</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html">Busines Growing</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html"> Data Analysis</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html">App Development </a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html"> Web Development</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-list-2">
+                        <h3 class="color-title">Quick Links</h3>
+                        <ul>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="index.html">Home</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="services.html">Service</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="about.html">About Us</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="testimonial.html">Testimonial</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="blog.html">Blog</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="contact.html">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-list-2 ml-20">
+                        <h3>Contact Us</h3>
+                        <ul>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="tel:+1123456789">+1  1234 56 789</a>
+                            </li>
+                            <!-- <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="tel:+19876543210">+1  9876 543 210</a>
+                            </li> -->
+                            <!-- <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="mailto:info@bonsa.com">info@bonsa.com</a>
+                            </li> -->
+                            <li >
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="mailto:admin@rizendigital.com" >admin@rizendigital.com</a>
+                            </li>
+                            <!-- <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                28/A Street, New York, USA
+                            </li> -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom-2">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-12">
+                    <div class="bottom-text-2 text-center">
+                        <p>© Rizen Digital 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Area End -->
+
+
+ <!-- Jquery Min JS -->
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<!-- Bootstrap Bundle Min JS -->
+<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+<!-- Meanmenu JS -->
+<script src="{% static 'assets/js/meanmenu.min.js' %}"></script>
+<!-- Owl Carousel JS -->
+<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+<!-- Magnific Popup JS -->
+<script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
+<!-- Wow JS -->
+<script src="{% static 'assets/js/wow.min.js' %}"></script>
+<!-- Ajaxchimp Min JS -->
+<script src="{% static 'assets/js/jquery.ajaxchimp.min.js' %}"></script>
+<!-- Form Validator Min JS -->
+<script src="{% static 'assets/js/form-validator.min.js' %}"></script>
+<!-- Contact Form JS -->
+<script src="{% static 'assets/js/contact-form-script.js' %}"></script>
+<!-- Custom JS -->
+<script src="{% static 'assets/js/custom.js' %}"></script>
+<script>
+// Open Modal
+function openModal() {
+    document.getElementById('contactModal').style.display = 'block';
+}
+
+// Close Modal
+function closeModal() {
+    document.getElementById('contactModal').style.display = 'none';
+}
+
+// Close Modal When Clicking Outside the Modal Content
+window.onclick = function(event) {
+    const modal = document.getElementById('contactModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>
