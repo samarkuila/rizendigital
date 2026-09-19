@@ -4,6 +4,12 @@
 set -euo pipefail
 APP=/srv/rizendigital
 
+# Small instances (1 GB RAM) need swap so pip/collectstatic cannot run out of memory
+if ! swapon --show | grep -q .; then
+    sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+    grep -q '/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+fi
+
 sudo apt-get update
 sudo apt-get install -y python3-venv python3-pip nginx certbot python3-certbot-nginx sqlite3 ufw
 

@@ -8,8 +8,10 @@ Group=www-data
 WorkingDirectory=/srv/rizendigital
 EnvironmentFile=/srv/rizendigital/.env
 ExecStart=/srv/rizendigital/venv/bin/gunicorn rizendigital.wsgi:application \
-    --workers 3 --bind unix:/run/rizendigital.sock --timeout 30 \
+    --workers 3 --bind unix:/run/rizendigital/gunicorn.sock --timeout 30 \
     --access-logfile - --error-logfile -
+RuntimeDirectory=rizendigital
+RuntimeDirectoryMode=0755
 Restart=on-failure
 
 [Install]

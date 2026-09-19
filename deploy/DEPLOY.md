@@ -1,4 +1,6 @@
-# Deploying Rizen Digital to AWS Lightsail
+# Deploying Rizen Digital to AWS (EC2 or Lightsail)
+
+The server steps (2 onwards) are identical on EC2 and Lightsail. Step 1 below is for Lightsail; for EC2 create an Ubuntu 24.04 instance (t3.micro or t3.small, 20 GB gp3), attach an Elastic IP, and open ports 22/80/443 in its security group.
 
 Stack: Ubuntu 24.04 → nginx (TLS, static, media) → gunicorn → Django, SQLite database.
 Everything runs on one small server. Estimated cost: ~$7/month (1 GB plan) plus a free static IP.
