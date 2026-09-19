@@ -1,9 +1,12 @@
+import logging
 from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import transaction, IntegrityError
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
 
 # Define Post Types
 POST_TYPES = (('Page', 'Page'), ('Blog', 'Blog'), ('Custom_Page', 'Custom_Page'))  # Example post types
@@ -113,7 +116,7 @@ class SubService(models.Model):
                 service_slug, subservice_slug = self.page.page_tag.split('/')
                 return service_slug, subservice_slug
             except ValueError:
-                print(f"Invalid page_tag format: {self.page.page_tag}")
+                logger.warning(f"Invalid page_tag format: {self.page.page_tag}")
                 return None, None
         return None, None
 
@@ -127,6 +130,133 @@ class SubService(models.Model):
         return '#'
 
 
+class BlogPost(models.Model):
+    title = models.CharField(max_length=180)
+    slug = models.SlugField(max_length=200, unique=True)
+    excerpt = models.TextField(max_length=500)
+    content = models.TextField()
+    meta_title = models.CharField(max_length=60, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+    featured_image = models.FileField(upload_to='blog/', blank=True)
+    author = models.CharField(max_length=120, default='Rizen Digital')
+    published_at = models.DateTimeField(null=True, blank=True)
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-published_at', '-created_at')
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog-detail', kwargs={'page_tag': self.slug})
+
+
+class Testimonial(models.Model):
+    client_name = models.CharField(max_length=120)
+    role = models.CharField(max_length=150, blank=True, help_text='e.g. "Business Owner", "Marketing Director"')
+    company_name = models.CharField(max_length=150, blank=True)
+    quote = models.TextField(max_length=500)
+    photo = models.FileField(upload_to='testimonials/', blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('order', '-created_at')
+
+    def __str__(self):
+        return f'{self.client_name} ({self.company_name})' if self.company_name else self.client_name
+
+
+class CaseStudy(models.Model):
+    client_name = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=200, unique=True)
+    industry = models.CharField(max_length=120, blank=True)
+    service = models.ForeignKey(
+        Service, related_name='case_studies', on_delete=models.SET_NULL, null=True, blank=True
+    )
+    summary = models.TextField(
+        max_length=500,
+        help_text='One or two sentence result-focused summary, e.g. "Increased organic traffic by 52% in 6 months."',
+    )
+    challenge = models.TextField(help_text="What problem was the client facing?")
+    solution = models.TextField(help_text="What did Rizen Digital do?")
+    results = models.TextField(help_text="What outcome did the client get?")
+    metric_1_value = models.CharField(max_length=20, blank=True, help_text='e.g. "52%"')
+    metric_1_label = models.CharField(max_length=60, blank=True, help_text='e.g. "Organic traffic increase"')
+    metric_2_value = models.CharField(max_length=20, blank=True)
+    metric_2_label = models.CharField(max_length=60, blank=True)
+    metric_3_value = models.CharField(max_length=20, blank=True)
+    metric_3_label = models.CharField(max_length=60, blank=True)
+    testimonial = models.TextField(blank=True)
+    testimonial_author = models.CharField(max_length=120, blank=True)
+    featured_image = models.FileField(upload_to='case-studies/', blank=True)
+    meta_title = models.CharField(max_length=60, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+    is_published = models.BooleanField(default=False)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-published_at', '-created_at')
+        verbose_name = 'Case study'
+        verbose_name_plural = 'Case studies'
+
+    def __str__(self):
+        return self.client_name
+
+    def get_absolute_url(self):
+        return reverse('case_study_detail', kwargs={'slug': self.slug})
+
+
+class LocationPage(models.Model):
+    service = models.ForeignKey(Service, related_name='location_pages', on_delete=models.CASCADE)
+    city = models.CharField(max_length=120)
+    country = models.CharField(max_length=120, blank=True)
+    slug = models.SlugField(max_length=160, unique=True)
+    headline = models.CharField(max_length=180)
+    introduction = models.TextField(max_length=700)
+    content = models.TextField()
+    meta_title = models.CharField(max_length=60)
+    meta_description = models.CharField(max_length=160)
+    map_embed_url = models.URLField(blank=True, help_text='Google Maps embed URL (src of an <iframe>).')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('city', 'service__name')
+        verbose_name = 'Location service page'
+        verbose_name_plural = 'Location service pages'
+
+    def __str__(self):
+        return f'{self.service.name} in {self.city}'
+
+    def get_absolute_url(self):
+        return reverse('location_detail', kwargs={'slug': self.slug})
+
+
+class LocationFAQ(models.Model):
+    location_page = models.ForeignKey(LocationPage, related_name='faqs', on_delete=models.CASCADE)
+    question = models.CharField(max_length=200)
+    answer = models.TextField(max_length=600)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('order', 'id')
+        verbose_name = 'Location FAQ'
+        verbose_name_plural = 'Location FAQs'
+
+    def __str__(self):
+        return f'{self.question} ({self.location_page.city})'
+
+
 # Global flag to prevent recursion during deletion
 _deletion_in_progress = False
 
@@ -138,13 +268,15 @@ def delete_associated_page_service(sender, instance, **kwargs):
         return
 
     _deletion_in_progress = True
-
-    if instance.page:
-        try:
-            with transaction.atomic():
-                instance.page.delete()
-        except models.ObjectDoesNotExist:
-            pass
+    try:
+        if instance.page:
+            try:
+                with transaction.atomic():
+                    instance.page.delete()
+            except models.ObjectDoesNotExist:
+                pass
+    finally:
+        _deletion_in_progress = False
 
 
 @receiver(post_delete, sender=Service)
@@ -154,17 +286,17 @@ def delete_related_subservices(sender, instance, **kwargs):
         return
 
     _deletion_in_progress = True
-
-    for subservice in instance.subservices.all():
-        if subservice.page:
-            try:
-                with transaction.atomic():
-                    subservice.page.delete()
-            except models.ObjectDoesNotExist:
-                pass
-        subservice.delete()
-
-    _deletion_in_progress = False
+    try:
+        for subservice in instance.subservices.all():
+            if subservice.page:
+                try:
+                    with transaction.atomic():
+                        subservice.page.delete()
+                except models.ObjectDoesNotExist:
+                    pass
+            subservice.delete()
+    finally:
+        _deletion_in_progress = False
 
 
 @receiver(post_delete, sender=SubService)

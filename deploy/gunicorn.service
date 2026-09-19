@@ -1,0 +1,16 @@
+[Unit]
+Description=Rizen Digital (gunicorn)
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/srv/rizendigital
+EnvironmentFile=/srv/rizendigital/.env
+ExecStart=/srv/rizendigital/venv/bin/gunicorn rizendigital.wsgi:application \
+    --workers 3 --bind unix:/run/rizendigital.sock --timeout 30 \
+    --access-logfile - --error-logfile -
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -5,7 +5,6 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
-
 from django.urls import path
 
 urlpatterns = [
@@ -17,8 +16,11 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('blog/', views.blog, name='blog'),
     path('blog/<str:page_tag>/', views.blog_detail, name='blog-detail'),
+    path('case-studies/', views.case_studies, name='case_studies'),
+    path('case-studies/<slug:slug>/', views.case_study_detail, name='case_study_detail'),
+    path('locations/<slug:slug>/', views.location_detail, name='location_detail'),
     path('digital-marketing/', RedirectView.as_view(url='/', permanent=False), name='digital-marketing'),
-
+    path("get-in-touch/", views.get_in_touch, name="get_in_touch"),
     # SubService Dynamic Route
     path('<slug:service_slug>/<slug:subservice_slug>/', views.subservice_detail, name='subservice_detail'),
 

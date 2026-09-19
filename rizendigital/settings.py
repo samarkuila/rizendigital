@@ -12,21 +12,48 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v&rrdv8bxe%n@d0s8g9#p0b24zp^r_6!f1)q40x9a62r6d#xxn'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-v&rrdv8bxe%n@d0s8g9#p0b24zp^r_6!f1)q40x9a62r6d#xxn',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+    if h.strip()
+]
+
+# Email — sends a notification whenever someone submits a contact/enquiry form.
+# Falls back to printing emails to the console until real SMTP credentials are
+# set, so lead notifications can be developed and tested without a live mail
+# server.
+EMAIL_BACKEND = os.environ.get(
+    'DJANGO_EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend' if os.environ.get('EMAIL_HOST_USER') else 'django.core.mail.backends.console.EmailBackend',
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'no-reply@rizendigital.com')
+# The inbox that should receive new lead notifications.
+LEAD_NOTIFICATION_EMAIL = os.environ.get('LEAD_NOTIFICATION_EMAIL', 'admin@rizendigital.com')
 
 
 # Application definition
@@ -39,10 +66,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
+    'admin_app',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,6 +94,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.services_and_subservices',
+                'home.context_processors.breadcrumbs',
+                'home.context_processors.canonical_url',
+                'home.context_processors.site_contact',
             ],
         },
     },
@@ -118,10 +150,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-    # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# WhiteNoise serves compressed static files with far-future cache headers
+# directly from Django, so static assets work in production without a
+# separate nginx/CDN config. Run `manage.py collectstatic` before deploying.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
@@ -135,3 +178,40 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ---------------------------------------------------------------------------
+# Production hardening (active only when DJANGO_DEBUG=False)
+# ---------------------------------------------------------------------------
+CSRF_TRUSTED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
+    if o.strip()
+]
+
+if not DEBUG:
+    if SECRET_KEY.startswith('django-insecure-'):
+        raise RuntimeError('Set DJANGO_SECRET_KEY in the environment when DJANGO_DEBUG=False.')
+
+    # nginx terminates TLS and forwards X-Forwarded-Proto to gunicorn.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SSL_REDIRECT', 'True') == 'True'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', '3600'))  # raise to 31536000 once HTTPS is confirmed
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# ---------------------------------------------------------------------------
+# Public contact details. Leave blank until real ones exist: the site hides
+# every phone number / social icon that is not set.
+# ---------------------------------------------------------------------------
+SITE_PHONE = os.environ.get('SITE_PHONE', '').strip()  # e.g. +919812345678
+SITE_SOCIAL_LINKS = {
+    'facebook': os.environ.get('SITE_FACEBOOK_URL', '').strip(),
+    'twitter': os.environ.get('SITE_TWITTER_URL', '').strip(),
+    'youtube': os.environ.get('SITE_YOUTUBE_URL', '').strip(),
+    'instagram': os.environ.get('SITE_INSTAGRAM_URL', '').strip(),
+    'linkedin': os.environ.get('SITE_LINKEDIN_URL', '').strip(),
+}

@@ -1,0 +1,96 @@
+{% extends 'home/layout.html' %}
+
+{% load static %}
+
+{% block main %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ study.client_name|escapejs }} Case Study",
+    "description": "{{ study.summary|escapejs }}",
+    "datePublished": "{{ study.published_at|date:'c' }}",
+    "dateModified": "{{ study.updated_at|date:'c' }}",
+    "author": {
+        "@type": "Organization",
+        "name": "Rizen Digital"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Rizen Digital"
+    }
+}
+</script>
+
+<article class="single-content-area ptb-100">
+    <div class="container">
+        <div class="single-content">
+            {% if study.industry %}<span>{{ study.industry }}</span>{% endif %}
+            <h1>{{ study.client_name }}</h1>
+            <p class="lead">{{ study.summary }}</p>
+
+            {% if study.featured_image %}
+                <img src="{{ study.featured_image.url }}" alt="{{ study.client_name }}" loading="eager">
+            {% endif %}
+
+            {% if study.metric_1_value or study.metric_2_value or study.metric_3_value %}
+                <div class="row justify-content-center pt-45 pb-45">
+                    {% if study.metric_1_value %}
+                        <div class="col-lg-4 col-sm-6 col-md-4">
+                            <div class="single-counter">
+                                <h3 class="color-black">{{ study.metric_1_value }}</h3>
+                                <p class="color-black font-size">{{ study.metric_1_label }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if study.metric_2_value %}
+                        <div class="col-lg-4 col-sm-6 col-md-4">
+                            <div class="single-counter">
+                                <h3 class="color-black">{{ study.metric_2_value }}</h3>
+                                <p class="color-black font-size">{{ study.metric_2_label }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if study.metric_3_value %}
+                        <div class="col-lg-4 col-sm-12 col-md-4">
+                            <div class="single-counter">
+                                <h3 class="color-black">{{ study.metric_3_value }}</h3>
+                                <p class="color-black font-size">{{ study.metric_3_label }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="pt-45">
+                <h2>The Challenge</h2>
+                <p>{{ study.challenge|linebreaks }}</p>
+
+                <h2>The Solution</h2>
+                <p>{{ study.solution|linebreaks }}</p>
+
+                <h2>The Results</h2>
+                <p>{{ study.results|linebreaks }}</p>
+
+                {% if study.testimonial %}
+                    <blockquote>
+                        <p>&ldquo;{{ study.testimonial }}&rdquo;</p>
+                        {% if study.testimonial_author %}<footer>{{ study.testimonial_author }}</footer>{% endif %}
+                    </blockquote>
+                {% endif %}
+            </div>
+
+            {% if related_studies %}
+                <div class="pt-45">
+                    <h2>More Case Studies</h2>
+                    <ul>
+                        {% for related in related_studies %}
+                            <li><a href="{{ related.get_absolute_url }}">{{ related.client_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endblock %}

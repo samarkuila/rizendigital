@@ -6,25 +6,71 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="{{pages.page_meta_description}}">
+        <meta name="description" content="{% firstof seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}">
         <meta name="author" content="Rizen Digital">
-        <meta name="Keywords" content="{{pages.page_meta_keyword}}">
-        <title>{{pages.page_meta_title}}</title>
-	    <link rel="icon" href="{% static 'app/img/favicon.png' %}" sizes="16x16">
-	    <meta name="robots" content="INDEX,FOLLOW"/>
+    	    <meta name="keywords" content="{% firstof pages.page_meta_keyword 'SEO agency, digital marketing agency, SEO services, Kolkata' %}">
+        <title>{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}</title>
+    	    <link rel="canonical" href="{{ canonical_url }}">
+    	    <link rel="icon" href="{% static 'assets/img/favicon.png' %}" sizes="16x16">
+    	    <meta name="robots" content="index,follow">
 	
 	    <!-- OG Meta Tags -->
-	    <meta property="og:title" content= "{{pages.page_meta_title}}" />
-	    <meta property="og:description" content="{{pages.page_meta_description}}" />
-	    <meta property="og:url" content="https://www.rizendigital.com/" />
-	    <meta name="og:site_name" content="cashupgift"/>
+        <meta property="og:title" content="{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
+        <meta property="og:description" content="{% firstof seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
+	    <meta property="og:url" content="{{ canonical_url }}" />
+	    <meta property="og:site_name" content="Rizen Digital"/>
 	    <meta property="og:locale" content="en_US" />
 	    <meta property="og:type" content="website" />	
 	    <meta property="og:image" content="{% static 'assets/img/logo.png' %}" />
 	    <meta name="twitter:card" content="summary_large_image" />
-	    <meta name="twitter:title" content="{{pages.page_meta_title}}" />
-	    <meta name="twitter:description" content="{{pages.page_meta_description}}" />
+        <meta name="twitter:title" content="{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
+        <meta name="twitter:description" content="{% firstof seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
 	    <meta name="twitter:image" content="{% static 'assets/img/logo.png' %}" />
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "Rizen Digital",
+              "alternateName": "Rizen Digital",
+              "url": "https://www.rizendigital.com/",
+              "logo": "https://www.rizendigital.com/static/assets/img/logo.png",
+              "image": "https://www.rizendigital.com/static/assets/img/logo.png",
+              "description": "Rizen Digital is a digital marketing and SEO agency in Kolkata offering SEO, digital marketing, creative branding, and web development services.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Kolkata",
+                "addressRegion": "West Bengal",
+                "addressCountry": "IN"
+              },
+              "areaServed": ["Kolkata", "West Bengal", "India"],
+              "priceRange": "$$"{% if site_phone %},
+              "telephone": "{{ site_phone }}"{% endif %}{% if site_same_as %},
+              "sameAs": [{% for u in site_same_as %}"{{ u }}"{% if not forloop.last %}, {% endif %}{% endfor %}]{% endif %}
+            }
+            </script>
+        <!-- TODO: add a "sameAs" array with real social profile URLs and a "telephone" field once a public business number is confirmed. -->
+
+        {% if breadcrumb_items %}
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {% for item in breadcrumb_items %}
+                {
+                  "@type": "ListItem",
+                  "position": {{ forloop.counter }},
+                  "name": "{{ item.name|escapejs }}",
+                  "item": "{{ item.url }}"
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              ]
+            }
+        </script>
+        {% endif %}
+
+        {% if pages and pages.schema_tag_text %}{{ pages.schema_tag_text|safe }}{% endif %}
         
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet"> 
@@ -48,10 +94,10 @@
         <!-- Theme Dark CSS -->
         <link rel="stylesheet" href="{% static 'assets/css/theme-dark.css' %}" rel="stylesheet">
 
-        <!-- Title -->       
+                <!-- Title -->       
 
         <!-- Favicon -->
-        <link rel="icon" type="image/png' %}" href="{% static 'assets/img/favicon.png' %}">
+        <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
     </head>
     <body>
         <!-- Start Preloader -->
@@ -69,27 +115,20 @@
                             <ul class="header-contact">
                                
                                 <li><a href="mailto:admin@rizendigital.com"><i class="flaticon-paper-plane"></i> admin@rizendigital.com</a></li>
-                                <li><a href="tel:+11234567890"><i class="flaticon-call"></i> +1 123 456 7890</a></li>
+                                {% if site_phone %}<li><a href="tel:{{ site_phone }}"><i class="flaticon-call"></i> {{ site_phone_display }}</a></li>{% endif %}
                             </ul>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-3">
                         <div class="header-content-right">
-                            <ul class="header-social">
-                                <li>
-                                    <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank"><i class='bx bxl-youtube'></i></a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank"><i class='bx bxl-instagram' ></i></a>
-                                </li>
-                            </ul>
+                            {% if site_social %}<ul class="header-social">
+                                {% if site_social.facebook %}<li><a href="{{ site_social.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bx bxl-facebook"></i></a></li>{% endif %}
+                                {% if site_social.twitter %}<li><a href="{{ site_social.twitter }}" target="_blank" rel="noopener" aria-label="Twitter"><i class="bx bxl-twitter"></i></a></li>{% endif %}
+                                {% if site_social.youtube %}<li><a href="{{ site_social.youtube }}" target="_blank" rel="noopener" aria-label="Youtube"><i class="bx bxl-youtube"></i></a></li>{% endif %}
+                                {% if site_social.instagram %}<li><a href="{{ site_social.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bx bxl-instagram"></i></a></li>{% endif %}
+                                {% if site_social.linkedin %}<li><a href="{{ site_social.linkedin }}" target="_blank" rel="noopener" aria-label="Linkedin"><i class="bx bxl-linkedin"></i></a></li>{% endif %}
+                            </ul>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -114,7 +153,7 @@
                         <a class="navbar-brand" href="{% url 'home' %}">
                             <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
                         </a>
-                        <a class="navbar-brand-sticky" href="index.html">
+                        <a class="navbar-brand-sticky" href="{% url 'home' %}">
                             <img src="{% static 'assets/img/sticky-logo.png' %}" alt="Logo">
                         </a>
 
@@ -124,23 +163,6 @@
                                     <a href="{% url 'home' %}" class="nav-link active">
                                         Home                                         
                                     </a>
-                                    <!-- <ul class="dropdown-menu">
-                                        <li class="nav-item">
-                                            <a href="index.html" class="nav-link">
-                                                Home One 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="index-two.html" class="nav-link active">
-                                                Home Two
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="index-three.html" class="nav-link">
-                                                Home Three
-                                            </a>
-                                        </li>
-                                    </ul> -->
                                 </li>
                                 
                                 <li class="nav-item">
@@ -185,24 +207,6 @@
                                     
                                     
                                 </li>
-                                <!-- <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        Services 
-                                        <i class='bx bxs-chevron-right'></i>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="nav-item">
-                                            <a href="services.html" class="nav-link">
-                                                Services 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="service-details.html" class="nav-link">
-                                                Service Details 
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li> -->
                                 <li class="nav-item">
                                     <a href="{% url 'about' %}" class="nav-link">
                                         About
@@ -220,18 +224,18 @@
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="{% url 'blog' %}" class="nav-link">
-                                                Blog Details 
+                                            <a href="{% url 'case_studies' %}" class="nav-link">
+                                                Case Studies
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nav-item">
+<li class="nav-item">
                                     <a href="{% url 'terms_condition' %}" class="nav-link">
                                         Terms & Conditions
                                     </a>
                                 </li>
-                                
+
                                 <li class="nav-item">
                                     <a href="{% url 'contact' %}" class="nav-link">
                                         Contact
@@ -250,56 +254,61 @@
                                         <div class="modal-content">
                                         <span class="close-btn" onclick="closeModal()">&times;</span>
                                         <h3>Get in Touch</h3>
+                                        <!-- Message Display Area -->
+                                        <p id="modalMessage" style="color: green; display: none;"></p>
+
                                         <form method="post">
+                                            {% csrf_token %}
                                             <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <input class="form-control" type="text" id="name" name="name" placeholder="Name" required>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" id="full_name" name="full_name" placeholder="Name" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <input class="form-control" type="text" id="phone" name="phone" placeholder="Phone" required>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" id="phone_number" name="phone_number" placeholder="Phone" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <input class="form-control" type="text" id="company" name="company" placeholder="Company Name" required>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" id="company_name" name="company_name" placeholder="Company Name" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <input class="form-control" type="url" id="website" name="website" placeholder="Website URL (optional)">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="url" id="website_url" name="website_url" placeholder="Website URL (optional)">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                <label for="services">Services Required:</label>
-                                                <select class="form-control" id="services" name="services" required>
-                                                    <option value="" disabled selected>Select your service</option>
-                                                    <option value="seo">Search Engine Optimization</option>
-                                                    <option value="google_local">Google Local Listing</option>
-                                                    <option value="adwords">Google Adwords</option>
-                                                    <option value="web_design">Website Design & Development</option>
-                                                    <option value="wordpress">WordPress Website</option>
-                                                    <option value="ecommerce">eCommerce Website</option>
-                                                    <option value="social_media">Social Media Marketing</option>
-                                                    <option value="facebook_ads">Facebook Ads</option>
-                                                    <option value="youtube_ads">YouTube Ads</option>
-                                                    <option value="others">Others</option>
-                                                </select>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="services">Services Required:</label>
+                                                        <select class="form-control" id="select_service" name="select_service" required>
+                                                            <option value="" disabled selected>Select your service</option>
+                                                            <option value="seo">Search Engine Optimization</option>
+                                                            <option value="google_local">Google Local Listing</option>
+                                                            <option value="adwords">Google Adwords</option>
+                                                            <option value="web_design">Website Design & Development</option>
+                                                            <option value="wordpress">WordPress Website</option>
+                                                            <option value="ecommerce">eCommerce Website</option>
+                                                            <option value="social_media">Social Media Marketing</option>
+                                                            <option value="facebook_ads">Facebook Ads</option>
+                                                            <option value="youtube_ads">YouTube Ads</option>
+                                                            <option value="others">Others</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12 text-center">
-                                                <button class="default-btn btn-two" type="submit">Submit</button>
-                                            </div>
+                                                <div class="col-12 text-center">
+                                                    <button class="default-btn btn-two" type="submit">Submit</button>
+                                                </div>
                                             </div>
                                         </form>
+                                        
                                         </div>
                                     </div>
                         </div>
@@ -307,6 +316,9 @@
                 </div>
             </div>
         </div>
+
+       
+
         <!-- End Navbar Area -->
 
 {% block main %}
@@ -321,26 +333,19 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-single-2">
                         <div class="footer-single-content-2">
-                            <a href="index.html">
+                            <a href="{% url 'home' %}">
                                 <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo1" alt="Logo">
                                 <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo2" alt="Logo">
                             </a>
                             <p>RizenDigital specializes in SEO, digital marketing, and web development, helping businesses grow their online presence effectively. Our expert team delivers tailored solutions for measurable success.</p>
                         </div>
-                        <ul class="footer-social">
-                            <li>
-                                <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" target="_blank"><i class='bx bxl-youtube'></i></a>
-                            </li>
-                            <li>
-                                <a href="#" target="_blank"><i class='bx bxl-instagram' ></i></a>
-                            </li>
-                        </ul>
+                        {% if site_social %}<ul class="footer-social">
+                                {% if site_social.facebook %}<li><a href="{{ site_social.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bx bxl-facebook"></i></a></li>{% endif %}
+                                {% if site_social.twitter %}<li><a href="{{ site_social.twitter }}" target="_blank" rel="noopener" aria-label="Twitter"><i class="bx bxl-twitter"></i></a></li>{% endif %}
+                                {% if site_social.youtube %}<li><a href="{{ site_social.youtube }}" target="_blank" rel="noopener" aria-label="Youtube"><i class="bx bxl-youtube"></i></a></li>{% endif %}
+                                {% if site_social.instagram %}<li><a href="{{ site_social.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bx bxl-instagram"></i></a></li>{% endif %}
+                                {% if site_social.linkedin %}<li><a href="{{ site_social.linkedin }}" target="_blank" rel="noopener" aria-label="Linkedin"><i class="bx bxl-linkedin"></i></a></li>{% endif %}
+                            </ul>{% endif %}
 
                     </div>
                 </div>
@@ -349,30 +354,12 @@
                     <div class="footer-list-2 ml-50">
                         <h3>Services</h3>
                         <ul>
+                            {% for service in services %}
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html">SEO Optimization</a>
+                                <a href="{% url 'page_detail' service.page.page_tag %}">{{ service.name }}</a>
                             </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html">Social Marketing</a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html">Busines Growing</a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html"> Data Analysis</a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html">App Development </a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html"> Web Development</a>
-                            </li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -383,27 +370,23 @@
                         <ul>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="index.html">Home</a>
+                                <a href="{% url 'home' %}">Home</a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="services.html">Service</a>
+                                <a href="{% url 'about' %}">About Us</a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="about.html">About Us</a>
+                                <a href="{% url 'case_studies' %}">Case Studies</a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="testimonial.html">Testimonial</a>
+                                <a href="{% url 'blog' %}">Blog</a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="blog.html">Blog</a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="contact.html">Contact</a>
+                                <a href="{% url 'contact' %}">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -413,26 +396,18 @@
                     <div class="footer-list-2 ml-20">
                         <h3>Contact Us</h3>
                         <ul>
+                            {% if site_phone %}<li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="tel:{{ site_phone }}">{{ site_phone_display }}</a>
+                            </li>{% endif %}
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="tel:+1123456789">+1  1234 56 789</a>
+                                <a href="mailto:admin@rizendigital.com">admin@rizendigital.com</a>
                             </li>
-                            <!-- <li>
+                            <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="tel:+19876543210">+1  9876 543 210</a>
-                            </li> -->
-                            <!-- <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="mailto:info@bonsa.com">info@bonsa.com</a>
-                            </li> -->
-                            <li >
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="mailto:admin@rizendigital.com" >admin@rizendigital.com</a>
+                                Kolkata, West Bengal, India
                             </li>
-                            <!-- <li>
-                                <i class='bx bxs-chevron-right'></i>
-                                28/A Street, New York, USA
-                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -476,23 +451,69 @@
 <!-- Custom JS -->
 <script src="{% static 'assets/js/custom.js' %}"></script>
 <script>
-// Open Modal
-function openModal() {
-    document.getElementById('contactModal').style.display = 'block';
-}
-
-// Close Modal
-function closeModal() {
-    document.getElementById('contactModal').style.display = 'none';
-}
-
-// Close Modal When Clicking Outside the Modal Content
-window.onclick = function(event) {
-    const modal = document.getElementById('contactModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
+    // Open Modal
+    function openModal() {
+        document.getElementById('contactModal').style.display = 'block';
     }
-}
+
+    // Close Modal
+    function closeModal() {
+        document.getElementById('contactModal').style.display = 'none';
+    }
+
+    // Close Modal When Clicking Outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('contactModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Wait for DOM to load
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("#contactModal form");
+        const modalMessage = document.getElementById("modalMessage");
+
+        if (form) {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent default submission
+
+                let formData = new FormData(form);
+
+                fetch("{% url 'get_in_touch' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        modalMessage.style.color = "green";
+                        modalMessage.innerHTML = "✅ Form submitted successfully!";
+                        modalMessage.style.display = "block";
+                        form.reset();
+                        setTimeout(closeModal, 2000); // Close modal after 2 seconds
+                    } else {
+                        modalMessage.style.color = "red";
+                        modalMessage.innerHTML = "❌ Error submitting form. Try again.";
+                        modalMessage.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    modalMessage.style.color = "red";
+                    modalMessage.innerHTML = "⚠ Something went wrong. Try again later.";
+                    modalMessage.style.display = "block";
+                });
+            });
+        }
+    });
 </script>
+
+    
+    
+    
 </body>
 </html>

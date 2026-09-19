@@ -4,8 +4,45 @@
 
 {% block main %}
 
+<div class="inner-banner inner-bg4">
+    <div class="container">
+        <div class="inner-title text-center">
+            <span>{% if parent_service %}{{ parent_service.name }}{% else %}Rizen Digital{% endif %}</span>
+            <p class="inner-title-name">{{ pages.page_name }}</p>
+        </div>
+    </div>
+</div>
 
-{{rendered_content|safe}}
+<main class="single-content-area ptb-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="single-content">
+                    {{ rendered_content|safe }}
+                </div>
 
+                {% if parent_service.subservices.exists %}
+                <div class="related-services pt-45">
+                    <h2>Related services</h2>
+                    <ul>
+                        {% if service %}
+                        <li><a href="{% url 'page_detail' parent_service.page.page_tag %}">{{ parent_service.name }} overview</a></li>
+                        {% endif %}
+                        {% for sub in parent_service.subservices.all %}
+                            {% if not subservice or sub.pk != subservice.pk %}
+                            <li><a href="{{ sub.get_absolute_url }}">{{ sub.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="text-center pt-45">
+                    <a href="{% url 'contact' %}" class="default-btn">Discuss your growth goals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 {% endblock %}

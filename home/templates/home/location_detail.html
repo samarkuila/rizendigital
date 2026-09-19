@@ -1,0 +1,147 @@
+{% extends 'home/layout.html' %}
+
+{% block main %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Rizen Digital - {{ location_page.service.name|escapejs }} in {{ location_page.city|escapejs }}",
+    "description": "{{ location_page.introduction|escapejs }}",
+    "url": "{{ request.build_absolute_uri }}",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ location_page.city|escapejs }}"{% if location_page.country %},
+        "addressCountry": "{{ location_page.country|escapejs }}"{% endif %}
+    }{% if location_page.latitude and location_page.longitude %},
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": {{ location_page.latitude }},
+        "longitude": {{ location_page.longitude }}
+    }{% endif %},
+    "areaServed": {
+        "@type": "City",
+        "name": "{{ location_page.city|escapejs }}"
+    },
+    "priceRange": "$$"
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "{{ location_page.service.name|escapejs }} in {{ location_page.city|escapejs }}",
+    "serviceType": "{{ location_page.service.name|escapejs }}",
+    "description": "{{ location_page.introduction|escapejs }}",
+    "provider": {
+        "@type": "Organization",
+        "name": "Rizen Digital",
+        "url": "https://www.rizendigital.com/"
+    },
+    "areaServed": {
+        "@type": "City",
+        "name": "{{ location_page.city|escapejs }}"
+    }
+}
+</script>
+
+{% if location_page.faqs.all %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {% for faq in location_page.faqs.all %}
+        {
+            "@type": "Question",
+            "name": "{{ faq.question|escapejs }}",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ faq.answer|escapejs }}"
+            }
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>
+{% endif %}
+
+<div class="inner-banner inner-bg4">
+    <div class="container">
+        <div class="inner-title text-center">
+            <span>{{ location_page.service.name }} in {{ location_page.city }}</span>
+            <h1>{{ location_page.headline }}</h1>
+            <p>{{ location_page.introduction }}</p>
+        </div>
+    </div>
+</div>
+
+<main class="single-content-area ptb-100">
+    <div class="container">
+        <div class="single-content">
+            {{ location_page.content|safe }}
+        </div>
+
+        {% if location_page.map_embed_url %}
+        <div class="location-map pt-45">
+            <iframe
+                src="{{ location_page.map_embed_url }}"
+                width="100%"
+                height="350"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Map showing {{ location_page.service.name }} service area in {{ location_page.city }}">
+            </iframe>
+        </div>
+        {% endif %}
+
+        {% if location_page.faqs.all %}
+        <section class="faq-bg pt-100 pb-70">
+            <div class="section-title text-center wow animate__fadeInUp" data-wow-duration="0.8s">
+                <span>FAQs</span>
+                <h2>Frequently Asked Questions About {{ location_page.service.name }} in {{ location_page.city }}</h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="faq-accordion">
+                        <ul class="accordion">
+                            {% for faq in location_page.faqs.all %}
+                            <li class="accordion-item">
+                                <a class="accordion-title{% if forloop.first %} active{% endif %}" href="javascript:void(0)">
+                                    <i class='bx bx-chevron-down'></i>
+                                    {{ faq.question }}
+                                </a>
+                                <div class="accordion-content{% if forloop.first %} show{% endif %}">
+                                    <p>{{ faq.answer }}</p>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if services %}
+        <div class="related-services pt-45">
+            <h2>Related services</h2>
+            <ul>
+                {% for service in services %}
+                <li><a href="{% url 'page_detail' service.page.page_tag %}">{{ service.name }}</a></li>
+                {% for subservice in service.subservices.all %}
+                <li><a href="{{ subservice.get_absolute_url }}">{{ subservice.name }}</a></li>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="text-center pt-45">
+            <a href="{% url 'contact' %}" class="default-btn">Discuss your growth goals</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

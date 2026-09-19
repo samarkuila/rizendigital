@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /get-in-touch/
+
+Sitemap: https://www.rizendigital.com/sitemap.xml
+
+# See https://www.rizendigital.com/llms.txt for an AI-crawler-friendly summary of this site.

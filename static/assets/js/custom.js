@@ -16,17 +16,27 @@
         }
     });
 
-    // FAQ Accordion JS
-	$('.accordion').find('.accordion-title').on('click', function(){
-		// Adds Active Class
-		$(this).toggleClass('active');
-		// Expand or Collapse This Panel
-		$(this).next().slideToggle('fast');
-		// Hide The Other Panels
-		$('.accordion-content').not($(this).next()).slideUp('fast');
-		// Removes Active Class From Other Titles
-		$('.accordion-title').not($(this)).removeClass('active');		
-	});
+    // FAQ Accordion JS (each accordion works independently)
+    $('.accordion').find('.accordion-title').on('click', function(e){
+        e.preventDefault();
+        var $title = $(this);
+        var $item = $title.closest('.accordion-item');
+        var $accordion = $title.closest('.accordion');
+        var $content = $item.find('.accordion-content').first();
+        var isOpen = $title.hasClass('active');
+
+        // Close the other panels of THIS accordion only
+        $accordion.find('.accordion-title').not($title).removeClass('active').attr('aria-expanded', 'false');
+        $accordion.find('.accordion-content').not($content).stop(true, true).slideUp('fast');
+
+        // Toggle this panel
+        $title.toggleClass('active', !isOpen).attr('aria-expanded', String(!isOpen));
+        if (isOpen) {
+            $content.stop(true, true).slideUp('fast');
+        } else {
+            $content.stop(true, true).slideDown('fast');
+        }
+    });
 
     // Brand Slider 
      $('.brand-slider').owlCarousel({
@@ -235,8 +245,10 @@
         return false;
     });
 
-    // WOW JS
-    new WOW().init();
+    // WOW JS (animate.css v4 uses the animate__ prefix, so animateClass must match)
+    new WOW({
+        animateClass: 'animate__animated'
+    }).init();
 
     // Preloader JS
     jQuery(window).on('load',function(){

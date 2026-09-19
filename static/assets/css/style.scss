@@ -53,6 +53,40 @@ $title-color:#070f4d;
 $color-blue:#4356d6;
 $color-white:#fff;
 
+// Modernization tokens (additive — do not remove the tokens above, existing rules depend on them)
+$color-blue-dark: #2f3fae;
+$surface-color: #ffffff;
+$surface-alt-color: #f6f7fd;
+$border-color: rgba(7, 15, 77, 0.08);
+$gradient-brand: linear-gradient(135deg, $color-blue 0%, $color-blue-dark 100%);
+$gradient-accent: linear-gradient(135deg, $main-color 0%, #ff7a53 100%);
+
+$radius-sm: 10px;
+$radius-md: 16px;
+$radius-lg: 24px;
+$radius-pill: 50px;
+
+$shadow-sm: 0 4px 14px rgba(7, 15, 77, 0.06);
+$shadow-md: 0 12px 30px rgba(7, 15, 77, 0.1);
+$shadow-lg: 0 24px 48px rgba(7, 15, 77, 0.14);
+$shadow-hover: 0 20px 40px rgba(67, 86, 214, 0.22);
+
+$ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin card-surface {
+    background-color: $surface-color;
+    border-radius: $radius-md;
+    box-shadow: $shadow-sm;
+    transition: transform 0.35s $ease-standard, box-shadow 0.35s $ease-standard;
+}
+
+@mixin card-hover-lift {
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow-md;
+    }
+}
+
 body {
     font-size: 16px;
     line-height: 1.8;
@@ -152,13 +186,17 @@ Default Btn Style
 ===================================*/
 .default-btn {
     background-color: $color-blue;
-    padding: 12px 42px;
+    padding: 13px 44px;
     color: $color-white;
-    border-radius: 50px;
+    border-radius: $radius-pill;
     text-align: center;
     position: relative;
     overflow: hidden;
     z-index: 1;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    box-shadow: $shadow-sm;
+    transition: transform 0.35s $ease-standard, box-shadow 0.35s $ease-standard;
     &::before {
         content: "";
         position: absolute;
@@ -170,7 +208,7 @@ Default Btn Style
         z-index: -1;
         -webkit-transition: all 0.5s;
         transition: all 0.5s;
-      }      
+      }
     &::after {
         content: "";
         position: absolute;
@@ -185,13 +223,15 @@ Default Btn Style
     }
     &:hover {
         color: $color-white;
+        transform: translateY(-3px);
+        box-shadow: $shadow-hover;
     }
     &:hover::before {
         top: 0;
         background-color: $title-color;
         color: $color-white;
      }
-      
+
     &:hover::after {
         bottom: 0;
         background-color: $title-color;
@@ -203,10 +243,11 @@ Default Btn Style
         background-color: transparent;
         border: 1px solid $title-color;
         overflow: hidden;
+        box-shadow: none;
         &:hover {
             color: $color-white;
         }
-    } 
+    }
 }
 /*================================
 Default Btn Style End
@@ -218,8 +259,25 @@ Section Title Style
 .section-title {
     span {
         color: $main-color;
-        font-weight: 500;
+        font-weight: 600;
         line-height: 0;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        font-size: 14px;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 22px;
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 46px;
+            height: 3px;
+            border-radius: $radius-pill;
+            background: $gradient-accent;
+        }
     }
     h2 {
         font-size: 35px;
@@ -275,12 +333,14 @@ Navbar Area
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    box-shadow: $shadow-lg;
     margin: auto;
     z-index: 999;
-    background-color: $color-blue !important;
-    animation: 900ms ease-in-out 5s normal none 1 running fadeInDown;
-    transition: 0.9s;
+    background-color: rgba(67, 86, 214, 0.96) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+    transition: 0.4s $ease-standard;
     width: 100% !important;
     .main-nav {
         background-color: $title-color;
@@ -864,11 +924,17 @@ Service Area
     position: relative;
     text-align: center;
     padding: 40px 30px;
-    box-shadow: 0 0 15px rgba(0, 0, 0,0.1);
+    box-shadow: $shadow-sm;
     display: block;
     z-index: 1;
-    border-radius: 15px;
+    border-radius: $radius-md;
     margin-bottom: 30px;
+    background-color: $surface-color;
+    transition: transform 0.35s $ease-standard, box-shadow 0.35s $ease-standard;
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow-hover;
+    }
     &:hover::before {
         background-image: url(../img/service-icon/card-shape-2.png);
         z-index: 1;
@@ -1062,12 +1128,20 @@ Faq Area
         padding-left: 0;
         margin-bottom: 0;
         .accordion-item {
-            border-radius: 50px;
+            border-radius: $radius-md;
             display: block;
-            background-color: #ffffff;
+            background-color: $surface-color;
             margin-bottom: 15px;
-            box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.05);
-            border: none;
+            box-shadow: $shadow-sm;
+            border: 1px solid transparent;
+            transition: box-shadow 0.35s $ease-standard, border-color 0.35s $ease-standard;
+            &:hover {
+                box-shadow: $shadow-md;
+            }
+            &:has(.accordion-title.active) {
+                border-color: rgba(67, 86, 214, 0.25);
+                box-shadow: $shadow-md;
+            }
             &:last-child {
                 margin-bottom: 0;
             }
@@ -1081,23 +1155,24 @@ Faq Area
             font-size: 18px;
             font-weight: 600;
             &.active {
-                border-radius: 50px;
+                border-radius: $radius-md;
+                color: $color-blue;
             }
             i {
                 position: absolute;
                 right: 20px;
                 top: 15px;
                 font-size: 25px;
-                -webkit-transition: 0.5s;
-                transition: 0.5s;
+                -webkit-transition: transform 0.35s $ease-standard, background-color 0.35s $ease-standard;
+                transition: transform 0.35s $ease-standard, background-color 0.35s $ease-standard;
                 font-size: 24px;
                 width: 40px;
                 height: 40px;
-                border-radius: 50px;
+                border-radius: $radius-pill;
                 color: $color-white;
                 text-align: center;
                 line-height: 40px;
-                background-color: $color-blue;
+                background: $gradient-brand;
             }
             &.active i {
                 transform: rotate(180deg);
@@ -1206,13 +1281,20 @@ Portfolio Area
     margin-bottom: 30px;
     .portfolio-img {
         position: relative;
+        overflow: hidden;
+        border-radius: $radius-md;
         a {
             display: block;
+            overflow: hidden;
+            border-radius: $radius-md;
             img {
-                border-radius: 10px;
+                border-radius: $radius-md;
+                transition: transform 0.6s $ease-standard;
             }
         }
-        
+        &:hover img {
+            transform: scale(1.08);
+        }
     }
     .portfolio-tag {
         position: absolute;
@@ -1223,7 +1305,7 @@ Portfolio Area
                 color: $color-white;
                 background-color: $main-color;
                 padding: 7px 20px;
-                border-radius: 50px;
+                border-radius: $radius-pill;
                 font-size: 13px;
             }
         }
@@ -1234,9 +1316,10 @@ Portfolio Area
         left: 25px;
         background-color: $color-white;
         padding: 15px 20px;
-        border-radius: 15px;
+        border-radius: $radius-md;
         width: 85%;
-        transition: 0.7s;
+        box-shadow: $shadow-sm;
+        transition: 0.5s $ease-standard;
         &:hover {
             background-color: $color-blue;
         }
@@ -1419,12 +1502,14 @@ Price Section
     padding-bottom: 30px;
     text-align: center;
     background-color: $color-white;
-    box-shadow: 0 0 15px rgba(146, 145, 145, 0.1);
-    border-radius: 15px;
-    transition: 0.7s;
+    box-shadow: $shadow-sm;
+    border-radius: $radius-md;
+    transition: transform 0.4s $ease-standard, background-color 0.4s $ease-standard, box-shadow 0.4s $ease-standard;
     margin-bottom: 30px;
     &:hover {
         background-color: $color-blue;
+        transform: translateY(-10px);
+        box-shadow: $shadow-hover;
     }
     &:hover .get-btn  {
         background-color: $color-white;
@@ -1516,7 +1601,14 @@ Member Area
 }
 .member-card {
     margin-bottom: 30px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-sm;
+    border-radius: $radius-md;
+    overflow: hidden;
+    transition: transform 0.4s $ease-standard, box-shadow 0.4s $ease-standard;
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow-md;
+    }
     &:hover .member-img .member-content {
         padding-top: 40px;
     }
@@ -1666,7 +1758,7 @@ Counter Area
     }
 }
 .counter-area-2 {
-    background-image: url(../img/counter-bg.png);
+    background-image: url(../img/counter-bg.webp);
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -1824,16 +1916,27 @@ Blog Card
 ====================================*/
 .blog-card {
     margin-bottom: 30px;
+    transition: transform 0.4s $ease-standard;
+    &:hover {
+        transform: translateY(-8px);
+    }
     &:hover a h3{
         color: $color-blue;
     }
     .blog-img {
         position: relative;
+        overflow: hidden;
+        border-radius: $radius-md $radius-md 0 0;
         a {
             display: block;
+            overflow: hidden;
             img {
-                border-radius: 15px 15px 0 0;
+                border-radius: $radius-md $radius-md 0 0;
+                transition: transform 0.6s $ease-standard;
             }
+        }
+        &:hover img {
+            transform: scale(1.08);
         }
     }
     .blog-content {
@@ -1849,8 +1952,8 @@ Blog Card
         padding-left: 35px;
         padding-right: 35px;
         background-color: $color-white;
-        border-radius: 15px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: $radius-md;
+        box-shadow: $shadow-md;
         .blog-tag {
             position: absolute;
             left: 25px;
@@ -2112,6 +2215,7 @@ Header Area
             a {
                 font-size: 20px;
                 color: $color-white;
+                transition: transform 0.3s $ease-standard, color 0.3s $ease-standard;
                 &:hover {
                     color: $title-color;
                     transform: translateY(-2px);
@@ -2350,12 +2454,17 @@ Client Area
     margin-top: 100px;
     position: relative;
     background-color: $color-white;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-md;
     text-align: center;
-    border-radius: 15px;
+    border-radius: $radius-md;
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 45px;
+    transition: transform 0.4s $ease-standard, box-shadow 0.4s $ease-standard;
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: $shadow-lg;
+    }
     .client-item-img {
         img {
             position: absolute;
@@ -2365,6 +2474,7 @@ Client Area
             margin: auto;
             width: 100px;
             border-radius: 50%;
+            box-shadow: $shadow-md;
         }
     }
     h3 {
@@ -2502,10 +2612,19 @@ Footer Area Another
             position: relative;
             padding-right: 10px;
             a {
-                font-size: 24px;
+                font-size: 18px;
                 color: $title-color;
+                background-color: $surface-alt-color;
+                width: 42px;
+                height: 42px;
+                line-height: 42px;
+                text-align: center;
+                border-radius: 50%;
+                transition: transform 0.35s $ease-standard, background 0.35s $ease-standard, color 0.35s $ease-standard;
                 &:hover {
-                    color: $color-blue;
+                    color: $color-white;
+                    background: $gradient-brand;
+                    transform: translateY(-4px);
                 }
             }
         }
@@ -2961,6 +3080,7 @@ Inner Banner
     position: relative;
     background-position: center center;
     background-size: cover;
+    background-color: $title-color;
     &::before {
         content: '';
         position: absolute;
@@ -2969,16 +3089,42 @@ Inner Banner
         top: 0;
         left: 0;
         right: 0;
-        background-color: $title-color;
-        opacity: 0.8;
+        background: linear-gradient(120deg, rgba(7, 15, 77, 0.94) 0%, rgba(67, 86, 214, 0.88) 100%);
     }
     .inner-title {
         padding-top: 150px;
         padding-bottom: 150px;
         position: relative;
+        span {
+            display: inline-block;
+            color: $main-color;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        h1, h2, h3 {
+            color: $color-white;
+        }
+        h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
         h3 {
             font-size: 30px;
+        }
+        > p {
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .inner-title-name {
+            font-size: 42px;
+            font-weight: 600;
+            line-height: 1.3;
             color: $color-white;
+            margin-bottom: 0;
         }
         ul {
             list-style: none;
@@ -3006,29 +3152,27 @@ Inner Banner
         }
     }
 }
+// NOTE: inner-bg1..8 previously pointed at static/assets/img/inner-banner/*.jpg,
+// which are all identical placeholder stock images (a literal "1920 x 400" dummy
+// graphic shipped by the theme). Removed until real photography is supplied —
+// the .inner-banner gradient background above covers these in the meantime.
+// To restore a photo background once real images are added, add back:
+//   background-image: url(../img/inner-banner/N.jpg);
 .inner-bg1 {
-    background-image: url(../img/inner-banner/1.jpg);
 }
 .inner-bg2 {
-    background-image: url(../img/inner-banner/2.jpg);
 }
 .inner-bg3 {
-    background-image: url(../img/inner-banner/3.jpg);
 }
 .inner-bg4 {
-    background-image: url(../img/inner-banner/4.jpg);
 }
 .inner-bg5 {
-    background-image: url(../img/inner-banner/5.jpg);
 }
 .inner-bg6 {
-    background-image: url(../img/inner-banner/6.jpg);
 }
 .inner-bg7 {
-    background-image: url(../img/inner-banner/7.jpg);
 }
 .inner-bg8 {
-    background-image: url(../img/inner-banner/8.jpg);
 }
 /*================================
 Inner Banner End
@@ -3679,7 +3823,209 @@ Blog Details Page End
 ==================================*/
 
 /*================================
-Contact Page 
+Blog Details Interactive Enhancements
+==================================*/
+.reading-progress-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(7, 15, 77, 0.08);
+    z-index: 9999;
+}
+.reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: $gradient-accent;
+    transition: width 0.1s linear;
+}
+
+.blog-breadcrumb {
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    a {
+        color: rgba(255, 255, 255, 0.75);
+        &:hover {
+            color: $main-color;
+        }
+    }
+    i {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+        vertical-align: middle;
+        margin: 0 2px;
+    }
+    span {
+        color: $color-white;
+    }
+}
+
+.blog-meta-list {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: $color-white;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 8px 18px;
+        border-radius: $radius-pill;
+        font-size: 14px;
+        font-weight: 500;
+        i {
+            color: $main-color;
+            font-size: 16px;
+        }
+    }
+}
+
+.toc-box {
+    background-color: $surface-alt-color;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    padding: 20px 24px;
+    margin-bottom: 30px;
+    summary {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        font-size: 17px;
+        color: $title-color;
+        &::-webkit-details-marker {
+            display: none;
+        }
+        i:first-child {
+            color: $main-color;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        .toc-caret {
+            margin-left: auto;
+            transition: transform 0.3s $ease-standard;
+        }
+    }
+    &[open] summary .toc-caret {
+        transform: rotate(180deg);
+    }
+    ul {
+        list-style: none;
+        margin: 16px 0 0;
+        padding: 0;
+        li {
+            padding-left: 0;
+            margin-bottom: 8px;
+            &::before {
+                content: none;
+            }
+            &.toc-sub {
+                padding-left: 20px;
+                a {
+                    font-weight: 400;
+                    font-size: 14px;
+                }
+            }
+        }
+        a {
+            display: inline-block;
+            color: $paragraph-color;
+            font-weight: 500;
+            border-bottom: none;
+            transition: color 0.25s $ease-standard, padding-left 0.25s $ease-standard;
+            &:hover, &.active {
+                color: $main-color;
+                padding-left: 4px;
+            }
+        }
+    }
+}
+
+.article-share {
+    .copy-link-btn {
+        display: block;
+        width: 32px;
+        height: 32px;
+        line-height: 33px;
+        border-radius: 50%;
+        background-color: $color-blue;
+        color: $color-white;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.25s $ease-standard, transform 0.25s $ease-standard;
+        &:hover {
+            background-color: $main-color;
+            transform: translateY(-2px);
+        }
+    }
+    li {
+        position: relative;
+    }
+    .copy-toast {
+        position: absolute;
+        bottom: 42px;
+        right: 0;
+        background: $title-color;
+        color: $color-white;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: $radius-sm;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(4px);
+        transition: opacity 0.25s $ease-standard, transform 0.25s $ease-standard;
+        &.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+.widget-cta {
+    background: $gradient-brand;
+    border-radius: $radius-md;
+    padding: 32px 28px;
+    color: $color-white;
+    h3 {
+        color: $color-white;
+        font-size: 21px;
+        margin-bottom: 12px;
+    }
+    p {
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 20px;
+        font-size: 15px;
+    }
+    .default-btn {
+        background-color: $color-white;
+        color: $title-color;
+        padding: 11px 30px;
+        &::before, &::after {
+            background-color: $color-white;
+        }
+        &:hover {
+            color: $title-color;
+        }
+    }
+}
+/*================================
+Blog Details Interactive Enhancements End
+==================================*/
+
+/*================================
+Contact Page
 ==================================*/
 .contact-width {
     width: 960px;
@@ -3872,9 +4218,71 @@ Contact Page
 Contact Page End
 ==================================*/
 /*==================================
+Related Services
+====================================*/
+.related-services {
+    border-top: 1px solid $border-color;
+    padding-top: 40px;
+    h2 {
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        li {
+            margin: 0;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: $radius-pill;
+            background-color: $surface-alt-color;
+            color: $title-color;
+            font-weight: 500;
+            font-size: 15px;
+            transition: background 0.3s $ease-standard, color 0.3s $ease-standard, transform 0.3s $ease-standard;
+            &:hover {
+                background: $gradient-brand;
+                color: $color-white;
+                transform: translateY(-3px);
+            }
+        }
+    }
+}
+/*==================================
+Related Services End
+====================================*/
+
+/*==================================
 Single Content CSS
 ====================================*/
 .single-content {
+    h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+    h2 {
+        font-size: 28px;
+        margin-top: 40px;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 14px;
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 46px;
+            height: 3px;
+            border-radius: $radius-pill;
+            background: $gradient-accent;
+        }
+    }
     h3 {
         font-size: 24px;
         margin-bottom: 10px;
@@ -3884,6 +4292,39 @@ Single Content CSS
         &:last-child {
             margin-bottom: 0;
         }
+    }
+    ul, ol {
+        margin-bottom: 20px;
+        padding-left: 5px;
+        list-style: none;
+        li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            &::before {
+                content: "\ea41";
+                font-family: 'boxicons';
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: $color-blue;
+                font-size: 18px;
+            }
+        }
+    }
+    a {
+        color: $color-blue;
+        font-weight: 500;
+        border-bottom: 1px solid rgba(67, 86, 214, 0.35);
+        &:hover {
+            color: $main-color;
+            border-color: $main-color;
+        }
+    }
+    em {
+        display: inline-block;
+        color: $paragraph-color;
+        font-size: 14px;
     }
 }
 /*==================================

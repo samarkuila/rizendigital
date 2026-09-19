@@ -1,0 +1,15 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block main %}
+<section class="error-area">
+    <div class="container">
+        <div class="error-content">
+            <h1>4<span>0</span>4</h1>
+            <h3>Oops! Page Not Found</h3>
+            <p>The page you're looking for may have been moved, renamed, or doesn't exist. Let's get you back on track.</p>
+            <a href="{% url 'home' %}" class="default-btn">Back to Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

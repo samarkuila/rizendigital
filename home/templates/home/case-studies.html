@@ -1,0 +1,53 @@
+{% extends 'home/layout.html' %}
+
+{% load static %}
+
+{% block main %}
+<div class="inner-banner inner-bg4">
+    <div class="container">
+        <div class="inner-title text-center">
+            <h1>Case Studies</h1>
+            <p>Real results Rizen Digital has delivered for clients through SEO, digital marketing, and web development.</p>
+        </div>
+    </div>
+</div>
+
+<section class="blog-area pt-100 pb-70">
+    <div class="container">
+        <div class="section-title text-center wow animate__fadeInUp" data-wow-duration="0.8s">
+            <span>Our Work</span>
+            <h2>Results our clients have achieved</h2>
+        </div>
+        <div class="row pt-45">
+            {% for study in studies %}
+                <div class="col-lg-4 col-md-6">
+                    <article class="blog-card">
+                        {% if study.featured_image %}
+                            <div class="blog-img">
+                                <a href="{{ study.get_absolute_url }}">
+                                    <img src="{{ study.featured_image.url }}" alt="{{ study.client_name }}" loading="lazy">
+                                </a>
+                            </div>
+                        {% endif %}
+                        <div class="blog-content">
+                            {% if study.industry %}<span>{{ study.industry }}</span>{% endif %}
+                            <a href="{{ study.get_absolute_url }}">
+                                <h2>{{ study.client_name }}</h2>
+                            </a>
+                            <p>{{ study.summary }}</p>
+                            {% if study.metric_1_value %}
+                                <p><strong>{{ study.metric_1_value }}</strong> {{ study.metric_1_label }}</p>
+                            {% endif %}
+                            <a href="{{ study.get_absolute_url }}" class="read-btn">Read case study</a>
+                        </div>
+                    </article>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p>Case studies are being prepared. Check back soon.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

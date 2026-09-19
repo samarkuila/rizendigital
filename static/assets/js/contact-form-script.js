@@ -27,15 +27,20 @@
 
         $.ajax({
             type: "POST",
-            url: "assets/php/form-process.php",
-            data: "name=" + name + "&email=" + email + "&msg_subject=" + msg_subject + "&phone_number=" + phone_number + "&message=" + message,
-            success : function(statustxt){
-                if (statustxt == "success"){
+            url: $("#contactForm").attr("action"),
+            data: $("#contactForm").serialize(),
+            dataType: "json",
+            success : function(response){
+                if (response.success){
                     formSuccess();
                 } else {
                     formError();
-                    submitMSG(false,statustxt);
+                    submitMSG(false, response.message);
                 }
+            },
+            error: function(xhr) {
+                formError();
+                submitMSG(false, xhr.responseJSON?.message || "We could not submit your message.");
             }
         });
     }
