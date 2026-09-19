@@ -1,0 +1,165 @@
+{% extends 'studio/base.html' %}
+{% load studio_tags %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="st-editor" id="st-editor" novalidate data-kind="{{ kind }}" data-serp-prefix="{{ serp_prefix }}">
+    {% csrf_token %}
+    <header class="st-editor-h">
+        <a class="st-back" href="{% url 'studio:list' kind %}"><svg class="ico"><use href="#i-arrow-left"/></svg>{{ cfg.plural }}</a>
+        <div class="st-editor-title">
+            <h1>{{ title }}</h1>
+            {% if not is_new and cfg.has_status %}<span class="st-status {% if obj.is_published %}live{% endif %}">{% if obj.is_published %}Published{% else %}Draft{% endif %}</span>{% endif %}
+        </div>
+        <div class="st-editor-actions">
+            {% if public %}<a class="st-btn" href="{{ public }}" target="_blank" rel="noopener"><svg class="ico"><use href="#i-external"/></svg>View live</a>{% endif %}
+            {% if not is_new %}<button class="st-btn st-btn-danger-o" type="submit" form="st-delete-form" data-confirm="Delete this {{ cfg.label|lower }}? This cannot be undone." data-confirm-ok="Delete"><svg class="ico"><use href="#i-trash"/></svg>Delete</button>{% endif %}
+            <button class="st-btn" type="submit" name="_continue" value="1">Save &amp; keep editing</button>
+            <button class="st-btn st-btn-primary" type="submit"><svg class="ico"><use href="#i-check"/></svg>Save</button>
+        </div>
+    </header>
+
+    {% if form.non_field_errors %}<div class="st-alert st-alert-danger" role="alert"><svg class="ico"><use href="#i-alert"/></svg><div>{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div></div>{% endif %}
+    {% if raw_html %}<div class="st-alert st-alert-info"><svg class="ico"><use href="#i-info"/></svg><div><b>Advanced page.</b> This page uses template tags, so it opens in HTML mode to keep them intact. Edit carefully.</div></div>{% endif %}
+
+    <div class="st-editor-grid">
+        <div class="st-editor-main">
+            {% for g in groups %}{% if not g.side %}
+            <section class="st-card st-group">
+                <header class="st-card-h"><h2>{{ g.title }}</h2></header>
+                {% for field in g.fields %}{% include 'studio/_field.html' %}{% endfor %}
+                {% if serp and g.title == 'Search appearance' %}
+                <div class="st-serp" data-serp data-title="{{ serp.title }}" data-desc="{{ serp.desc }}" data-slug="{{ serp.slug }}" data-fallback="{{ serp.fallback_title }}">
+                    <p class="st-serp-h">Google preview</p>
+                    <div class="st-serp-card">
+                        <div class="st-serp-url"><span class="st-serp-fav">R</span><span>rizendigital.com <i>&rsaquo;</i> <span data-serp-url></span></span></div>
+                        <div class="st-serp-title" data-serp-title></div>
+                        <div class="st-serp-desc" data-serp-desc></div>
+                    </div>
+                    <div class="st-meters"><div><span>Title</span><i data-meter-title></i></div><div><span>Description</span><i data-meter-desc></i></div></div>
+                </div>
+                {% endif %}
+            </section>
+            {% if formset and g.title == 'Page content' %}
+            <section class="st-card st-group" id="st-faqs">
+                <header class="st-card-h"><h2>FAQs</h2><button class="st-btn st-btn-sm" type="button" data-add-faq><svg class="ico"><use href="#i-plus"/></svg>Add FAQ</button></header>
+                <p class="st-help">Real questions customers ask. They appear on the page and in Google&rsquo;s structured data.</p>
+                {{ formset.management_form }}
+                <div data-faq-list>
+                    {% for f in formset %}
+                    <div class="st-faq{% if f.errors %} has-error{% endif %}" data-faq>
+                        {{ f.id }}{{ f.order }}
+                        <div class="st-faq-body">
+                            <div class="st-field"><label class="st-lbl">Question</label>{{ f.question }}{% for e in f.question.errors %}<p class="st-error">{{ e }}</p>{% endfor %}</div>
+                            <div class="st-field"><label class="st-lbl">Answer</label>{{ f.answer }}{% for e in f.answer.errors %}<p class="st-error">{{ e }}</p>{% endfor %}</div>
+                        </div>
+                        <label class="st-faq-del" title="Remove this FAQ">{{ f.DELETE }}<span><svg class="ico"><use href="#i-trash"/></svg></span></label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <template id="st-faq-template">
+                    <div class="st-faq" data-faq>
+                        <input type="hidden" name="faqs-__prefix__-id" id="id_faqs-__prefix__-id"><input type="hidden" name="faqs-__prefix__-location_page" id="id_faqs-__prefix__-location_page"><input type="hidden" name="faqs-__prefix__-order" value="0">
+                        <div class="st-faq-body">
+                            <div class="st-field"><label class="st-lbl">Question</label><input type="text" name="faqs-__prefix__-question" maxlength="200" class="st-input" id="id_faqs-__prefix__-question"></div>
+                            <div class="st-field"><label class="st-lbl">Answer</label><textarea name="faqs-__prefix__-answer" rows="3" maxlength="600" class="st-textarea" id="id_faqs-__prefix__-answer"></textarea></div>
+                        </div>
+                        <button type="button" class="st-faq-del" data-remove-faq title="Remove this FAQ"><span><svg class="ico"><use href="#i-trash"/></svg></span></button>
+                    </div>
+                </template>
+            </section>
+            {% endif %}
+            {% endif %}{% endfor %}
+
+            {% if seo_panel %}
+            <section class="st-card st-group st-rm-main" data-rm-main>
+                <header class="st-card-h"><h2>Search appearance</h2></header>
+                <div class="st-rm-tabs" role="tablist" aria-label="Search appearance">
+                    <button type="button" role="tab" class="on" data-rm-tab="general" aria-selected="true">General</button>
+                    <button type="button" role="tab" data-rm-tab="social" aria-selected="false">Social</button>
+                    <button type="button" role="tab" data-rm-tab="advanced" aria-selected="false">Advanced</button>
+                </div>
+
+                <div data-rm-panel="general" role="tabpanel">
+                    <div class="st-serp" data-rm-serp>
+                        <div class="st-serp-h"><span>Google preview</span>
+                            <span class="st-serp-mode" role="group" aria-label="Preview device"><button type="button" class="on" data-serp-mode="desktop">Desktop</button><button type="button" data-serp-mode="mobile">Mobile</button></span>
+                        </div>
+                        <div class="st-serp-card" data-serp-card>
+                            <div class="st-serp-url"><span class="st-serp-fav">R</span><span>rizendigital.com <i>&rsaquo;</i> <span data-serp-url></span></span></div>
+                            <div class="st-serp-title" data-serp-title></div>
+                            <div class="st-serp-desc" data-serp-desc></div>
+                        </div>
+                        <div class="st-meters"><div><span>Title</span><i data-meter-title></i></div><div><span>Description</span><i data-meter-desc></i></div></div>
+                    </div>
+                    {% for field in seo_panel.general %}{% include 'studio/_field.html' %}{% endfor %}
+                </div>
+
+                <div data-rm-panel="social" role="tabpanel" hidden>
+                    <p class="st-help st-help-top">Controls how the page looks when shared on Facebook, LinkedIn, WhatsApp and X. Empty fields fall back to your SEO title and description.</p>
+                    <div class="st-social">
+                        <div class="st-fb"><span class="st-social-tag">Facebook</span><div class="st-fb-img" data-fb-img></div><div class="st-fb-meta"><small>RIZENDIGITAL.COM</small><b data-fb-title></b><span data-fb-desc></span></div></div>
+                        <div class="st-tw"><span class="st-social-tag">X (Twitter)</span><div class="st-tw-img" data-tw-img></div><div class="st-tw-meta"><small>rizendigital.com</small><b data-tw-title></b><span data-tw-desc></span></div></div>
+                    </div>
+                    {% for field in seo_panel.social %}{% include 'studio/_field.html' %}{% endfor %}
+                </div>
+
+                <div data-rm-panel="advanced" role="tabpanel" hidden>
+                    {% for field in seo_panel.advanced %}{% include 'studio/_field.html' %}{% endfor %}
+                    <div class="st-tip"><svg class="ico"><use href="#i-info"/></svg><div><b>Leave these alone unless you need them.</b> &ldquo;Hide from search engines&rdquo; adds <code>noindex</code> and removes the page from the sitemap. A canonical URL tells Google which address is the original when content is duplicated.</div></div>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+
+        <aside class="st-editor-side">
+            {% if seo_panel %}
+            <section class="st-card st-rm" id="st-rm" data-rm data-config="{{ seo_panel.config }}">
+                <header class="st-card-h"><h2>SEO analysis</h2><span class="st-rm-badge" data-rm-badge>Not analysed</span></header>
+                <div class="st-rm-top">
+                    <div class="st-rm-ring" data-rm-ring style="--p:0"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52" pathLength="100"/></svg><div><b data-rm-score>0</b><span>/100</span></div></div>
+                    <div class="st-rm-kw">
+                        {% with field=seo_panel.focus %}{% include 'studio/_field.html' %}{% endwith %}
+                    </div>
+                </div>
+                {{ seo_panel.score }}
+                <p class="st-rm-summary" data-rm-summary>Enter a focus keyword to see how well this page is optimised for it.</p>
+                <div class="st-rm-dup" data-rm-dup hidden></div>
+                <div class="st-rm-groups" data-rm-groups></div>
+                <div class="st-rm-links">
+                    <h3>Internal link suggestions</h3>
+                    <p class="st-help">Live pages related to your keyword. Copy a link and add it to your content.</p>
+                    <ul data-rm-links><li class="st-empty-sm">Set a focus keyword to get suggestions.</li></ul>
+                </div>
+            </section>
+            {% elif seo %}
+            <section class="st-card st-seo-card">
+                <header class="st-card-h"><h2>SEO score</h2><span class="st-score st-score-{{ seo.grade }}">{{ seo.score }}</span></header>
+                {% if seo.issues %}<ul class="st-checklist">{% for i in seo.issues %}<li class="{{ i.level }}"><svg class="ico"><use href="#i-alert"/></svg>{{ i.text }}</li>{% endfor %}</ul>
+                {% else %}<p class="st-good"><svg class="ico"><use href="#i-check"/></svg>No issues found. This page is search-ready.</p>{% endif %}
+            </section>
+            {% endif %}
+            {% for g in groups %}{% if g.side %}
+            <section class="st-card st-group">
+                <header class="st-card-h"><h2>{{ g.title }}</h2></header>
+                {% for field in g.fields %}{% include 'studio/_field.html' %}{% endfor %}
+            </section>
+            {% endif %}{% endfor %}
+        </aside>
+    </div>
+
+    <div class="st-savebar" data-savebar>
+        <span class="st-muted" data-dirty-note>All changes saved</span>
+        <div><button class="st-btn" type="submit" name="_continue" value="1">Save &amp; keep editing</button> <button class="st-btn st-btn-primary" type="submit">Save</button></div>
+    </div>
+</form>
+
+{% if not is_new %}
+<form method="post" action="{% url 'studio:delete' kind obj.pk %}" id="st-delete-form">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>window.STUDIO = {mediaApi: "{% url 'studio:api_media' %}", rawHtml: {{ raw_html|yesno:"true,false" }}};</script>
+{% if seo_panel %}{% load static %}<script src="{% static 'studio/seo-panel.js' %}" defer></script>{% endif %}
+{% endblock %}

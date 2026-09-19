@@ -1,0 +1,30 @@
+{% load studio_tags %}{% with t=field|field_type %}{% if t == 'hidden' %}{{ field }}{% else %}
+<div class="st-field st-f-{{ t }}{% if field.errors %} has-error{% endif %}" data-field="{{ field.name }}">
+    {% if t == 'checkbox' %}
+    <label class="st-switch" for="{{ field.id_for_label }}">{{ field }}<span class="st-switch-ui" aria-hidden="true"></span><span class="st-switch-label">{{ field.label }}</span></label>
+    {% elif t == 'file' %}
+    <label class="st-lbl" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% if field.value and field.value.name %}
+    <div class="st-file-current">
+        <img src="{{ field.value.url }}" alt="Current image" loading="lazy">
+        <div><a href="{{ field.value.url }}" target="_blank" rel="noopener">{{ field.value.name }}</a>
+        <label class="st-check"><input type="checkbox" name="{{ field.html_name }}-clear" id="{{ field.html_name }}-clear"> Remove image</label></div>
+    </div>
+    {% endif %}
+    <label class="st-drop" for="{{ field.id_for_label }}" data-drop>
+        {{ field }}
+        <svg class="ico"><use href="#i-upload"/></svg>
+        <span><b>Click to upload</b> or drop an image here</span><small>JPG, PNG, WebP or GIF, up to 8 MB</small>
+        <img class="st-drop-preview" alt="" hidden>
+    </label>
+    {% else %}
+    <label class="st-lbl" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<i class="st-req" title="Required">*</i>{% endif %}
+        {% if field.name == 'meta_title' or field.name == 'page_meta_title' %}<span class="st-counter" data-counter-for="{{ field.id_for_label }}" data-max="60"></span>{% endif %}
+        {% if field.name == 'meta_description' or field.name == 'page_meta_description' %}<span class="st-counter" data-counter-for="{{ field.id_for_label }}" data-max="160"></span>{% endif %}
+    </label>
+    {{ field }}
+    {% endif %}
+    {% if field.help_text %}<p class="st-help">{{ field.help_text }}</p>{% endif %}
+    {% for e in field.errors %}<p class="st-error">{{ e }}</p>{% endfor %}
+</div>
+{% endif %}{% endwith %}

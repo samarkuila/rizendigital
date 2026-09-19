@@ -1,0 +1,118 @@
+{% load static studio_tags %}<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>{% block title %}Studio{% endblock %} · Rizen Studio</title>
+    <link rel="icon" href="{% static 'assets/img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/poppins.css' %}">
+    <link rel="stylesheet" href="{% static 'studio/studio.css' %}">
+    <script>try{var t=localStorage.getItem('studio-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+    {% block head %}{% endblock %}
+</head>
+<body class="st-body">
+{% include 'studio/_sprite.html' %}
+<a class="st-skip" href="#st-content">Skip to content</a>
+
+<div class="st-shell">
+    <aside class="st-side" id="st-side" aria-label="Studio navigation">
+        <a class="st-brand" href="{% url 'studio:dashboard' %}">
+            <span class="st-brand-mark"><svg class="ico"><use href="#i-bolt"/></svg></span>
+            <span class="st-brand-txt"><b>Rizen Studio</b><small>Website control centre</small></span>
+        </a>
+
+        <nav class="st-nav">
+            <a class="st-link {% st_active request 'studio:dashboard' %}" href="{% url 'studio:dashboard' %}"><svg class="ico"><use href="#i-dashboard"/></svg>Dashboard</a>
+
+            <p class="st-nav-h">Content</p>
+            <a class="st-link {% st_active request 'studio:list' 'pages' %}" href="{% url 'studio:list' 'pages' %}"><svg class="ico"><use href="#i-file"/></svg>Pages</a>
+            <a class="st-link {% st_active request 'studio:list' 'blog' %}" href="{% url 'studio:list' 'blog' %}"><svg class="ico"><use href="#i-pen"/></svg>Blog posts</a>
+            <a class="st-link {% st_active request 'studio:list' 'locations' %}" href="{% url 'studio:list' 'locations' %}"><svg class="ico"><use href="#i-pin"/></svg>Location pages</a>
+            <a class="st-link {% st_active request 'studio:list' 'cases' %}" href="{% url 'studio:list' 'cases' %}"><svg class="ico"><use href="#i-trophy"/></svg>Case studies</a>
+            <a class="st-link {% st_active request 'studio:list' 'testimonials' %}" href="{% url 'studio:list' 'testimonials' %}"><svg class="ico"><use href="#i-quote"/></svg>Testimonials</a>
+            <a class="st-link {% st_active request 'studio:list' 'services' %}" href="{% url 'studio:list' 'services' %}"><svg class="ico"><use href="#i-layers"/></svg>Services</a>
+            <a class="st-link {% st_active request 'studio:list' 'subservices' %}" href="{% url 'studio:list' 'subservices' %}"><svg class="ico"><use href="#i-layers"/></svg>Sub-services</a>
+
+            <p class="st-nav-h">Bulk tools</p>
+            <a class="st-link st-link-hot {% st_active request 'studio:bulk_pages' %}" href="{% url 'studio:bulk_pages' %}"><svg class="ico"><use href="#i-stack"/></svg>Bulk pages<span class="st-tag">New</span></a>
+            <a class="st-link st-link-hot {% st_active request 'studio:bulk_locations' %}" href="{% url 'studio:bulk_locations' %}"><svg class="ico"><use href="#i-globe"/></svg>Bulk locations<span class="st-tag">New</span></a>
+
+            <p class="st-nav-h">Inbox &amp; files</p>
+            <a class="st-link {% st_active request 'studio:list' 'leads' %}" href="{% url 'studio:list' 'leads' %}"><svg class="ico"><use href="#i-mail"/></svg>Enquiries</a>
+            <a class="st-link {% st_active request 'studio:media' %}" href="{% url 'studio:media' %}"><svg class="ico"><use href="#i-image"/></svg>Media library</a>
+
+            <p class="st-nav-h">Site</p>
+            <a class="st-link {% st_active request 'studio:settings' %}" href="{% url 'studio:settings' %}"><svg class="ico"><use href="#i-settings"/></svg>Site settings</a>
+            <a class="st-link" href="/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-external"/></svg>View website</a>
+            {% if request.user.is_superuser %}<a class="st-link" href="{% url 'admin:index' %}"><svg class="ico"><use href="#i-list"/></svg>Django admin</a>{% endif %}
+        </nav>
+
+        <div class="st-user">
+            <span class="st-avatar">{{ request.user|initials }}</span>
+            <span class="st-user-txt"><b>{{ request.user.get_full_name|default:request.user.get_username }}</b><small>{% if request.user.is_superuser %}Administrator{% else %}Editor{% endif %}</small></span>
+            <form method="post" action="{% url 'studio:logout' %}">{% csrf_token %}<button class="st-icon-btn" type="submit" title="Sign out" aria-label="Sign out"><svg class="ico"><use href="#i-logout"/></svg></button></form>
+        </div>
+    </aside>
+    <div class="st-scrim" data-close-side></div>
+
+    <div class="st-main">
+        <header class="st-top">
+            <button class="st-icon-btn st-menu-btn" type="button" data-toggle-side aria-label="Open menu"><svg class="ico"><use href="#i-menu"/></svg></button>
+            <button class="st-search-btn" type="button" data-open-palette>
+                <svg class="ico"><use href="#i-search"/></svg><span>Search everything&hellip;</span><kbd>Ctrl K</kbd>
+            </button>
+            <div class="st-top-actions">
+                <div class="st-dd" data-dd>
+                    <button class="st-btn st-btn-primary" type="button" data-dd-toggle aria-haspopup="true" aria-expanded="false"><svg class="ico"><use href="#i-plus"/></svg>New<svg class="ico st-chev"><use href="#i-chevron"/></svg></button>
+                    <div class="st-dd-menu" role="menu">
+                        <a role="menuitem" href="{% url 'studio:new' 'blog' %}"><svg class="ico"><use href="#i-pen"/></svg>Blog post</a>
+                        <a role="menuitem" href="{% url 'studio:new' 'pages' %}"><svg class="ico"><use href="#i-file"/></svg>Page</a>
+                        <a role="menuitem" href="{% url 'studio:new' 'locations' %}"><svg class="ico"><use href="#i-pin"/></svg>Location page</a>
+                        <a role="menuitem" href="{% url 'studio:new' 'cases' %}"><svg class="ico"><use href="#i-trophy"/></svg>Case study</a>
+                        <a role="menuitem" href="{% url 'studio:new' 'testimonials' %}"><svg class="ico"><use href="#i-quote"/></svg>Testimonial</a>
+                        <hr>
+                        <a role="menuitem" href="{% url 'studio:bulk_pages' %}"><svg class="ico"><use href="#i-stack"/></svg>Bulk pages</a>
+                        <a role="menuitem" href="{% url 'studio:bulk_locations' %}"><svg class="ico"><use href="#i-globe"/></svg>Bulk locations</a>
+                    </div>
+                </div>
+                <button class="st-icon-btn" type="button" data-theme-toggle aria-label="Toggle dark mode" title="Toggle dark mode"><svg class="ico st-ico-moon"><use href="#i-moon"/></svg><svg class="ico st-ico-sun"><use href="#i-sun"/></svg></button>
+            </div>
+        </header>
+
+        <main class="st-content" id="st-content">
+            {% if messages %}
+            <div class="st-flash" role="status">
+                {% for m in messages %}<div class="st-toast st-toast-{{ m.level_tag }}" data-toast><svg class="ico"><use href="#i-{% if m.level_tag == 'error' or m.level_tag == 'warning' %}alert{% else %}check{% endif %}"/></svg><span>{{ m }}</span><button type="button" data-close-toast aria-label="Dismiss"><svg class="ico"><use href="#i-x"/></svg></button></div>{% endfor %}
+            </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- Command palette -->
+<dialog class="st-palette" id="st-palette" aria-label="Search">
+    <div class="st-palette-box">
+        <div class="st-palette-input"><svg class="ico"><use href="#i-search"/></svg><input type="search" id="st-palette-q" placeholder="Search pages, posts, locations, enquiries&hellip;" autocomplete="off" data-api="{% url 'studio:api_search' %}"><kbd>Esc</kbd></div>
+        <div class="st-palette-list" id="st-palette-list" role="listbox"><p class="st-palette-hint">Type at least two letters. Try a page name, a city or a client.</p></div>
+        <div class="st-palette-quick">
+            <a href="{% url 'studio:new' 'blog' %}">+ Blog post</a><a href="{% url 'studio:bulk_locations' %}">Bulk locations</a><a href="{% url 'studio:bulk_pages' %}">Bulk pages</a><a href="{% url 'studio:media' %}">Media</a>
+        </div>
+    </div>
+</dialog>
+
+<!-- Confirm dialog -->
+<dialog class="st-confirm" id="st-confirm" aria-labelledby="st-confirm-title">
+    <form method="dialog">
+        <div class="st-confirm-ico"><svg class="ico"><use href="#i-alert"/></svg></div>
+        <h2 id="st-confirm-title">Are you sure?</h2>
+        <p id="st-confirm-text"></p>
+        <div class="st-confirm-actions"><button value="cancel" class="st-btn">Cancel</button><button value="ok" class="st-btn st-btn-danger" id="st-confirm-ok">Delete</button></div>
+    </form>
+</dialog>
+
+<script src="{% static 'studio/studio.js' %}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

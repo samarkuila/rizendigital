@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Ledger AI agent">
+<defs>
+<style>
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.eyes{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+.prop{animation:bob 3.6s ease-in-out infinite}
+.ant{animation:pulse 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.eyes,.prop,.ant{animation:none}}
+</style>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb020"/><stop offset="1" stop-color="#0b1030"/></linearGradient>
+<linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".08" stop-color="#ffb020"/><stop offset="1" stop-color="#e07a00"/></linearGradient>
+<linearGradient id="bodyg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb020"/><stop offset="1" stop-color="#e07a00"/></linearGradient>
+<linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="halo" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="#fff2b3" stop-opacity=".45"/><stop offset="1" stop-color="#fff2b3" stop-opacity="0"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern>
+</defs>
+<rect width="400" height="400" fill="url(#bg)"/>
+<rect width="400" height="400" fill="url(#grid)"/>
+<circle cx="200" cy="170" r="190" fill="url(#halo)"/>
+<circle cx="70" cy="60" r="90" fill="#fff2b3" opacity=".08"/><circle cx="350" cy="380" r="120" fill="#e07a00" opacity=".35"/>
+<circle cx="52" cy="90" r="3" fill="#fff" opacity="0.5"/><circle cx="70" cy="300" r="2.5" fill="#fff" opacity="0.4"/><circle cx="352" cy="260" r="3.5" fill="#fff" opacity="0.35"/><circle cx="40" cy="210" r="2" fill="#fff" opacity="0.5"/><circle cx="340" cy="340" r="2.5" fill="#fff" opacity="0.3"/><circle cx="110" cy="40" r="2" fill="#fff" opacity="0.45"/>
+<g>
+<path d="M62 400 C62 318 118 292 200 292 C282 292 338 318 338 400Z" fill="url(#bodyg)"/>
+<path d="M62 400 C62 318 118 292 200 292 C282 292 338 318 338 400Z" fill="url(#gloss)"/>
+<path d="M150 296 Q200 330 250 296" stroke="#0b1030" stroke-opacity=".35" stroke-width="10" fill="none" stroke-linecap="round"/>
+<rect x="172" y="268" width="56" height="34" rx="14" fill="#1a2260"/>
+<rect x="150" y="312" width="100" height="44" rx="16" fill="#0b1030" opacity=".85"/>
+<circle cx="200" cy="332" r="13" fill="#fff2b3" opacity=".95" filter="url(#glow)"/><circle cx="200" cy="332" r="5" fill="#0b1030"/>
+<rect x="164" y="346" width="72" height="5" rx="2.5" fill="#fff2b3" opacity=".55"/>
+</g>
+<g class="ant"></g>
+<rect x="92" y="160" width="20" height="44" rx="10" fill="#e07a00"/><rect x="288" y="160" width="20" height="44" rx="10" fill="#e07a00"/><rect x="97" y="172" width="10" height="20" rx="5" fill="#fff2b3" opacity=".9"/><rect x="293" y="172" width="10" height="20" rx="5" fill="#fff2b3" opacity=".9"/>
+<rect x="108" y="92" width="184" height="164" rx="36" fill="url(#hg)"/>
+<path d="M120 112 Q150 96 190 96" stroke="#fff" stroke-opacity=".55" stroke-width="6" fill="none" stroke-linecap="round"/>
+<rect x="134" y="140" width="132" height="86" rx="34" fill="#0b1030"/><rect x="134" y="140" width="132" height="86" rx="34" fill="url(#gloss)"/><g class="eyes"><circle cx="200" cy="183" r="27" fill="none" stroke="#fff2b3" stroke-width="5" filter="url(#glow)"/><circle cx="200" cy="183" r="14" filter="url(#glow)" fill="#fff2b3"/><circle cx="205" cy="177" r="5" fill="#fff"/></g>
+<circle cx="126" cy="214" r="7" fill="#fff2b3" opacity=".35"/><circle cx="274" cy="214" r="7" fill="#fff2b3" opacity=".35"/>
+<g class="prop"><g transform="translate(300 82)"><circle r="32" fill="none" stroke="#fff2b3" stroke-width="7"/><circle r="19" fill="none" stroke="#fff2b3" stroke-width="6" opacity=".85"/><circle r="7" fill="#fff2b3"/><path d="M6 -6 L34 -34" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 -34 H36 V-24" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+</svg>

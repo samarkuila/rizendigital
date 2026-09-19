@@ -1,0 +1,306 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'assets/css/google-updates.min.css' %}">
+<script type="application/ld+json">{{ faq_schema_json|safe }}</script>
+<noscript><style>.gu-panel[hidden]{display:block}</style></noscript>
+{% endblock %}
+
+{% block main %}
+<div class="inner-banner inner-bg4 gu-banner">
+    <div class="container">
+        <div class="inner-title text-center">
+            <span class="gu-eyebrow">SEO Intelligence</span>
+            <h1>Google Algorithm &amp; Core Updates: The Interactive Guide</h1>
+            <p>Every major Google update from Florida in 2003 to the latest core and spam updates, what each one targeted, and what to do about it. Filter the timeline, find the updates that matter to your site, and score your core-update readiness.</p>
+            <div class="gu-banner-cta">
+                <a href="#gu-timeline" class="default-btn">Explore the timeline</a>
+                <a href="#gu-readiness" class="default-btn active">Check my readiness</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key numbers -->
+<section class="gu-stats pt-100">
+    <div class="container">
+        <ul class="gu-stat-row" aria-label="Guide at a glance">
+            <li><strong data-count="{{ updates|length }}">{{ updates|length }}</strong><span>updates tracked</span></li>
+            <li><strong data-count="{{ core_count }}">{{ core_count }}</strong><span>core updates</span></li>
+            <li><strong data-count="{{ years|length }}">{{ years|length }}</strong><span>years of change</span></li>
+            <li><strong>{{ first_year }}</strong><span>earliest entry</span></li>
+        </ul>
+        <p class="gu-note">Compiled from <a href="{{ history_url }}" target="_blank" rel="noopener">Search Engine Journal&rsquo;s Google algorithm history</a> and the update articles it links to. Summaries are written in our own words and each entry links to its source. Last reviewed {{ last_reviewed|date:"F j, Y" }}.</p>
+    </div>
+</section>
+
+<!-- How a core update works -->
+<section class="gu-how pt-100 pb-70" id="gu-how">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>How core updates work</span>
+            <h2>From announcement to recovery in five steps</h2>
+            <p>Core updates follow a predictable rhythm. Click through the steps to see what to do at each stage.</p>
+        </div>
+        <div class="gu-steps" id="gu-steps">
+            <div class="gu-step-tabs" role="tablist" aria-label="Core update stages">
+                {% for title, text in core_steps %}
+                <button type="button" role="tab" id="gu-step-tab-{{ forloop.counter }}" aria-controls="gu-step-panel-{{ forloop.counter }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %}>
+                    <span class="gu-step-num">{{ forloop.counter }}</span>{{ title }}
+                </button>
+                {% endfor %}
+            </div>
+            {% for title, text in core_steps %}
+            <div class="gu-step-panel" role="tabpanel" id="gu-step-panel-{{ forloop.counter }}" aria-labelledby="gu-step-tab-{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
+                <h3>{{ title }}</h3>
+                <p>{{ text }}</p>
+                {% if not forloop.last %}<button type="button" class="gu-link-btn" data-step-next>Next step &rarr;</button>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Interactive timeline -->
+<section class="gu-timeline pt-100 pb-70" id="gu-timeline">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>Interactive timeline</span>
+            <h2>Every Google update, searchable and filterable</h2>
+            <p>Filter by update family, search by name, or click a year to see how busy it was. Open any card for what it targeted and what to do.</p>
+        </div>
+
+        <div class="gu-controls" id="gu-controls">
+            <div class="gu-search">
+                <label for="gu-search" class="gu-sr">Search updates</label>
+                <input type="search" id="gu-search" placeholder="Search updates, e.g. Panda, helpful, spam&hellip;" autocomplete="off">
+            </div>
+
+            <div class="gu-chips" id="gu-chips" role="group" aria-label="Filter by update type">
+                {% for t in type_list %}
+                <button type="button" class="gu-chip gu-t-{{ t.key }}" data-type="{{ t.key }}" aria-pressed="false">{{ t.label }} <span>{{ t.count }}</span></button>
+                {% endfor %}
+            </div>
+
+            <div class="gu-years" id="gu-years" role="group" aria-label="Filter by year (bar height shows how many updates)">
+                {% for y in years %}
+                <button type="button" class="gu-year" data-year="{{ y.year }}" aria-pressed="false" style="--h: {{ y.pct }}%" title="{{ y.year }}: {{ y.count }} update{{ y.count|pluralize }}">
+                    <i aria-hidden="true"></i><span aria-hidden="true">&rsquo;{{ y.year|stringformat:"d"|slice:"2:" }}</span>
+                    <b class="gu-sr">{{ y.year }}, {{ y.count }} update{{ y.count|pluralize }}</b>
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="gu-toolbar">
+                <p id="gu-count" class="gu-count" role="status" aria-live="polite">Showing all {{ updates|length }} updates</p>
+                <div class="gu-toolbar-btns">
+                    <button type="button" id="gu-sort" class="gu-tool" data-order="desc">Newest first</button>
+                    <button type="button" id="gu-expand" class="gu-tool">Expand all</button>
+                    <button type="button" id="gu-reset" class="gu-tool" hidden>Clear filters</button>
+                </div>
+            </div>
+        </div>
+
+        <ol class="gu-list" id="gu-list">
+            {% for u in updates %}
+            <li class="gu-item" id="{{ u.slug }}" data-type="{{ u.type }}" data-year="{{ u.year }}" data-ts="{{ u.ts }}">
+                <button type="button" class="gu-head" aria-expanded="false" aria-controls="gu-panel-{{ u.slug }}">
+                    <span class="gu-dot gu-t-{{ u.type }}" aria-hidden="true"></span>
+                    <span class="gu-date">{{ u.when }}</span>
+                    <span class="gu-badge gu-t-{{ u.type }}">{{ u.type_label }}</span>
+                    <span class="gu-title">{{ u.name }}</span>
+                    <span class="gu-lesson">{{ u.lesson }}</span>
+                    <i class="bx bx-chevron-down gu-chev" aria-hidden="true"></i>
+                </button>
+                <div class="gu-panel" id="gu-panel-{{ u.slug }}" hidden>
+                    <p class="gu-summary">{{ u.summary }}</p>
+                    <div class="gu-cols">
+                        <div>
+                            <h4>Who it affected</h4>
+                            <p>{{ u.affected }}</p>
+                        </div>
+                        <div>
+                            <h4>What to do</h4>
+                            <p class="gu-takeaway"><strong>Takeaway:</strong> {{ u.lesson }}</p>
+                            <ul class="gu-todo" data-todo="{{ u.type }}"></ul>
+                        </div>
+                    </div>
+                    <div class="gu-panel-foot">
+                        {% if u.source %}<a href="{{ u.source }}" target="_blank" rel="noopener">Read the source article &nearr;</a>
+                        {% else %}<span class="gu-extra">Added from Google&rsquo;s own public announcement (not in SEJ&rsquo;s list)</span>{% endif %}
+                        <button type="button" class="gu-copy" data-slug="{{ u.slug }}">Copy link</button>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+        <div class="gu-empty" id="gu-empty" hidden>
+            <p><strong>No updates match those filters.</strong></p>
+            <button type="button" class="default-btn" data-gu-clear>Clear filters</button>
+        </div>
+    </div>
+</section>
+
+<!-- Update finder -->
+<section class="gu-finder-sec pt-100 pb-70" id="gu-finder">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>Update finder</span>
+            <h2>Which Google updates should worry your site?</h2>
+            <p>Tick everything that describes your website. We&rsquo;ll show the update families most relevant to you, the latest updates in each, and where to start.</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <fieldset class="gu-questions" id="gu-questions">
+                    <legend class="gu-sr">Describe your website</legend>
+                    {% for qid, text, types_list in finder %}
+                    <label class="gu-q">
+                        <input type="checkbox" name="{{ qid }}" data-types="{{ types_list|join:' ' }}">
+                        <span class="gu-box" aria-hidden="true"></span>
+                        <span>{{ text }}</span>
+                    </label>
+                    {% endfor %}
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <div class="gu-out" id="gu-finder-out" aria-live="polite">
+                    <p class="gu-out-empty">Your personalised results will appear here as you tick the boxes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Readiness checklist -->
+<section class="gu-readiness pt-100 pb-70" id="gu-readiness">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>Core update readiness</span>
+            <h2>How well does your site match what Google rewards?</h2>
+            <p>{{ checklist_total }} checks drawn from what the updates above have rewarded and punished. Tick what is true for your site. Your answers stay in this browser.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="gu-check">
+                    {% for pillar, ptype, items in checklist %}
+                    <fieldset class="gu-pillar" data-pillar>
+                        <legend><span class="gu-dot gu-t-{{ ptype }}" aria-hidden="true"></span>{{ pillar }} <em class="gu-pillar-score" data-pillar-score></em></legend>
+                        {% for cid, text, tags in items %}
+                        <label class="gu-check">
+                            <input type="checkbox" data-check="{{ cid }}" data-tags="{{ tags }}" data-pillar-type="{{ ptype }}">
+                            <span class="gu-box" aria-hidden="true"></span>
+                            <span class="gu-check-text">{{ text }}<small>Linked to: {{ tags }}</small></span>
+                        </label>
+                        {% endfor %}
+                    </fieldset>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <aside class="gu-score" aria-live="polite">
+                    <div class="gu-ring" id="gu-ring" style="--p:0">
+                        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="gu-ring-bg" cx="60" cy="60" r="52"/><circle class="gu-ring-fg" id="gu-ring-fg" cx="60" cy="60" r="52" pathLength="100"/></svg>
+                        <div><strong id="gu-score-num">0</strong><span>/ 100</span></div>
+                    </div>
+                    <p class="gu-score-label" id="gu-score-label">Not started</p>
+                    <p class="gu-score-msg" id="gu-score-msg">Tick the boxes that are true for your site to see your score.</p>
+                    <div class="gu-next" id="gu-next" hidden>
+                        <h3>Fix these first</h3>
+                        <ul id="gu-next-list"></ul>
+                    </div>
+                    <button type="button" class="gu-tool" id="gu-check-reset">Reset checklist</button>
+                    <a href="{% url 'contact' %}" class="default-btn gu-score-cta">Get a free core-update audit</a>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How we build -->
+<section class="gu-approach pt-100 pb-70">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>Our approach</span>
+            <h2>How Rizen Digital builds for core updates</h2>
+            <p>Core updates keep rewarding the same things. That is how we plan every SEO and web project.</p>
+        </div>
+        <div class="row">
+            {% include 'home/_gu_approach.html' %}
+        </div>
+    </div>
+</section>
+
+<!-- Playbook + self assessment -->
+<section class="gu-playbook pt-100 pb-70" id="gu-playbook">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="section-title">
+                    <span>Recovery playbook</span>
+                    <h2 class="gu-left">What to do when rankings move</h2>
+                </div>
+                <div class="gu-acc">
+                    {% for title, lead, steps in playbook %}
+                    <details {% if forloop.first %}open{% endif %}>
+                        <summary>{{ title }}<i class="bx bx-chevron-down" aria-hidden="true"></i></summary>
+                        <p class="gu-lead">{{ lead }}</p>
+                        <ol>{% for s in steps %}<li>{{ s }}</li>{% endfor %}</ol>
+                    </details>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="gu-assess">
+                    <h3>Google&rsquo;s people-first self-check</h3>
+                    <p>Ask these about your important pages. Every honest &ldquo;no&rdquo; is an improvement to make.</p>
+                    <ul>
+                        {% for q in self_assessment %}<li>{{ q }}</li>{% endfor %}
+                    </ul>
+                    <a href="#gu-readiness" class="gu-link-btn">Score your site &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="gu-faq pt-100 pb-70">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>FAQs</span>
+            <h2>Google core updates: common questions</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="gu-acc">
+                    {% for q, a in faq %}
+                    <details>
+                        <summary>{{ q }}<i class="bx bx-chevron-down" aria-hidden="true"></i></summary>
+                        <p>{{ a }}</p>
+                    </details>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="gu-cta pb-100">
+    <div class="container">
+        <div class="gu-cta-box">
+            <div>
+                <h2>Rankings moved after an update?</h2>
+                <p>Our team reviews your traffic, content and technical health against what recent updates reward, and gives you a clear, prioritised plan.</p>
+            </div>
+            <a href="{% url 'contact' %}" class="default-btn">Talk to an SEO specialist</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ types_json|json_script:"gu-types" }}
+<script src="{% static 'assets/js/google-updates.min.js' %}" defer></script>
+{% endblock %}

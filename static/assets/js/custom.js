@@ -16,7 +16,7 @@
         }
     });
 
-    // FAQ Accordion JS (each accordion works independently)
+    // FAQ Accordion JS (each accordion works independently; the clicked question stays put on screen)
     $('.accordion').find('.accordion-title').on('click', function(e){
         e.preventDefault();
         var $title = $(this);
@@ -24,10 +24,22 @@
         var $accordion = $title.closest('.accordion');
         var $content = $item.find('.accordion-content').first();
         var isOpen = $title.hasClass('active');
+        var startTop = $title[0].getBoundingClientRect().top;
 
         // Close the other panels of THIS accordion only
         $accordion.find('.accordion-title').not($title).removeClass('active').attr('aria-expanded', 'false');
-        $accordion.find('.accordion-content').not($content).stop(true, true).slideUp('fast');
+        var $others = $accordion.find('.accordion-content').not($content).stop(true, true);
+
+        // Panels ABOVE the clicked question would push it up the screen while collapsing, so
+        // close those instantly and correct the scroll in the same frame (nothing visible moves).
+        // Panels below it can animate freely.
+        var $above = $others.filter(function () {
+            return !!(this.compareDocumentPosition($content[0]) & Node.DOCUMENT_POSITION_FOLLOWING);
+        });
+        $above.hide();
+        $others.not($above).slideUp('fast');
+        var drift = $title[0].getBoundingClientRect().top - startTop;
+        if (drift) { window.scrollBy({ top: drift, left: 0, behavior: 'instant' }); }
 
         // Toggle this panel
         $title.toggleClass('active', !isOpen).attr('aria-expanded', String(!isOpen));
@@ -258,6 +270,17 @@
     // Switch Btn
     $('body').append("<div class='switch-box'><label id='switch' class='switch'><input type='checkbox' onchange='toggleTheme()' id='slider'><span class='slider round'></span></label></div>");
 
+
+    // Accessibility: give icon-only controls accessible names (plugins render them without any)
+    function a11yFixes() {
+        $('.owl-nav .owl-prev').removeAttr('role').attr('aria-label', 'Previous slide');
+        $('.owl-nav .owl-next').removeAttr('role').attr('aria-label', 'Next slide');
+        $('.owl-dots .owl-dot').removeAttr('role').each(function (i) { $(this).attr('aria-label', 'Go to slide ' + (i + 1)); });
+        $('.meanmenu-reveal').attr({ 'aria-label': 'Open or close navigation menu', 'role': 'button' });
+        $('#slider').attr('aria-label', 'Toggle dark mode');
+    }
+    a11yFixes();
+    $(window).on('load resize', a11yFixes);
 
 })(jQuery);
 

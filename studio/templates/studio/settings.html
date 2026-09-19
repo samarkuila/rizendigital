@@ -1,0 +1,34 @@
+{% extends 'studio/base.html' %}
+{% block title %}Site settings{% endblock %}
+{% block content %}
+<header class="st-page-h">
+    <div><h1>Site settings</h1><p class="st-muted">Public contact details. They appear in the header, footer, contact page and search-engine data.</p></div>
+</header>
+<form method="post" class="st-editor" novalidate>
+    {% csrf_token %}
+    <div class="st-editor-grid">
+        <div class="st-editor-main">
+            <section class="st-card st-group">
+                <header class="st-card-h"><h2>Contact</h2></header>
+                {% for field in form %}{% if field.name in 'phone email address' %}{% include 'studio/_field.html' %}{% endif %}{% endfor %}
+            </section>
+            <section class="st-card st-group">
+                <header class="st-card-h"><h2>Social profiles</h2></header>
+                <p class="st-help">Leave a profile blank to hide its icon. Filled profiles are also added to your structured data.</p>
+                {% for field in form %}{% if field.name in 'facebook twitter youtube instagram linkedin' %}{% include 'studio/_field.html' %}{% endif %}{% endfor %}
+            </section>
+        </div>
+        <aside class="st-editor-side">
+            <section class="st-card st-group">
+                <header class="st-card-h"><h2>Good to know</h2></header>
+                <ul class="st-checklist st-plain">
+                    <li><svg class="ico"><use href="#i-info"/></svg>Changes go live within about a minute.</li>
+                    <li><svg class="ico"><use href="#i-info"/></svg>Phone numbers should include the country code, e.g. +919812345678.</li>
+                    <li><svg class="ico"><use href="#i-info"/></svg>Consistent name, address and phone everywhere helps local search.</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+    <div class="st-savebar st-savebar-on"><span class="st-muted">Last saved {{ form.instance.updated_at|timesince }} ago</span><div><button class="st-btn st-btn-primary" type="submit"><svg class="ico"><use href="#i-check"/></svg>Save settings</button></div></div>
+</form>
+{% endblock %}

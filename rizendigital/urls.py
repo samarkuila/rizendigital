@@ -14,6 +14,7 @@ from home.sitemaps import BlogSitemap, CaseStudySitemap, LocationSitemap, PageSi
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('admin/', admin.site.urls),
+    path('studio/', include('studio.urls')),
     path('', include('home.urls')),    
     path('sitemap.xml', sitemap, {
         'sitemaps': {

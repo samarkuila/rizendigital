@@ -12,8 +12,22 @@ logger = logging.getLogger(__name__)
 POST_TYPES = (('Page', 'Page'), ('Blog', 'Blog'), ('Custom_Page', 'Custom_Page'))  # Example post types
 
 
+class SeoFields(models.Model):
+    """Rank-Math-style SEO settings shared by pages, posts, location pages and case studies."""
+    focus_keyword = models.CharField(max_length=120, blank=True, help_text='The main phrase this page should rank for.')
+    seo_score = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Last score from the Studio SEO analyzer (0-100).')
+    seo_noindex = models.BooleanField(default=False, verbose_name='Hide from search engines', help_text='Adds noindex and removes the page from the sitemap.')
+    seo_canonical = models.URLField(max_length=500, blank=True, verbose_name='Canonical URL', help_text='Only set this if the page duplicates another address.')
+    og_title = models.CharField(max_length=120, blank=True, verbose_name='Social title')
+    og_description = models.CharField(max_length=300, blank=True, verbose_name='Social description')
+    og_image = models.FileField(upload_to='social/', blank=True, verbose_name='Social image')
+
+    class Meta:
+        abstract = True
+
+
 # Page Model
-class Page(models.Model):
+class Page(SeoFields, models.Model):
     id = models.AutoField(primary_key=True)
     post_type = models.CharField(max_length=500, choices=POST_TYPES)
     page_name = models.CharField(max_length=500)
@@ -61,7 +75,9 @@ class Service(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.page and not self.pk:
+            # _create_service_page() attaches the new Page and saves this service itself.
             self._create_service_page()
+            return
         super(Service, self).save(*args, **kwargs)
 
 
@@ -130,7 +146,7 @@ class SubService(models.Model):
         return '#'
 
 
-class BlogPost(models.Model):
+class BlogPost(SeoFields, models.Model):
     title = models.CharField(max_length=180)
     slug = models.SlugField(max_length=200, unique=True)
     excerpt = models.TextField(max_length=500)
@@ -171,7 +187,7 @@ class Testimonial(models.Model):
         return f'{self.client_name} ({self.company_name})' if self.company_name else self.client_name
 
 
-class CaseStudy(models.Model):
+class CaseStudy(SeoFields, models.Model):
     client_name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=200, unique=True)
     industry = models.CharField(max_length=120, blank=True)
@@ -213,7 +229,7 @@ class CaseStudy(models.Model):
         return reverse('case_study_detail', kwargs={'slug': self.slug})
 
 
-class LocationPage(models.Model):
+class LocationPage(SeoFields, models.Model):
     service = models.ForeignKey(Service, related_name='location_pages', on_delete=models.CASCADE)
     city = models.CharField(max_length=120)
     country = models.CharField(max_length=120, blank=True)

@@ -43,16 +43,15 @@ This files table contents are outlined below>>>>>
 /*================================================
 Default CSS
 =================================================*/
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400&display=swap");
 body {
   font-size: 16px;
   line-height: 1.8;
   font-family: "Poppins", sans-serif;
-  color: #75799b;
+  color: #666a8c;
 }
 
 p {
-  color: #75799b;
+  color: #666a8c;
 }
 
 a {
@@ -159,7 +158,7 @@ img {
 }
 
 .color-list {
-  color: #75799b !important;
+  color: #666a8c !important;
 }
 
 /*================================
@@ -237,7 +236,7 @@ Default Btn Style End
 Section Title Style 
 ===================================*/
 .section-title span {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 600;
   line-height: 0;
   letter-spacing: 1.2px;
@@ -346,7 +345,7 @@ Navbar Area
   height: auto;
 }
 .main-nav nav .navbar-nav .nav-item:hover a, .main-nav nav .navbar-nav .nav-item .active {
-  color: #ff4a35;
+  color: #d13823;
 }
 .main-nav nav .navbar-nav .nav-item a {
   text-transform: capitalize;
@@ -359,10 +358,10 @@ Navbar Area
   top: 3px;
 }
 .main-nav nav .navbar-nav .nav-item a:hover, .main-nav nav .navbar-nav .nav-item a :focus {
-  color: #ff4a35;
+  color: #d13823;
 }
 .main-nav nav .navbar-nav .nav-item a.active {
-  color: #ff4a35 !important;
+  color: #d13823 !important;
 }
 .main-nav nav .navbar-nav .nav-item a.active i {
   -webkit-transform: rotate(90deg);
@@ -404,7 +403,7 @@ Navbar Area
 .main-nav nav .navbar-nav .nav-item .dropdown-menu li a.active {
   background-color: #f3f3f3;
   border-radius: 0.25rem;
-  color: #ff4a35 !important;
+  color: #d13823 !important;
 }
 .main-nav nav .navbar-nav .nav-item .dropdown-menu li a::before {
   content: "";
@@ -421,13 +420,13 @@ Navbar Area
   width: 100%;
 }
 .main-nav nav .navbar-nav .nav-item .dropdown-menu li a:hover, .main-nav nav .navbar-nav .nav-item .dropdown-menu li a :focus, .main-nav nav .navbar-nav .nav-item .dropdown-menu li a .active {
-  color: #ff4a35 !important;
+  color: #d13823 !important;
   letter-spacing: 0.5px;
   background-color: #f3f3f3;
   border-radius: 0.25rem;
 }
 .main-nav nav .navbar-nav .nav-item .dropdown-menu li.active {
-  color: #ff4a35 !important;
+  color: #d13823 !important;
 }
 
 .menu-btn {
@@ -485,7 +484,7 @@ Navbar Area
 
 /* Mobile Nav */
 .mobile-nav .mean-container .mean-nav ul li a .active {
-  color: #ff4a35;
+  color: #d13823;
 }
 
 .mean-container a.meanmenu-reveal {
@@ -515,7 +514,7 @@ Main Banner Style
   margin-left: auto;
 }
 .banner-text span {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 500;
   margin-bottom: 10px;
 }
@@ -714,7 +713,7 @@ Brand Area
   margin-bottom: 50px;
 }
 .brand-title span {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 500;
   line-height: 0;
 }
@@ -757,7 +756,7 @@ About Area
   margin-right: auto;
 }
 .about-content span {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 500;
   line-height: 0;
 }
@@ -1053,7 +1052,7 @@ Faq Area
   margin-left: 30px;
 }
 .faq-content span {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 500;
   line-height: 0;
 }
@@ -1160,7 +1159,7 @@ Faq Area
   margin-bottom: 50px;
 }
 .faq-content-text p a {
-  color: #ff4a35;
+  color: #d13823;
   text-decoration: underline;
 }
 .faq-content-text p a:hover {
@@ -1251,7 +1250,7 @@ Portfolio Area
 }
 .portfolio-item .portfolio-tag a span {
   color: #fff;
-  background-color: #ff4a35;
+  background-color: #d13823;
   padding: 7px 20px;
   border-radius: 50px;
   font-size: 13px;
@@ -1455,7 +1454,7 @@ Price Section
 }
 .single-price:hover .get-btn {
   background-color: #fff;
-  color: #ff4a35;
+  color: #d13823;
 }
 .single-price:hover ul li, .single-price:hover .single-price-title h2 {
   color: #fff;
@@ -1468,7 +1467,7 @@ Price Section
 }
 .single-price.current .get-btn {
   background-color: #fff;
-  color: #ff4a35;
+  color: #d13823;
 }
 .single-price.current ul li, .single-price.current .single-price-title h2 {
   color: #fff;
@@ -1478,10 +1477,10 @@ Price Section
 }
 .single-price.current .get-btn {
   background-color: #fff;
-  color: #ff4a35;
+  color: #d13823;
 }
 .single-price span {
-  color: #ff4a35;
+  color: #d13823;
   background-color: #fffbfb;
   padding: 10px 20px;
   border-radius: 50px;
@@ -1923,7 +1922,7 @@ Blog Card
   color: #4356d6;
 }
 .blog-card .blog-content .read-btn:hover {
-  color: #ff4a35;
+  color: #d13823;
   letter-spacing: 0.2px;
 }
 
@@ -2128,7 +2127,7 @@ Header Area
   font-weight: 400;
 }
 .header-content-right .header-contact li:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .header-content-right .header-contact li a {
   color: #fff;
@@ -2235,7 +2234,7 @@ Banner Area
   margin-left: 20px;
 }
 .banner-content .banner-content-btn .banner-play-btn .play-btn {
-  color: #ff4a35;
+  color: #d13823;
   position: relative;
 }
 .banner-content .banner-content-btn .banner-play-btn .play-btn i {
@@ -2247,7 +2246,7 @@ Banner Area
   text-align: center;
   font-size: 35px;
   border-radius: 50px;
-  color: #ff4a35;
+  color: #d13823;
   background-color: #fff;
   margin-right: 10px;
   transition: 0.7s;
@@ -2417,7 +2416,7 @@ Client Area
   padding-top: 70px;
 }
 .client-item p {
-  color: #75799b;
+  color: #666a8c;
   max-width: 490px;
   margin: 0 auto;
 }
@@ -2533,7 +2532,7 @@ Footer Area Another
   display: none;
 }
 .footer-single-2 .footer-single-content-2 p {
-  color: #75799b;
+  color: #666a8c;
   margin-bottom: 20px;
 }
 .footer-single-2 .footer-social {
@@ -2566,7 +2565,8 @@ Footer Area Another
 .footer-list-2 {
   margin-bottom: 30px;
 }
-.footer-list-2 h3 {
+.footer-list-2 h3,
+.footer-list-2 h2 {
   font-size: 25px;
   color: #070f4d;
   position: relative;
@@ -2622,7 +2622,7 @@ Footer Area Another
   margin: 0;
 }
 .footer-bottom-2 .bottom-text-2 p a {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 500;
 }
 .footer-bottom-2 .bottom-text-2 p a:hover {
@@ -2648,7 +2648,7 @@ Home Page Three Style
 .other-side .search-area .search-item {
   display: inline-block;
   position: relative;
-  color: #75799b;
+  color: #666a8c;
   cursor: pointer;
   top: 9px;
 }
@@ -2658,7 +2658,7 @@ Home Page Three Style
   font-size: 16px;
   position: relative;
   top: -5px;
-  color: #75799b;
+  color: #666a8c;
   font-weight: 600;
   border-radius: 3px;
   width: 40px;
@@ -2692,7 +2692,7 @@ Home Page Three Style
   height: 50px;
   line-height: initial;
   border: 1px solid #eeeeee;
-  color: #75799b;
+  color: #666a8c;
   outline: 0;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -2726,7 +2726,7 @@ Home Page Three Style
   box-shadow: none;
 }
 .other-side .search-area .search-item .search-overlay.search-popup .search-form .search-button:focus {
-  color: #ff4a35;
+  color: #d13823;
 }
 .other-side .search-area .search-item .search-btn {
   -webkit-transition: all 0.5s;
@@ -2735,23 +2735,23 @@ Home Page Three Style
   color: #000000;
 }
 .other-side .search-area .search-item .search-btn:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .other-side .search-area .search-item .search-btn:hover i {
-  color: #ff4a35;
+  color: #d13823;
 }
 .other-side .search-area .search-item .close-btn {
   cursor: pointer;
   display: none;
   -webkit-transition: 0.5s;
   transition: 0.5s;
-  color: #75799b;
+  color: #666a8c;
 }
 .other-side .search-area .search-item .close-btn i {
   font-size: 20px;
 }
 .other-side .search-area .search-item .close-btn:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .other-side .search-area .search-item .close-btn.active {
   display: block;
@@ -2778,7 +2778,7 @@ Home Page Three Style
   text-align: center;
 }
 .other-side .modal-menu a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 
 /* Sidebar Modal */
@@ -2842,12 +2842,12 @@ Home Page Three Style
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget ul li a {
   font-size: 16px;
-  color: #75799b;
+  color: #666a8c;
   font-weight: 600;
   text-transform: capitalize;
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget ul li a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget .contact-info {
   list-style: none;
@@ -2861,7 +2861,7 @@ Home Page Three Style
   text-transform: uppercase;
   margin-bottom: 10px;
   font-size: 16px;
-  color: #75799b;
+  color: #666a8c;
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget .contact-info li span {
   font-size: 16px;
@@ -2918,7 +2918,7 @@ Home Page Three Style
   background-color: #ff4a35;
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget .social-list li a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .sidebar-modal .modal.right .modal-body .sidebar-modal-widget .social-list li:hover {
   color: #fff;
@@ -2936,7 +2936,7 @@ Home Page Three Style
 .sidebar-modal .modal-header .close {
   height: 110px;
   width: 60px;
-  color: #75799b;
+  color: #666a8c;
   margin: 0px;
   padding: 0px;
   cursor: pointer;
@@ -3010,7 +3010,7 @@ Inner Banner
 }
 .inner-banner .inner-title span {
   display: inline-block;
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 600;
   letter-spacing: 1.2px;
   text-transform: uppercase;
@@ -3046,7 +3046,7 @@ Inner Banner
 }
 .inner-banner .inner-title ul li {
   font-size: 18px;
-  color: #ff4a35;
+  color: #d13823;
   display: inline-block;
   margin-right: 10px;
 }
@@ -3061,7 +3061,7 @@ Inner Banner
   color: #fff;
 }
 .inner-banner .inner-title ul li a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 
 /*================================
@@ -3079,7 +3079,7 @@ Pagination Area
   display: table;
 }
 .pagination-area .page-link {
-  color: #ff4a35;
+  color: #d13823;
   background-color: #ffffff;
   box-shadow: 0 0 15px #d0d0d0;
   width: 40px;
@@ -3276,7 +3276,7 @@ Blog Details Page
   display: none;
 }
 .blog-dtls-content .blog-text blockquote::before {
-  color: #ff4a35;
+  color: #d13823;
   content: "\ee83";
   position: absolute;
   left: 50px;
@@ -3324,11 +3324,11 @@ Blog Details Page
   font-weight: 600;
 }
 .blog-dtls-content .article-footer .article-tags a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .blog-dtls-content .article-footer span {
   display: inline-block;
-  color: #ff4a35;
+  color: #d13823;
   font-size: 20px;
   margin-right: 5px;
   position: relative;
@@ -3432,7 +3432,7 @@ Blog Details Page
 .blog-dtls-content .comment-area .comment-card .comment-author-title span {
   font-size: 12px;
   font-weight: 500;
-  color: #75799b;
+  color: #666a8c;
 }
 .blog-dtls-content .comment-area .comment-card .comment-body {
   margin-left: 100px;
@@ -3607,7 +3607,7 @@ Blog Details Page
 }
 .widget-area .widget-popular-post .item .info span {
   display: block;
-  color: #75799b;
+  color: #666a8c;
   text-transform: uppercase;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -3636,7 +3636,7 @@ Blog Details Page
   position: relative;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  color: #75799b;
+  color: #666a8c;
   padding-left: 20px;
   font-size: 15px;
   font-weight: 600;
@@ -3658,7 +3658,7 @@ Blog Details Page
 }
 .widget-area .widget_categories ul li a {
   display: block;
-  color: #75799b;
+  color: #666a8c;
   font-weight: normal;
 }
 .widget-area .widget_categories ul li a span {
@@ -3666,7 +3666,7 @@ Blog Details Page
   font-size: 13px;
 }
 .widget-area .widget_categories ul li a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .widget-area .widget_tag ul {
   margin: 0;
@@ -3677,7 +3677,7 @@ Blog Details Page
   display: inline-block;
 }
 .widget-area .widget_tag ul li a {
-  color: #75799b;
+  color: #666a8c;
   font-weight: normal;
   padding: 7px 16px;
   border: 1px dashed #eeeeee;
@@ -3722,7 +3722,7 @@ Blog Details Interactive Enhancements
   color: rgba(255, 255, 255, 0.75);
 }
 .blog-breadcrumb a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 .blog-breadcrumb i {
   color: rgba(255, 255, 255, 0.5);
@@ -3755,7 +3755,7 @@ Blog Details Interactive Enhancements
   font-weight: 500;
 }
 .blog-meta-list li i {
-  color: #ff4a35;
+  color: #d13823;
   font-size: 16px;
 }
 
@@ -3779,7 +3779,7 @@ Blog Details Interactive Enhancements
   display: none;
 }
 .toc-box summary i:first-child {
-  color: #ff4a35;
+  color: #d13823;
   margin-right: 8px;
   font-size: 20px;
 }
@@ -3811,13 +3811,13 @@ Blog Details Interactive Enhancements
 }
 .toc-box ul a {
   display: inline-block;
-  color: #75799b;
+  color: #666a8c;
   font-weight: 500;
   border-bottom: none;
   transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .toc-box ul a:hover, .toc-box ul a.active {
-  color: #ff4a35;
+  color: #d13823;
   padding-left: 4px;
 }
 
@@ -3942,7 +3942,7 @@ Contact Page
   color: #070f4d;
 }
 .contact-card ul li a:hover {
-  color: #ff4a35;
+  color: #d13823;
 }
 
 .contact-wrap-form {
@@ -4006,7 +4006,7 @@ Contact Page
 .contact-wrap-form .forget {
   margin-bottom: 15px;
   float: right;
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 600;
 }
 .contact-wrap-form .forget:hover {
@@ -4017,13 +4017,13 @@ Contact Page
   font-weight: 600;
 }
 .contact-wrap-form .account-desc a {
-  color: #ff4a35;
+  color: #d13823;
 }
 .contact-wrap-form .account-desc a:hover {
   color: #4356d6;
 }
 .contact-wrap-form .recover-login {
-  color: #ff4a35;
+  color: #d13823;
   font-weight: 600;
 }
 .contact-wrap-form .recover-login:hover {
@@ -4033,7 +4033,7 @@ Contact Page
   font-weight: 600;
 }
 .contact-wrap-form .recover-register a {
-  color: #ff4a35;
+  color: #d13823;
 }
 .contact-wrap-form .recover-register a:hover {
   color: #4356d6;
@@ -4191,12 +4191,12 @@ Single Content CSS
   border-bottom: 1px solid rgba(67, 86, 214, 0.35);
 }
 .single-content a:hover {
-  color: #ff4a35;
+  color: #d13823;
   border-color: #ff4a35;
 }
 .single-content em {
   display: inline-block;
-  color: #75799b;
+  color: #666a8c;
   font-size: 14px;
 }
 
@@ -4217,15 +4217,15 @@ Single Content CSS End
   font-size: 300px;
   line-height: 0.5;
   font-weight: 700;
-  color: #75799b;
+  color: #666a8c;
 }
 .error-area .error-content h1 span {
-  color: #ff4a35;
+  color: #d13823;
 }
 .error-area .error-content h3 {
   margin: 50px 0 0;
   position: relative;
-  color: #ff4a35;
+  color: #d13823;
 }
 .error-area .error-content p {
   margin: 20px 0 20px;
@@ -4562,3 +4562,51 @@ Animation CSS End
 ====================================*/
 
 /*# sourceMappingURL=style.css.map */
+
+/*================================
+Accessibility & performance additions
+==================================*/
+img { height: auto; }
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: -64px;
+    z-index: 10000;
+    background: #070f4d;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 10px; color: #fff; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .accordion-title:focus-visible {
+    outline: 3px solid #4356d6;
+    outline-offset: 2px;
+}
+#contactModal .close-btn {
+    background: transparent;
+    border: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+.member-shape-2 img, .about-shape img { object-fit: contain; }
+
+/* Pricing cards: keep text readable on the highlighted / hovered (blue) card */
+.single-price.current .single-price-title p,
+.single-price:hover .single-price-title p,
+.single-price.current > p,
+.single-price:hover > p { color: rgba(255, 255, 255, 0.92); }
+.single-price.current ul .color-gray,
+.single-price:hover ul .color-gray { color: rgba(255, 255, 255, 0.75); }
+.single-price ul li.color-gray { color: #6f7492; text-decoration: line-through; }
+.single-price.current ul li.color-gray,
+.single-price:hover ul li.color-gray { text-decoration: line-through; }
+/* Hero headline: fluid size so a longer, keyword-rich H1 still sits comfortably */
+.banner-text h1 { font-size: clamp(1.9rem, 3vw, 2.75rem); line-height: 1.18; }
+
+/* Decorative background layers must never intercept clicks (they were covering the FAQ questions) */
+.faq-bg::before, .faq-bg::after, .faq-bg-into::before { pointer-events: none; }
+.faq-bg .container { position: relative; z-index: 2; }
+
+/* Scroll anchoring off: the FAQ script holds the clicked question in place itself */
+html, body { overflow-anchor: none; }

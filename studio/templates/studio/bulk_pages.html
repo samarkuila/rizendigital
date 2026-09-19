@@ -1,0 +1,92 @@
+{% extends 'studio/base.html' %}
+{% block title %}Bulk pages{% endblock %}
+{% block content %}
+<header class="st-page-h">
+    <div><h1>Bulk pages</h1><p class="st-muted">Create many pages in one go from a spreadsheet, or generate them from a template. You always preview before anything is saved.</p></div>
+    <div class="st-page-actions"><a class="st-btn" href="{% url 'studio:bulk_pages_template' %}"><svg class="ico"><use href="#i-download"/></svg>CSV template</a></div>
+</header>
+
+<ol class="st-steps" aria-label="Progress">
+    <li class="{% if not items %}on{% else %}done{% endif %}"><i>1</i>Add your pages</li>
+    <li class="{% if items and not result %}on{% elif result %}done{% endif %}"><i>2</i>Preview &amp; check</li>
+    <li class="{% if result %}on{% endif %}"><i>3</i>Create</li>
+</ol>
+
+<form method="post" class="st-bulk" id="st-bulk-pages" novalidate>
+    {% csrf_token %}
+    <section class="st-card st-group">
+        <div class="st-tabs" role="tablist" aria-label="How do you want to add pages?">
+            <label class="st-tab {% if mode == 'paste' %}on{% endif %}"><input type="radio" name="mode" value="paste" {% if mode == 'paste' %}checked{% endif %} data-mode-tab="paste"><svg class="ico"><use href="#i-list"/></svg>Paste or upload a spreadsheet</label>
+            <label class="st-tab {% if mode == 'template' %}on{% endif %}"><input type="radio" name="mode" value="template" {% if mode == 'template' %}checked{% endif %} data-mode-tab="template"><svg class="ico"><use href="#i-sparkle"/></svg>Generate from a template</label>
+        </div>
+
+        <div class="st-mode" data-mode-panel="paste" {% if mode != 'paste' %}hidden{% endif %}>
+            <p class="st-help">First row = column names. Supported columns: <code>page_name</code> (required), <code>page_tag</code>, <code>meta_title</code>, <code>meta_description</code>, <code>keywords</code>, <code>content</code>, <code>short_content</code>, <code>post_type</code>. Copy straight from Excel or Google Sheets, or upload a .csv file.</p>
+            <div class="st-field">
+                <textarea name="table" rows="9" class="st-textarea st-mono" spellcheck="false" placeholder="{{ sample }}" data-csv-target>{{ table }}</textarea>
+            </div>
+            <label class="st-btn st-btn-sm st-upload-btn"><svg class="ico"><use href="#i-upload"/></svg>Upload .csv<input type="file" accept=".csv,text/csv,.txt,.tsv" hidden data-csv-file></label>
+            <button type="button" class="st-btn st-btn-sm" data-fill-sample="{{ sample }}">Fill with an example</button>
+        </div>
+
+        <div class="st-mode" data-mode-panel="template" {% if mode != 'template' %}hidden{% endif %}>
+            <div class="st-field"><label class="st-lbl">Page names (one per line)</label><textarea name="names" rows="6" class="st-textarea" placeholder="Website Redesign&#10;E-commerce SEO | ecommerce-seo&#10;Google Ads Management">{{ names }}</textarea><p class="st-help">Optionally add a custom URL slug after a pipe: <code>Name | slug</code>.</p></div>
+            <div class="st-two">
+                <div class="st-field"><label class="st-lbl">Meta title template</label><input class="st-input" name="title_tpl" value="{{ title_tpl }}"></div>
+                <div class="st-field"><label class="st-lbl">Meta description template</label><input class="st-input" name="desc_tpl" value="{{ desc_tpl }}"></div>
+            </div>
+            <div class="st-field"><label class="st-lbl">Content template (HTML)</label><textarea name="content_tpl" rows="7" class="st-textarea st-mono" spellcheck="false">{{ content_tpl }}</textarea><p class="st-help">Placeholders: <code>{name}</code> <code>{keyword}</code> <code>{slug}</code>. Add real, unique detail to each page after creating it.</p></div>
+        </div>
+
+        <div class="st-bulk-opts">
+            <label class="st-lbl" for="on_conflict">If a page with the same URL exists</label>
+            <select class="st-select st-select-sm" name="on_conflict" id="on_conflict"><option value="skip" {% if on_conflict == 'skip' %}selected{% endif %}>Skip it</option><option value="update" {% if on_conflict == 'update' %}selected{% endif %}>Update it</option></select>
+            <button class="st-btn st-btn-primary" type="submit" name="action" value="preview"><svg class="ico"><use href="#i-eye"/></svg>Preview pages</button>
+        </div>
+        {% if error %}<div class="st-alert st-alert-danger" role="alert"><svg class="ico"><use href="#i-alert"/></svg><div>{{ error }}</div></div>{% endif %}
+    </section>
+
+    {% if items %}
+    <section class="st-card st-group st-results">
+        <header class="st-card-h">
+            <h2>{% if result %}Done{% else %}Preview{% endif %}</h2>
+            <div class="st-chips">
+                <span class="st-chip ok">{{ summary.new }} new</span>
+                {% if summary.update %}<span class="st-chip info">{{ summary.update }} to update</span>{% endif %}
+                {% if summary.skip %}<span class="st-chip muted">{{ summary.skip }} skipped</span>{% endif %}
+                {% if summary.error %}<span class="st-chip bad">{{ summary.error }} with errors</span>{% endif %}
+                {% if summary.warn %}<span class="st-chip warn">{{ summary.warn }} with warnings</span>{% endif %}
+            </div>
+        </header>
+
+        {% if result %}
+        <div class="st-alert st-alert-success"><svg class="ico"><use href="#i-check"/></svg><div><b>{{ result.created|length }} page{{ result.created|length|pluralize }} created{% if result.updated %}, {{ result.updated|length }} updated{% endif %}.</b> {% if result.skipped or result.failed %}{{ result.skipped }} skipped, {{ result.failed }} had errors.{% endif %}</div></div>
+        <ul class="st-mini-list">
+            {% for p in result.created %}<li><a href="{% url 'studio:edit' 'pages' p.pk %}"><span class="st-dot on"></span><span><b>{{ p.page_name }}</b><small>/{{ p.page_tag }}/ &middot; created</small></span></a></li>{% endfor %}
+            {% for p in result.updated %}<li><a href="{% url 'studio:edit' 'pages' p.pk %}"><span class="st-dot"></span><span><b>{{ p.page_name }}</b><small>/{{ p.page_tag }}/ &middot; updated</small></span></a></li>{% endfor %}
+        </ul>
+        {% else %}
+        <div class="st-tablewrap"><table class="st-table st-table-preview">
+            <thead><tr><th>#</th><th>Status</th><th>Page</th><th class="st-hide-sm">Title</th><th class="st-hide-sm">Words</th><th>Notes</th></tr></thead>
+            <tbody>
+            {% for it in items %}
+                <tr class="st-row-{{ it.status }}">
+                    <td>{{ it.n }}</td>
+                    <td><span class="st-badge st-badge-{{ it.status }}">{% if it.status == 'new' %}New{% elif it.status == 'update' %}Update{% elif it.status == 'skip' %}Skip{% else %}Error{% endif %}</span></td>
+                    <td class="st-cell-title"><b>{{ it.values.page_name|default:"(no name)" }}</b><small>/{{ it.values.page_tag }}/</small></td>
+                    <td class="st-hide-sm st-cell-clip">{{ it.values.page_meta_title }}</td>
+                    <td class="st-hide-sm">{{ it.words }}</td>
+                    <td class="st-notes">{% for e in it.errors %}<span class="st-note bad">{{ e }}</span>{% endfor %}{% for w in it.warnings %}<span class="st-note warn">{{ w }}</span>{% endfor %}{% if not it.errors and not it.warnings %}<span class="st-note ok">Looks good</span>{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+        <div class="st-createbar">
+            <p class="st-muted">Pages that pass the checks will be created. Rows with errors are skipped.</p>
+            <button class="st-btn st-btn-primary st-btn-lg" type="submit" name="action" value="create" {% if summary.new|add:summary.update == 0 %}disabled{% endif %}><svg class="ico"><use href="#i-bolt"/></svg>Create {{ summary.new|add:summary.update }} page{{ summary.new|add:summary.update|pluralize }}</button>
+        </div>
+        {% endif %}
+    </section>
+    {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'assets/css/ai-agents.min.css' %}">
+<script type="application/ld+json">{{ faq_schema_json|safe }}</script>
+{% endblock %}
+
+{% block main %}
+<div class="inner-banner inner-bg4 aa-page-banner">
+    <div class="container">
+        <div class="inner-title text-center">
+            <span class="aa-eyebrow"><i class="aa-live" aria-hidden="true"></i> AI-powered marketing</span>
+            <h1>AI agents that grow your business</h1>
+            <p>Nine specialised AI agents research, audit, draft, advertise and report for you, while our human specialists direct the strategy and check the work that matters.</p>
+        </div>
+    </div>
+</div>
+
+{% include 'home/_ai_agents.html' with agents=agents on_agents_page=True %}
+
+<section class="aa-steps">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>How it works</span>
+            <h2>From brief to results in four steps</h2>
+        </div>
+        <div class="aa-step-grid pt-45">
+            {% for title, text in how_it_works %}
+            <div class="aa-step"><h3>{{ title }}</h3><p>{{ text }}</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="aa-principles">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>Our principles</span>
+            <h2>AI speed, human accountability</h2>
+        </div>
+        <div class="aa-pr-grid pt-45">
+            {% for title, text in principles %}
+            <div class="aa-pr"><h3>{{ title }}</h3><p>{{ text }}</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="aa-faq">
+    <div class="container">
+        <div class="section-title text-center">
+            <span>FAQs</span>
+            <h2>AI agents: common questions</h2>
+        </div>
+        <div class="row justify-content-center pt-45">
+            <div class="col-lg-9 aa-acc">
+                {% for q, a in faq %}
+                <details>
+                    <summary>{{ q }}<i class="bx bx-chevron-down" aria-hidden="true"></i></summary>
+                    <p>{{ a }}</p>
+                </details>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="aa-cta-band">
+    <div class="container">
+        <div class="aa-cta-box">
+            <div>
+                <h2>Ready to put AI agents to work?</h2>
+                <p>Tell us your goals and we will recommend the right agents and specialists for your business.</p>
+            </div>
+            <a href="{% url 'contact' %}" class="default-btn">Talk to our team</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'assets/js/ai-agents.min.js' %}" defer></script>
+{% endblock %}

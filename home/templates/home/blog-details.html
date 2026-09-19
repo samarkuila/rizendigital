@@ -117,7 +117,7 @@
                     <div class="widget widget-cta">
                         <h3>Need help growing organic traffic?</h3>
                         <p>Talk to our team about a free SEO and digital marketing consultation tailored to your business.</p>
-                        <a href="javascript:void(0);" class="default-btn" onclick="openModal()">Get in touch</a>
+                        <a href="{% url 'contact' %}" class="default-btn" onclick="openModal(); return false;" aria-haspopup="dialog">Get in touch</a>
                     </div>
 
                     {% if recent_posts %}

@@ -17,9 +17,11 @@ urlpatterns = [
     path('blog/', views.blog, name='blog'),
     path('blog/<str:page_tag>/', views.blog_detail, name='blog-detail'),
     path('case-studies/', views.case_studies, name='case_studies'),
+    path('google-algorithm-updates/', views.google_updates, name='google_updates'),
+    path('ai-agents/', views.ai_agents, name='ai_agents'),
     path('case-studies/<slug:slug>/', views.case_study_detail, name='case_study_detail'),
     path('locations/<slug:slug>/', views.location_detail, name='location_detail'),
-    path('digital-marketing/', RedirectView.as_view(url='/', permanent=False), name='digital-marketing'),
+    path('digital-marketing/', views.page_detail, {'page_tag': 'digital-marketing'}, name='digital-marketing'),
     path("get-in-touch/", views.get_in_touch, name="get_in_touch"),
     # SubService Dynamic Route
     path('<slug:service_slug>/<slug:subservice_slug>/', views.subservice_detail, name='subservice_detail'),

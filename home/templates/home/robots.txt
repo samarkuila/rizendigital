@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /studio/
 Disallow: /get-in-touch/
 
 Sitemap: https://www.rizendigital.com/sitemap.xml

@@ -1,0 +1,77 @@
+{% extends 'studio/base.html' %}
+{% load studio_tags %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="st-hero">
+    <div>
+        <p class="st-eyebrow">{% if hour < 12 %}Good morning{% elif hour < 18 %}Good afternoon{% else %}Good evening{% endif %}, {{ request.user.first_name|default:request.user.get_username }}</p>
+        <h1>Here&rsquo;s how your website is doing</h1>
+        <p class="st-muted">{{ drafts }} draft{{ drafts|pluralize }} waiting &middot; {{ cases }} case stud{{ cases|pluralize:"y,ies" }} &middot; {{ testimonials }} testimonial{{ testimonials|pluralize }}</p>
+    </div>
+    <div class="st-hero-actions">
+        <a class="st-btn st-btn-primary" href="{% url 'studio:new' 'blog' %}"><svg class="ico"><use href="#i-pen"/></svg>Write a post</a>
+        <a class="st-btn" href="{% url 'studio:bulk_locations' %}"><svg class="ico"><use href="#i-globe"/></svg>Bulk locations</a>
+    </div>
+</section>
+
+<section class="st-stats">
+    {% for s in stats %}
+    <a class="st-stat st-tone-{{ s.tone }}" href="{{ s.url }}">
+        <span class="st-stat-ico"><svg class="ico"><use href="#i-{{ s.icon }}"/></svg></span>
+        <span class="st-stat-num" data-count="{{ s.value }}">{{ s.value }}</span>
+        <span class="st-stat-label">{{ s.label }}</span>
+        <span class="st-stat-note">{{ s.note }}</span>
+    </a>
+    {% endfor %}
+</section>
+
+<section class="st-grid-2">
+    <article class="st-card">
+        <header class="st-card-h"><h2>Enquiries, last 14 days</h2><span class="st-pill">{{ spark_total }} total</span></header>
+        <div class="st-spark" role="img" aria-label="Enquiries per day for the last 14 days">
+            {% for d in spark %}<div class="st-spark-col" title="{{ d.day|date:'D j M' }}: {{ d.n }}"><i style="--h: {{ d.h }}%" class="{% if d.n %}on{% endif %}"></i><span>{{ d.day|date:"j" }}</span></div>{% endfor %}
+        </div>
+        <ul class="st-mini-list">
+            {% for l in recent_leads %}
+            <li><a href="{% url 'studio:edit' 'leads' l.pk %}"><span class="st-avatar st-avatar-sm">{{ l.full_name|slice:":1"|upper }}</span><span><b>{{ l.full_name }}</b><small>{{ l.get_select_service_display|default:"General enquiry" }} &middot; {{ l.added_date_time|timesince }} ago</small></span></a></li>
+            {% empty %}
+            <li class="st-empty-sm">No enquiries yet. They&rsquo;ll appear here when someone uses a contact form.</li>
+            {% endfor %}
+        </ul>
+    </article>
+
+    <article class="st-card">
+        <header class="st-card-h"><h2>SEO health</h2><span class="st-pill">{{ health_total }} pages checked</span></header>
+        <div class="st-health">
+            <div class="st-ring st-ring-{% if health_avg >= 85 %}good{% elif health_avg >= 60 %}ok{% else %}bad{% endif %}" style="--p: {{ health_avg }}"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52" pathLength="100"/></svg><div><b>{{ health_avg }}</b><span>average</span></div></div>
+            <p class="st-muted">Scores reflect meta titles and descriptions, content depth, FAQs, images and more. Fix the lowest first.</p>
+        </div>
+        <ul class="st-issues">
+            {% for h in health_worst %}
+            <li><a href="{% url 'studio:edit' h.kind h.obj.pk %}"><span class="st-score st-score-{{ h.grade }}">{{ h.score }}</span><span><b>{{ h.title }}</b><small>{{ h.label }} &middot; {{ h.issues.0.text }}</small></span></a></li>
+            {% empty %}
+            <li class="st-empty-sm">Everything looks healthy. Nice work.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+
+<section class="st-grid-2">
+    <article class="st-card">
+        <header class="st-card-h"><h2>Recently updated</h2></header>
+        <ul class="st-mini-list">
+            {% for r in recent %}
+            <li><a href="{% url 'studio:edit' r.kind r.pk %}"><span class="st-dot {% if r.live %}on{% endif %}"></span><span><b>{{ r.title }}</b><small>{{ r.label }} &middot; {{ r.when|timesince }} ago &middot; {% if r.live %}Live{% else %}Draft{% endif %}</small></span></a></li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="st-card st-card-tools">
+        <header class="st-card-h"><h2>Power tools</h2></header>
+        <a class="st-tool" href="{% url 'studio:bulk_locations' %}"><span class="st-tool-ico"><svg class="ico"><use href="#i-globe"/></svg></span><span><b>Bulk location pages</b><small>Pick services and paste a list of cities. Preview, then publish hundreds at once.</small></span></a>
+        <a class="st-tool" href="{% url 'studio:bulk_pages' %}"><span class="st-tool-ico"><svg class="ico"><use href="#i-stack"/></svg></span><span><b>Bulk pages</b><small>Import from a spreadsheet or generate pages from a template.</small></span></a>
+        <a class="st-tool" href="{% url 'studio:media' %}"><span class="st-tool-ico"><svg class="ico"><use href="#i-image"/></svg></span><span><b>Media library</b><small>Upload images once and reuse them anywhere.</small></span></a>
+        <a class="st-tool" href="{% url 'studio:settings' %}"><span class="st-tool-ico"><svg class="ico"><use href="#i-phone"/></svg></span><span><b>Contact details</b><small>Update phone, email, address and social links across the site.</small></span></a>
+    </article>
+</section>
+{% endblock %}

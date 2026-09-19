@@ -43,12 +43,11 @@ This files table contents are outlined below>>>>>
 /*================================================
 Default CSS
 =================================================*/
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400&display=swap');
 
 $body-font: 'Poppins', sans-serif;
 
 $main-color:#ff4a35;
-$paragraph-color: #75799b;
+$paragraph-color: #666a8c;
 $title-color:#070f4d;
 $color-blue:#4356d6;
 $color-white:#fff;
@@ -258,7 +257,7 @@ Section Title Style
 ===================================*/
 .section-title {
     span {
-        color: $main-color;
+        color: #d13823;
         font-weight: 600;
         line-height: 0;
         letter-spacing: 1.2px;
@@ -382,7 +381,7 @@ Navbar Area
         .navbar-nav {
             .nav-item {
                 &:hover a,.active {
-                    color: $main-color;
+                    color: #d13823;
                 }
                 a {
                     text-transform: capitalize;
@@ -394,10 +393,10 @@ Navbar Area
                         top: 3px;
                     }
                     &:hover, :focus {
-                        color: $main-color;
+                        color: #d13823;
                     }
                     &.active {
-                        color: $main-color !important;
+                        color: #d13823 !important;
                     }
                     &.active i {
                         -webkit-transform: rotate(90deg);
@@ -437,7 +436,7 @@ Navbar Area
                             &.active{
                                 background-color: #f3f3f3;
                                 border-radius: .25rem; 
-                                color: $main-color !important;
+                                color: #d13823 !important;
                             }
                             &::before {
                                 content: "";
@@ -454,14 +453,14 @@ Navbar Area
                                 width: 100%;
                             }
                             &:hover, :focus, .active{
-                                color: $main-color !important;
+                                color: #d13823 !important;
                                 letter-spacing: 0.5px;
                                 background-color: #f3f3f3;
                                 border-radius: .25rem;
                             }
                         }
                         &.active{
-                           color: $main-color !important;
+                           color: #d13823 !important;
                         }
                     }
                 }
@@ -530,7 +529,7 @@ Navbar Area
                 li{
                     a{
                         .active {
-                            color: $main-color;
+                            color: #d13823;
                         } 
                     }
                 }
@@ -567,7 +566,7 @@ Main Banner Style
     max-width: 550px;
     margin-left: auto;
     span {
-        color: $main-color;
+        color: #d13823;
         font-weight: 500;
         margin-bottom: 10px;
     }
@@ -763,7 +762,7 @@ Brand Area
 .brand-title {
     margin-bottom: 50px;
     span {
-        color: $main-color;
+        color: #d13823;
         font-weight: 500;
         line-height: 0;
     }
@@ -805,7 +804,7 @@ About Area
         margin-right: auto;
     }
     span {
-        color: $main-color;
+        color: #d13823;
         font-weight: 500;
         line-height: 0;
     }
@@ -1104,7 +1103,7 @@ Faq Area
     margin-right: auto;
     margin-left: 30px;
     span {
-        color: $main-color;
+        color: #d13823;
         font-weight: 500;
         line-height: 0;
     }
@@ -1209,7 +1208,7 @@ Faq Area
     p {
         margin-bottom: 50px;
         a {
-            color: $main-color;
+            color: #d13823;
             text-decoration: underline;
             &:hover {
                 color: $title-color;
@@ -1513,7 +1512,7 @@ Price Section
     }
     &:hover .get-btn  {
         background-color: $color-white;
-        color: $main-color;
+        color: #d13823;
     }
     &:hover ul li, &:hover .single-price-title  h2 {
         color: $color-white;
@@ -1526,7 +1525,7 @@ Price Section
     }
     &.current .get-btn  {
         background-color: $color-white;
-        color: $main-color;
+        color: #d13823;
     }
     &.current ul li, &.current .single-price-title  h2{
         color: $color-white;
@@ -1536,10 +1535,10 @@ Price Section
     }
     &.current .get-btn  {
         background-color: $color-white;
-        color: $main-color;
+        color: #d13823;
     }
     span {
-        color: $main-color;
+        color: #d13823;
         background-color: #fffbfb;
         padding: 10px 20px;
         border-radius: 50px;
@@ -1978,7 +1977,7 @@ Blog Card
         .read-btn {
             color: $color-blue;
             &:hover {
-                color: $main-color;
+                color: #d13823;
                 letter-spacing: .2px;
             }
         }
@@ -2187,7 +2186,7 @@ Header Area
             margin-right: 20px;
             font-weight: 400;
             &:hover {
-                color: $main-color;
+                color: #d13823;
             }
             a {
                 color: $color-white;
@@ -2295,7 +2294,7 @@ Banner Area
             display: inline-block;
             margin-left: 20px;
             .play-btn {
-                color: $main-color;
+                color: #d13823;
                 position: relative;
                 i {
                     position: relative;
@@ -2306,7 +2305,7 @@ Banner Area
                     text-align: center;
                     font-size: 35px;
                     border-radius: 50px;
-                    color: $main-color;
+                    color: #d13823;
                     background-color: $color-white;
                     margin-right: 10px;
                     transition: 0.7s;
@@ -2689,7 +2688,7 @@ Footer Area Another
             padding: 0;
             margin: 0;
             a {
-                color: $main-color;
+                color: #d13823;
                 font-weight: 500;
                 &:hover {
                     color: $color-white;
@@ -2729,7 +2728,7 @@ Home Page Three Style
                 font-size: 16px;
                 position: relative;
                 top: -5px;
-                color: #75799b;
+                color: #666a8c;
                 font-weight: 600;
                 border-radius: 3px;
                 width: 40px;
@@ -2793,7 +2792,7 @@ Home Page Three Style
                                 box-shadow: none;
                             }
                             &:focus {
-                                color: $main-color;
+                                color: #d13823;
                             }
                         }
                     }
@@ -2805,10 +2804,10 @@ Home Page Three Style
                 font-size: 16px;
                 color: #000000;
                 &:hover {
-                    color: $main-color;
+                    color: #d13823;
                 }
                 &:hover i {
-                    color: $main-color;
+                    color: #d13823;
                 }
             }
             .close-btn {
@@ -2821,7 +2820,7 @@ Home Page Three Style
                     font-size: 20px;
                 }
                 &:hover {
-                    color: $main-color;
+                    color: #d13823;
                 }
                 &.active {
                     display: block;
@@ -2851,7 +2850,7 @@ Home Page Three Style
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             text-align: center;
             &:hover {
-                color: $main-color;
+                color: #d13823;
             }
         }
     }
@@ -2922,7 +2921,7 @@ Home Page Three Style
                             font-weight: 600;
                             text-transform: capitalize;
                             &:hover {
-                                color: $main-color;
+                                color: #d13823;
                             }
                         }
                     }
@@ -2996,7 +2995,7 @@ Home Page Three Style
                                 }
                             }
                             &:hover {
-                                color: $main-color;
+                                color: #d13823;
                             }
                         }
                         &:hover {
@@ -3097,7 +3096,7 @@ Inner Banner
         position: relative;
         span {
             display: inline-block;
-            color: $main-color;
+            color: #d13823;
             font-weight: 600;
             letter-spacing: 1.2px;
             text-transform: uppercase;
@@ -3132,7 +3131,7 @@ Inner Banner
             margin: 0;
             li {
                 font-size: 18px;
-                color: $main-color;
+                color: #d13823;
                 display: inline-block;
                 margin-right: 10px;
                 &:last-child {
@@ -3145,7 +3144,7 @@ Inner Banner
                 a {
                     color: $color-white;
                     &:hover {
-                        color: $main-color;
+                        color: #d13823;
                     }
                 }
             }
@@ -3189,7 +3188,7 @@ Pagination Area
     margin-bottom: 30px;
     display: table;
     .page-link {
-        color: $main-color;
+        color: #d13823;
         background-color: #ffffff;
         box-shadow: 0 0 15px #d0d0d0;
         width: 40px;
@@ -3391,7 +3390,7 @@ Blog Details Page
                 display: none;
             }
             &::before {
-                color: $main-color;
+                color: #d13823;
                 content: "\ee83";
                 position: absolute;
                 left: 50px;
@@ -3438,13 +3437,13 @@ Blog Details Page
                 color: #666666;
                 font-weight: 600;
                 &:hover {
-                    color: $main-color;
+                    color: #d13823;
                 }
             }
         }
         span {
             display: inline-block;
-            color: $main-color;
+            color: #d13823;
             font-size: 20px;
             margin-right: 5px;
             position: relative;
@@ -3788,7 +3787,7 @@ Blog Details Page
                         font-size: 13px;
                     }
                     &:hover {
-                        color: $main-color;
+                        color: #d13823;
                     }
                 }
             }              
@@ -3848,7 +3847,7 @@ Blog Details Interactive Enhancements
     a {
         color: rgba(255, 255, 255, 0.75);
         &:hover {
-            color: $main-color;
+            color: #d13823;
         }
     }
     i {
@@ -3881,7 +3880,7 @@ Blog Details Interactive Enhancements
         font-size: 14px;
         font-weight: 500;
         i {
-            color: $main-color;
+            color: #d13823;
             font-size: 16px;
         }
     }
@@ -3905,7 +3904,7 @@ Blog Details Interactive Enhancements
             display: none;
         }
         i:first-child {
-            color: $main-color;
+            color: #d13823;
             margin-right: 8px;
             font-size: 20px;
         }
@@ -3942,7 +3941,7 @@ Blog Details Interactive Enhancements
             border-bottom: none;
             transition: color 0.25s $ease-standard, padding-left 0.25s $ease-standard;
             &:hover, &.active {
-                color: $main-color;
+                color: #d13823;
                 padding-left: 4px;
             }
         }
@@ -4068,7 +4067,7 @@ Contact Page
             a {
                 color: $title-color;
                 &:hover {
-                    color: $main-color;
+                    color: #d13823;
                 }
             }
         }
@@ -4134,7 +4133,7 @@ Contact Page
     .forget {
         margin-bottom: 15px;
         float: right;
-        color: $main-color;
+        color: #d13823;
         font-weight: 600;
         &:hover {
             color: $color-blue;
@@ -4144,14 +4143,14 @@ Contact Page
         margin-top: 25px;
         font-weight: 600;
         a {
-            color: $main-color;
+            color: #d13823;
             &:hover {
                 color: $color-blue;
             }
         }
     }
     .recover-login {
-        color: $main-color;
+        color: #d13823;
         font-weight: 600;
         &:hover {
             color: $color-blue;
@@ -4160,7 +4159,7 @@ Contact Page
     .recover-register {
         font-weight: 600;
         a {
-            color: $main-color;
+            color: #d13823;
             &:hover {
                 color: $color-blue;
             }
@@ -4317,7 +4316,7 @@ Single Content CSS
         font-weight: 500;
         border-bottom: 1px solid rgba(67, 86, 214, 0.35);
         &:hover {
-            color: $main-color;
+            color: #d13823;
             border-color: $main-color;
         }
     }
@@ -4346,13 +4345,13 @@ Single Content CSS End
             color: $paragraph-color;
             span {
                 
-                color: $main-color;
+                color: #d13823;
             }
         }
         h3 {
             margin: 50px 0 0;
             position: relative;
-            color: $main-color;
+            color: #d13823;
         }
         p {
             margin: 20px 0 20px;
@@ -4699,3 +4698,51 @@ Animation CSS
 /*==================================
 Animation CSS End
 ====================================*/
+
+/*================================
+Accessibility & performance additions
+==================================*/
+img { height: auto; }
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: -64px;
+    z-index: 10000;
+    background: #070f4d;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 10px; color: #fff; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .accordion-title:focus-visible {
+    outline: 3px solid #4356d6;
+    outline-offset: 2px;
+}
+#contactModal .close-btn {
+    background: transparent;
+    border: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+.member-shape-2 img, .about-shape img { object-fit: contain; }
+
+/* Pricing cards: keep text readable on the highlighted / hovered (blue) card */
+.single-price.current .single-price-title p,
+.single-price:hover .single-price-title p,
+.single-price.current > p,
+.single-price:hover > p { color: rgba(255, 255, 255, 0.92); }
+.single-price.current ul .color-gray,
+.single-price:hover ul .color-gray { color: rgba(255, 255, 255, 0.75); }
+.single-price ul li.color-gray { color: #6f7492; text-decoration: line-through; }
+.single-price.current ul li.color-gray,
+.single-price:hover ul li.color-gray { text-decoration: line-through; }
+/* Hero headline: fluid size so a longer, keyword-rich H1 still sits comfortably */
+.banner-text h1 { font-size: clamp(1.9rem, 3vw, 2.75rem); line-height: 1.18; }
+
+/* Decorative background layers must never intercept clicks (they were covering the FAQ questions) */
+.faq-bg::before, .faq-bg::after, .faq-bg-into::before { pointer-events: none; }
+.faq-bg .container { position: relative; z-index: 2; }
+
+/* Scroll anchoring off: the FAQ script holds the clicked question in place itself */
+html, body { overflow-anchor: none; }

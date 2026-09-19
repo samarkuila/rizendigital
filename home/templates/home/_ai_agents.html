@@ -1,0 +1,75 @@
+{% load static %}
+<section class="aa-section" id="ai-agents" aria-labelledby="aa-title">
+    <div class="aa-bg" aria-hidden="true">
+        <span class="aa-orb aa-orb-1"></span><span class="aa-orb aa-orb-2"></span><span class="aa-orb aa-orb-3"></span><span class="aa-grid"></span>
+    </div>
+    <div class="container aa-wrap">
+        <header class="aa-head">
+            <span class="aa-eyebrow"><i class="aa-live" aria-hidden="true"></i> Our AI agents</span>
+            <h2 id="aa-title">Meet the AI agents behind your growth</h2>
+            <p>Nine specialised agents handle research, audits, drafts, ads and reporting, so our human specialists can focus on strategy, creativity and results. Pick an agent to see what it does.</p>
+        </header>
+
+        <div class="aa-app" data-aa>
+            <div class="aa-roster" role="tablist" aria-orientation="vertical" aria-label="Choose an AI agent">
+                {% for a in agents %}
+                <button type="button" role="tab" class="aa-pick" id="aa-tab-{{ a.slug }}" aria-controls="aa-panel-{{ a.slug }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %} data-slug="{{ a.slug }}" style="--ac: {{ a.color }}">
+                    <img src="{% static 'assets/img/agents/'|add:a.slug|add:'.svg' %}" width="52" height="52" alt="" loading="lazy" decoding="async">
+                    <span class="aa-pick-txt"><b>{{ a.name }}</b><small>{{ a.role }}</small></span>
+                    <i class="aa-pick-dot" aria-hidden="true"></i>
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="aa-stage">
+                {% for a in agents %}
+                <article class="aa-panel" role="tabpanel" id="aa-panel-{{ a.slug }}" aria-labelledby="aa-tab-{{ a.slug }}" style="--ac: {{ a.color }}" {% if not forloop.first %}hidden{% endif %}>
+                    <div class="aa-hero">
+                        <div class="aa-avatar-wrap">
+                            <div class="aa-avatar" data-tilt>
+                                <img src="{% static 'assets/img/agents/'|add:a.slug|add:'.svg' %}" width="400" height="400" alt="{{ a.name }}, the {{ a.role }}" {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
+                            </div>
+                            <span class="aa-status"><i aria-hidden="true"></i> Online</span>
+                        </div>
+                        <div class="aa-info">
+                            <span class="aa-service">{{ a.service }}</span>
+                            <h3>{{ a.name }}</h3>
+                            <p class="aa-role">{{ a.role }}</p>
+                            <p class="aa-tagline">{{ a.tagline }}</p>
+                            <p class="aa-desc">{{ a.description }}</p>
+                        </div>
+                    </div>
+
+                    <div class="aa-cols">
+                        <div class="aa-do">
+                            <h4>What {{ a.name }} does</h4>
+                            <ul class="aa-tasks">
+                                {% for t in a.tasks %}<li>{{ t }}</li>{% endfor %}
+                            </ul>
+                            <div class="aa-chips" aria-label="Works with">
+                                {% for t in a.tools %}<span>{{ t }}</span>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="aa-term" role="group" aria-label="Sample run for {{ a.name }} (illustrative)">
+                            <div class="aa-term-bar">
+                                <i></i><i></i><i></i>
+                                <span>{{ a.name|lower }} &middot; sample run</span>
+                                <button type="button" class="aa-replay" aria-label="Replay {{ a.name }}'s sample run">&#8635; Replay</button>
+                            </div>
+                            <ol class="aa-lines">
+                                {% for l in a.console %}<li>{{ l }}</li>{% endfor %}
+                            </ol>
+                            <p class="aa-term-note">Illustrative example, not real client data.</p>
+                        </div>
+                    </div>
+
+                    <div class="aa-cta">
+                        <a href="{% url 'contact' %}" class="default-btn">Put {{ a.name }} to work</a>
+                        {% if not on_agents_page %}<a href="{% url 'ai_agents' %}#aa-{{ a.slug }}" class="aa-more">Meet all the agents &rarr;</a>{% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>

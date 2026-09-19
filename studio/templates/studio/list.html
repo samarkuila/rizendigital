@@ -1,0 +1,99 @@
+{% extends 'studio/base.html' %}
+{% load studio_tags %}
+{% block title %}{{ cfg.plural }}{% endblock %}
+
+{% block content %}
+<header class="st-page-h">
+    <div>
+        <h1>{{ cfg.plural }} <span class="st-count">{{ total }}</span></h1>
+        <p class="st-muted">{{ cfg.blurb }}</p>
+    </div>
+    <div class="st-page-actions">
+        <a class="st-btn" href="{% url 'studio:export' kind %}?{{ querystring }}"><svg class="ico"><use href="#i-download"/></svg>Export CSV</a>
+        {% if kind == 'locations' %}<a class="st-btn" href="{% url 'studio:bulk_locations' %}"><svg class="ico"><use href="#i-globe"/></svg>Bulk create</a>{% endif %}
+        {% if kind == 'pages' %}<a class="st-btn" href="{% url 'studio:bulk_pages' %}"><svg class="ico"><use href="#i-stack"/></svg>Bulk create</a>{% endif %}
+        {% if not cfg.readonly %}<a class="st-btn st-btn-primary" href="{% url 'studio:new' kind %}"><svg class="ico"><use href="#i-plus"/></svg>New {{ cfg.label|lower }}</a>{% endif %}
+    </div>
+</header>
+
+<form class="st-toolbar" method="get" role="search">
+    <label class="st-search-in"><svg class="ico"><use href="#i-search"/></svg><input type="search" name="q" value="{{ q }}" placeholder="Search {{ cfg.plural|lower }}&hellip;" aria-label="Search {{ cfg.plural }}"></label>
+    {% if counts %}
+    <div class="st-seg" role="group" aria-label="Filter by status">
+        <a href="?{% if q %}q={{ q }}{% endif %}" class="{% if not status %}on{% endif %}">All <i>{{ counts.all }}</i></a>
+        <a href="?status=published{% if q %}&q={{ q }}{% endif %}" class="{% if status == 'published' %}on{% endif %}">Published <i>{{ counts.published }}</i></a>
+        <a href="?status=draft{% if q %}&q={{ q }}{% endif %}" class="{% if status == 'draft' %}on{% endif %}">Drafts <i>{{ counts.draft }}</i></a>
+    </div>
+    {% endif %}
+    {% for f in filters %}
+    <select name="{{ f.param }}" class="st-select st-select-sm" aria-label="{{ f.label }}" onchange="this.form.submit()">
+        <option value="">{{ f.label }}: all</option>
+        {% for v, l in f.choices %}<option value="{{ v }}" {% if f.value == v|stringformat:"s" %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select>
+    {% endfor %}
+    {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+    <button class="st-btn" type="submit">Search</button>
+    {% if q or status or filters and request.GET %}<a class="st-link-sm" href="{% url 'studio:list' kind %}">Clear</a>{% endif %}
+</form>
+
+<form method="post" action="{% url 'studio:bulk' kind %}" id="st-bulk-form" class="st-tablecard">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <div class="st-bulkbar" data-bulkbar hidden>
+        <span><b data-bulk-count>0</b> selected</span>
+        {% if cfg.has_status %}
+        <button class="st-btn st-btn-sm" name="action" value="publish"><svg class="ico"><use href="#i-check"/></svg>Publish</button>
+        <button class="st-btn st-btn-sm" name="action" value="unpublish">Move to draft</button>
+        {% endif %}
+        <button class="st-btn st-btn-sm" name="action" value="export"><svg class="ico"><use href="#i-download"/></svg>Export</button>
+        {% if not cfg.readonly or kind == 'leads' %}<button class="st-btn st-btn-sm st-btn-danger-o" name="action" value="delete" data-confirm="Delete the selected items? This cannot be undone." data-confirm-ok="Delete"><svg class="ico"><use href="#i-trash"/></svg>Delete</button>{% endif %}
+    </div>
+
+    {% if rows %}
+    <div class="st-tablewrap">
+    <table class="st-table">
+        <thead>
+            <tr>
+                <th class="st-col-check"><input type="checkbox" data-check-all aria-label="Select all"></th>
+                <th>{{ cfg.label }}</th>
+                {% if cfg.has_status %}<th>Status</th>{% endif %}
+                {% for c in columns %}<th class="st-hide-sm">{{ c }}</th>{% endfor %}
+                {% if kind in 'pages blog locations cases' %}<th class="st-hide-sm" title="Search-readiness score">SEO</th>{% endif %}
+                <th class="st-col-actions"><span class="st-sr">Actions</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr>
+                <td class="st-col-check"><input type="checkbox" name="ids" value="{{ r.obj.pk }}" data-row-check aria-label="Select {{ r.title }}"></td>
+                <td class="st-cell-title"><a href="{% url 'studio:edit' kind r.obj.pk %}"><b>{{ r.title }}</b></a><small>{{ r.subtitle }}</small></td>
+                {% if cfg.has_status %}<td><span class="st-status {% if r.live %}live{% endif %}">{% if r.live %}Published{% else %}Draft{% endif %}</span></td>{% endif %}
+                {% for c in r.cells %}<td class="st-hide-sm">{{ c }}</td>{% endfor %}
+                {% if r.seo %}<td class="st-hide-sm"><span class="st-score st-score-{{ r.seo.grade }}" title="{% for i in r.seo.issues %}{{ i.text }}{% if not forloop.last %}; {% endif %}{% empty %}No issues found{% endfor %}">{{ r.seo.score }}</span></td>{% endif %}
+                <td class="st-col-actions">
+                    {% if r.public and r.live is not False %}<a class="st-icon-btn" href="{{ r.public }}" target="_blank" rel="noopener" title="View live" aria-label="View {{ r.title }} live"><svg class="ico"><use href="#i-eye"/></svg></a>{% endif %}
+                    <a class="st-icon-btn" href="{% url 'studio:edit' kind r.obj.pk %}" title="{% if cfg.readonly %}Open{% else %}Edit{% endif %}" aria-label="Edit {{ r.title }}"><svg class="ico"><use href="#i-{% if cfg.readonly %}eye{% else %}pen{% endif %}"/></svg></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div class="st-empty">
+        <div class="st-empty-ico"><svg class="ico"><use href="#i-{{ cfg.icon }}"/></svg></div>
+        <h2>{% if q or status %}Nothing matches your filters{% else %}No {{ cfg.plural|lower }} yet{% endif %}</h2>
+        <p class="st-muted">{% if q or status %}Try a different search or clear the filters.{% else %}{{ cfg.blurb }}{% endif %}</p>
+        {% if not cfg.readonly %}<a class="st-btn st-btn-primary" href="{% url 'studio:new' kind %}"><svg class="ico"><use href="#i-plus"/></svg>Create the first one</a>{% endif %}
+    </div>
+    {% endif %}
+</form>
+
+{% if page.paginator.num_pages > 1 %}
+<nav class="st-pager" aria-label="Pagination">
+    {% if page.has_previous %}<a href="?{{ querystring }}&page={{ page.previous_page_number }}">&larr; Previous</a>{% endif %}
+    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?{{ querystring }}&page={{ page.next_page_number }}">Next &rarr;</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

@@ -592,7 +592,9 @@
   background-color: #080808;
 }
 
-.theme-dark .footer-list-2 h3 {
+.theme-dark .footer-list-2 h3,
+
+.theme-dark .footer-list-2 h2 {
   color: #ffffff;
 }
 

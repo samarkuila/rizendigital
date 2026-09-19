@@ -1,0 +1,34 @@
+{% extends 'studio/base.html' %}
+{% block title %}{{ obj.full_name }}{% endblock %}
+{% block content %}
+<header class="st-editor-h">
+    <a class="st-back" href="{% url 'studio:list' kind %}"><svg class="ico"><use href="#i-arrow-left"/></svg>Enquiries</a>
+    <div class="st-editor-title"><h1>{{ obj.full_name }}</h1></div>
+    <div class="st-editor-actions">
+        <a class="st-btn st-btn-primary" href="mailto:{{ obj.email }}"><svg class="ico"><use href="#i-mail"/></svg>Reply by email</a>
+        <button class="st-btn st-btn-danger-o" type="submit" form="st-delete-form" data-confirm="Delete this enquiry permanently?" data-confirm-ok="Delete"><svg class="ico"><use href="#i-trash"/></svg>Delete</button>
+    </div>
+</header>
+<div class="st-editor-grid">
+    <div class="st-editor-main">
+        <section class="st-card st-group">
+            <header class="st-card-h"><h2>Message</h2><span class="st-pill">{{ obj.added_date_time|date:"j M Y, H:i" }}</span></header>
+            {% if obj.subject %}<p><b>{{ obj.subject }}</b></p>{% endif %}
+            <p class="st-message">{{ obj.message|default:"(No message. Submitted through the quick enquiry form.)"|linebreaksbr }}</p>
+        </section>
+    </div>
+    <aside class="st-editor-side">
+        <section class="st-card st-group">
+            <header class="st-card-h"><h2>Contact</h2></header>
+            <dl class="st-dl">
+                <dt>Email</dt><dd><a href="mailto:{{ obj.email }}">{{ obj.email }}</a></dd>
+                <dt>Phone</dt><dd><a href="tel:{{ obj.phone_number }}">{{ obj.phone_number }}</a></dd>
+                <dt>Company</dt><dd>{{ obj.company_name|default:"—" }}</dd>
+                <dt>Website</dt><dd>{% if obj.website_url %}<a href="{{ obj.website_url }}" target="_blank" rel="noopener nofollow">{{ obj.website_url }}</a>{% else %}—{% endif %}</dd>
+                <dt>Interested in</dt><dd>{{ obj.get_select_service_display|default:"—" }}</dd>
+            </dl>
+        </section>
+    </aside>
+</div>
+<form method="post" action="{% url 'studio:delete' kind obj.pk %}" id="st-delete-form">{% csrf_token %}</form>
+{% endblock %}

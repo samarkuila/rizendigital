@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import BlogPost, CaseStudy, LocationPage, Page, SubService, Service, Testimonial
+import json
 import logging
 import re
 from django.template import Engine, Context
@@ -10,7 +11,48 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
+from . import ai_agents_data as aad
+from . import google_updates_data as gud
+
 logger = logging.getLogger(__name__)
+
+
+def _gu_home_tabs():
+    """Tab data for the Google-updates teaser on the home page."""
+    ups = gud.build_updates()
+    def pick(types=None):
+        rows = [u for u in ups if not types or u['type'] in types]
+        return rows[:3]
+    return [
+        ('latest', 'Latest', pick()),
+        ('core', 'Core updates', pick(['core'])),
+        ('spam', 'Spam & policy', pick(['spam'])),
+        ('quality', 'Content quality', pick(['quality', 'reviews'])),
+        ('ai', 'AI & Discover', pick(['ai'])),
+    ]
+
+
+def seo_extras(request, obj, og_type='website'):
+    """Per-page SEO settings from Rizen Studio: robots, canonical and social-share tags."""
+    if obj is None:
+        return {}
+    image = ''
+    if getattr(obj, 'og_image', None) and obj.og_image.name:
+        image = obj.og_image.url
+    else:
+        for field in ('featured_image', 'image'):
+            f = getattr(obj, field, None)
+            if f and getattr(f, 'name', ''):
+                image = f.url
+                break
+    return {
+        'seo_robots': 'noindex,follow' if getattr(obj, 'seo_noindex', False) else '',
+        'seo_canonical': getattr(obj, 'seo_canonical', '') or '',
+        'og_title': getattr(obj, 'og_title', '') or '',
+        'og_description': getattr(obj, 'og_description', '') or '',
+        'og_image_url': request.build_absolute_uri(image) if image else '',
+        'og_type': og_type,
+    }
 
 
 # Home View
@@ -19,9 +61,12 @@ def home(request):
     recent_posts = BlogPost.objects.filter(is_published=True)[:3]
     testimonials = Testimonial.objects.filter(is_published=True)
     return render(request, 'home/index.html', {
+        'gu_tabs': _gu_home_tabs(),
+        'ai_agents': aad.AGENTS,
         'pages': pages,
         'recent_posts': recent_posts,
         'testimonials': testimonials,
+        **seo_extras(request, pages),
     })
 
 
@@ -59,6 +104,7 @@ def page_detail(request, page_tag):
         'service': service,
         'subservice': subservice,
         'parent_service': service,
+        **seo_extras(request, page),
     })
 
 
@@ -82,6 +128,7 @@ def subservice_detail(request, service_slug, subservice_slug):
         'subservice_slug': subservice_slug,
         'subservice': subservice,
         'parent_service': subservice.service,
+        **seo_extras(request, page),
     })
 
 
@@ -136,6 +183,7 @@ def blog_detail(request, page_tag):
         'breadcrumb_items': breadcrumb_items,
         'seo_title': post.meta_title or post.title,
         'seo_description': post.meta_description or post.excerpt,
+        **seo_extras(request, post, 'article'),
     })
 
 
@@ -156,6 +204,7 @@ def case_study_detail(request, slug):
         'related_studies': related_studies,
         'seo_title': study.meta_title or f'{study.client_name} Case Study | Rizen Digital',
         'seo_description': study.meta_description or study.summary,
+        **seo_extras(request, study, 'article'),
     })
 
 
@@ -169,6 +218,7 @@ def location_detail(request, slug):
         'location_page': location_page,
         'seo_title': location_page.meta_title,
         'seo_description': location_page.meta_description,
+        **seo_extras(request, location_page),
     })
 
 
@@ -233,12 +283,57 @@ def get_in_touch(request):
     return redirect('contact')
 
 
+def google_updates(request):
+    """Interactive Google algorithm / core update history and readiness tools."""
+    updates = gud.build_updates()
+    faq_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+            {'@type': 'Question', 'name': q,
+             'acceptedAnswer': {'@type': 'Answer', 'text': a}}
+            for q, a in gud.FAQ
+        ],
+    }
+    return render(request, 'home/google_updates.html', {
+        'seo_title': 'Google Algorithm Updates: Interactive Core Update Timeline & SEO Guide | Rizen Digital',
+        'seo_description': 'Explore every major Google algorithm and core update from Florida to 2026 in an interactive timeline, find which updates affect your site, and check your core-update readiness.',
+        'updates': updates,
+        'types': gud.TYPES,
+        'types_json': {k: {'label': t['label'], 'blurb': t['blurb'], 'todo': t['todo']} for k, t in gud.TYPES.items()},
+        'type_list': [{'key': k, 'label': t['label'], 'count': sum(1 for u in updates if u['type'] == k)} for k, t in gud.TYPES.items()],
+        'years': gud.year_counts(updates),
+        'checklist': gud.CHECKLIST,
+        'checklist_total': sum(len(items) for _, _, items in gud.CHECKLIST),
+        'finder': gud.FINDER,
+        'core_steps': gud.CORE_STEPS,
+        'self_assessment': gud.SELF_ASSESSMENT,
+        'playbook': gud.PLAYBOOK,
+        'faq': gud.FAQ,
+        'faq_schema_json': json.dumps(faq_schema).replace('<', '\u003c').replace('>', '\u003e').replace('&', '\u0026'),
+        'last_reviewed': gud.LAST_REVIEWED,
+        'history_url': gud.HISTORY_URL,
+        'core_count': sum(1 for u in updates if u['type'] == 'core'),
+        'first_year': min(u['year'] for u in updates),
+    })
 
 
-
-
-
-
-    
-
-
+def ai_agents(request):
+    """AI agent roster and how the agents work with our specialists."""
+    faq_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+            {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}}
+            for q, a in aad.FAQ
+        ],
+    }
+    return render(request, 'home/ai_agents.html', {
+        'seo_title': 'AI Agents for SEO & Digital Marketing | Meet Our Agent Team | Rizen Digital',
+        'seo_description': 'Meet the AI agents behind Rizen Digital: SEO research, technical audits, content, social media, paid ads, analytics, creative, web development and lead response.',
+        'agents': aad.AGENTS,
+        'how_it_works': aad.HOW_IT_WORKS,
+        'principles': aad.PRINCIPLES,
+        'faq': aad.FAQ,
+        'faq_schema_json': json.dumps(faq_schema).replace('<', '\u003c').replace('>', '\u003e').replace('&', '\u0026'),
+    })

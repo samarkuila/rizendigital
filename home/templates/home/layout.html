@@ -10,22 +10,22 @@
         <meta name="author" content="Rizen Digital">
     	    <meta name="keywords" content="{% firstof pages.page_meta_keyword 'SEO agency, digital marketing agency, SEO services, Kolkata' %}">
         <title>{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}</title>
-    	    <link rel="canonical" href="{{ canonical_url }}">
+    	    <link rel="canonical" href="{% firstof seo_canonical canonical_url %}">
     	    <link rel="icon" href="{% static 'assets/img/favicon.png' %}" sizes="16x16">
-    	    <meta name="robots" content="index,follow">
+    	    <meta name="robots" content="{% firstof seo_robots 'index,follow' %}">
 	
 	    <!-- OG Meta Tags -->
-        <meta property="og:title" content="{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
-        <meta property="og:description" content="{% firstof seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
-	    <meta property="og:url" content="{{ canonical_url }}" />
+        <meta property="og:title" content="{% firstof og_title seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
+        <meta property="og:description" content="{% firstof og_description seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
+	    <meta property="og:url" content="{% firstof seo_canonical canonical_url %}" />
 	    <meta property="og:site_name" content="Rizen Digital"/>
 	    <meta property="og:locale" content="en_US" />
-	    <meta property="og:type" content="website" />	
-	    <meta property="og:image" content="{% static 'assets/img/logo.png' %}" />
+	    <meta property="og:type" content="{% firstof og_type 'website' %}" />	
+	    <meta property="og:image" content="{% if og_image_url %}{{ og_image_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/img/logo.png' %}{% endif %}" />
 	    <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="{% firstof seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
-        <meta name="twitter:description" content="{% firstof seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
-	    <meta name="twitter:image" content="{% static 'assets/img/logo.png' %}" />
+        <meta name="twitter:title" content="{% firstof og_title seo_title pages.page_meta_title 'Rizen Digital | SEO and Digital Marketing Agency' %}" />
+        <meta name="twitter:description" content="{% firstof og_description seo_description pages.page_meta_description 'Rizen Digital helps ambitious businesses grow through measurable SEO, digital marketing, and web development services.' %}" />
+	    <meta name="twitter:image" content="{% if og_image_url %}{{ og_image_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/img/logo.png' %}{% endif %}" />
 
         <script type="application/ld+json">
             {
@@ -72,34 +72,36 @@
 
         {% if pages and pages.schema_tag_text %}{{ pages.schema_tag_text|safe }}{% endif %}
         
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet"> 
-        <!-- Owl Carousel CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}" rel="stylesheet">
-        <!-- Magnific Popup CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.min.css' %}" rel="stylesheet">
-        <!-- Animate Min CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet">
-        <!-- Boxicons CSS --> 
-        <link rel="stylesheet" href="{% static 'assets/css/boxicons.min.css' %}" rel="stylesheet">
-        <!-- Flaticon CSS -->
-        <link rel="stylesheet" href="{% static 'assets/fonts/flaticon.css' %}" rel="stylesheet">
-        <!-- Meanmenu CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}" rel="stylesheet">
-        <!-- Style CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-        <!-- Responsive CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
-        <!-- Theme Dark CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/theme-dark.css' %}" rel="stylesheet">
+        <!-- Fonts: self-hosted Poppins (no external request), icon fonts use font-display: swap -->
+        <link rel="preload" href="{% static 'assets/fonts/poppins-400.woff2' %}" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="{% static 'assets/fonts/poppins-600.woff2' %}" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="{% static 'assets/css/poppins.css' %}">
+        <!-- Critical CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/boxicons.subset.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/fonts/flaticon.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/style.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/responsive.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/theme-dark.min.css' %}">
+        <!-- Non-critical CSS (scroll animations / video popup): loaded without blocking first paint -->
+        <link rel="preload" href="{% static 'assets/css/animate.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="preload" href="{% static 'assets/css/magnific-popup.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript>
+            <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+            <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.min.css' %}">
+        </noscript>
 
-                <!-- Title -->       
+        {% block extra_head %}{% endblock %}
+        <!-- Title -->       
 
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
     </head>
     <body>
+        <a class="skip-link" href="#main-content">Skip to main content</a>
         <!-- Start Preloader -->
         <div class="preloader">
             <div class="preloader-wave"></div>
@@ -114,7 +116,7 @@
                         <div class="header-content-right">
                             <ul class="header-contact">
                                
-                                <li><a href="mailto:admin@rizendigital.com"><i class="flaticon-paper-plane"></i> admin@rizendigital.com</a></li>
+                                <li><a href="mailto:{{ site_email }}"><i class="flaticon-paper-plane"></i> {{ site_email }}</a></li>
                                 {% if site_phone %}<li><a href="tel:{{ site_phone }}"><i class="flaticon-call"></i> {{ site_phone_display }}</a></li>{% endif %}
                             </ul>
                         </div>
@@ -141,8 +143,8 @@
             <!-- Menu For Mobile Device -->
              <div class="mobile-nav">
                 <a href="{% url 'home' %}" class="logo">
-                    <img src="{% static 'assets/img/logo.png' %}" class="logo-one" alt="Rizen Digital -logo" title="Rizen Digital- Digital Marketing Company">
-                    <img src="{% static 'assets/img/sticky-logo.png' %}" class="logo-two" alt="Rizen Digital -logo" title="Rizen Digital- Internet Marketing Company near me">
+                    <img src="{% static 'assets/img/logo.webp' %}" class="logo-one" alt="Rizen Digital -logo" title="Rizen Digital- Digital Marketing Company" width="146" height="46">
+                    <img src="{% static 'assets/img/sticky-logo.webp' %}" class="logo-two" alt="Rizen Digital -logo" title="Rizen Digital- Internet Marketing Company near me" width="146" height="46">
                 </a>
             </div>
 
@@ -151,16 +153,16 @@
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light ">
                         <a class="navbar-brand" href="{% url 'home' %}">
-                            <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                            <img src="{% static 'assets/img/logo.webp' %}" alt="Logo" width="146" height="46">
                         </a>
                         <a class="navbar-brand-sticky" href="{% url 'home' %}">
-                            <img src="{% static 'assets/img/sticky-logo.png' %}" alt="Logo">
+                            <img src="{% static 'assets/img/sticky-logo.webp' %}" alt="Logo" width="146" height="46">
                         </a>
 
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                             <ul class="navbar-nav m-auto">
                                 <li class="nav-item">
-                                    <a href="{% url 'home' %}" class="nav-link active">
+                                    <a href="{% url 'home' %}" class="nav-link{% if request.path == '/' %} active{% endif %}"{% if request.path == '/' %} aria-current="page"{% endif %}>
                                         Home                                         
                                     </a>
                                 </li>
@@ -208,8 +210,13 @@
                                     
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{% url 'about' %}" class="nav-link">
+                                    <a href="{% url 'about' %}" class="nav-link{% if 'about' in request.path %} active{% endif %}">
                                         About
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'ai_agents' %}" class="nav-link{% if 'ai-agents' in request.path %} active{% endif %}">
+                                        AI Agents
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -228,16 +235,15 @@
                                                 Case Studies
                                             </a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a href="{% url 'google_updates' %}" class="nav-link">
+                                                Google Updates
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
 <li class="nav-item">
-                                    <a href="{% url 'terms_condition' %}" class="nav-link">
-                                        Terms & Conditions
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="{% url 'contact' %}" class="nav-link">
+                                    <a href="{% url 'contact' %}" class="nav-link{% if 'contact' in request.path %} active{% endif %}">
                                         Contact
                                     </a>
                                 </li>
@@ -245,17 +251,17 @@
 
                             <!-- Button Trigger -->
                                 <div class="menu-btn">
-                                    <a href="javascript:void(0);" class="seo-btn" onclick="openModal()">Get Touch with Us</a>
+                                    <a href="{% url 'contact' %}" class="seo-btn" onclick="openModal(); return false;" aria-haspopup="dialog">Get in Touch</a>
                                 </div>
 
                                 <!-- Popup Modal -->
                                
-                                    <div class="modal" id="contactModal">
+                                    <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
                                         <div class="modal-content">
-                                        <span class="close-btn" onclick="closeModal()">&times;</span>
-                                        <h3>Get in Touch</h3>
+                                        <button type="button" class="close-btn" onclick="closeModal()" aria-label="Close dialog">&times;</button>
+                                        <h3 id="contactModalTitle">Get in Touch</h3>
                                         <!-- Message Display Area -->
-                                        <p id="modalMessage" style="color: green; display: none;"></p>
+                                        <p id="modalMessage" role="status" aria-live="polite" style="color: green; display: none;"></p>
 
                                         <form method="post">
                                             {% csrf_token %}
@@ -287,7 +293,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="services">Services Required:</label>
+                                                        <label for="select_service">Services Required:</label>
                                                         <select class="form-control" id="select_service" name="select_service" required>
                                                             <option value="" disabled selected>Select your service</option>
                                                             <option value="seo">Search Engine Optimization</option>
@@ -321,9 +327,11 @@
 
         <!-- End Navbar Area -->
 
+<main id="main-content">
 {% block main %}
 
 {% endblock %}
+</main>
 
 <!-- Footer Area Another -->
 <footer class="footer-area-another">
@@ -334,8 +342,8 @@
                     <div class="footer-single-2">
                         <div class="footer-single-content-2">
                             <a href="{% url 'home' %}">
-                                <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo1" alt="Logo">
-                                <img src="{% static 'assets/img/footer-logo.png' %}" class="footer-logo2" alt="Logo">
+                                <img src="{% static 'assets/img/footer-logo.webp' %}" class="footer-logo1" alt="Logo" width="146" height="46">
+                                <img src="{% static 'assets/img/footer-logo.webp' %}" class="footer-logo2" alt="Logo" width="146" height="46">
                             </a>
                             <p>RizenDigital specializes in SEO, digital marketing, and web development, helping businesses grow their online presence effectively. Our expert team delivers tailored solutions for measurable success.</p>
                         </div>
@@ -352,7 +360,7 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-list-2 ml-50">
-                        <h3>Services</h3>
+                        <h2>Services</h2>
                         <ul>
                             {% for service in services %}
                             <li>
@@ -366,7 +374,7 @@
 
                 <div class="col-lg-2 col-md-6">
                     <div class="footer-list-2">
-                        <h3 class="color-title">Quick Links</h3>
+                        <h2 class="color-title">Quick Links</h2>
                         <ul>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
@@ -382,6 +390,14 @@
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
+                                <a href="{% url 'google_updates' %}">Google Updates</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
+                                <a href="{% url 'ai_agents' %}">AI Agents</a>
+                            </li>
+                            <li>
+                                <i class='bx bxs-chevron-right'></i>
                                 <a href="{% url 'blog' %}">Blog</a>
                             </li>
                             <li>
@@ -394,7 +410,7 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-list-2 ml-20">
-                        <h3>Contact Us</h3>
+                        <h2>Contact Us</h2>
                         <ul>
                             {% if site_phone %}<li>
                                 <i class='bx bxs-chevron-right'></i>
@@ -402,11 +418,11 @@
                             </li>{% endif %}
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="mailto:admin@rizendigital.com">admin@rizendigital.com</a>
+                                <a href="mailto:{{ site_email }}">{{ site_email }}</a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                Kolkata, West Bengal, India
+                                {{ site_address }}
                             </li>
                         </ul>
                     </div>
@@ -420,7 +436,7 @@
             <div class="row align-items-center justify-content-center">
                 <div class="col-lg-12">
                     <div class="bottom-text-2 text-center">
-                        <p>© Rizen Digital 2025</p>
+                        <p>&copy; {% now "Y" %} Rizen Digital. All rights reserved.</p>
                     </div>
                 </div>
             </div>
@@ -450,16 +466,27 @@
 <script src="{% static 'assets/js/contact-form-script.js' %}"></script>
 <!-- Custom JS -->
 <script src="{% static 'assets/js/custom.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
 <script>
     // Open Modal
+    var lastFocus = null;
     function openModal() {
-        document.getElementById('contactModal').style.display = 'block';
+        var m = document.getElementById('contactModal');
+        lastFocus = document.activeElement;
+        m.style.display = 'block';
+        var first = m.querySelector('input');
+        if (first) first.focus();
     }
 
     // Close Modal
     function closeModal() {
         document.getElementById('contactModal').style.display = 'none';
+        if (lastFocus) lastFocus.focus();
     }
+    document.addEventListener('keydown', function (e) {
+        var m = document.getElementById('contactModal');
+        if (e.key === 'Escape' && m && m.style.display === 'block') closeModal();
+    });
 
     // Close Modal When Clicking Outside
     window.onclick = function(event) {

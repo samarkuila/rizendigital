@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<main class="single-content-area ptb-100">
+<div class="single-content-area ptb-100">
     <div class="container">
         <div class="single-content">
             {{ location_page.content|safe }}
@@ -109,7 +109,7 @@
                         <ul class="accordion">
                             {% for faq in location_page.faqs.all %}
                             <li class="accordion-item">
-                                <a class="accordion-title{% if forloop.first %} active{% endif %}" href="javascript:void(0)">
+                                <a class="accordion-title{% if forloop.first %} active{% endif %}" href="#">
                                     <i class='bx bx-chevron-down'></i>
                                     {{ faq.question }}
                                 </a>
@@ -143,5 +143,5 @@
             <a href="{% url 'contact' %}" class="default-btn">Discuss your growth goals</a>
         </div>
     </div>
-</main>
+</div>
 {% endblock %}

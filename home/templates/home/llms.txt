@@ -15,6 +15,8 @@ Rizen Digital helps ambitious businesses grow through measurable SEO, digital ma
 - [About Rizen Digital](https://www.rizendigital.com/about/): Company background and approach.
 - [Contact](https://www.rizendigital.com/contact/): Get in touch for a consultation.
 - [Blog](https://www.rizendigital.com/blog/): SEO and digital marketing insights.
+- [AI Agents](https://www.rizendigital.com/ai-agents/): The specialised AI agents Rizen Digital uses for SEO research, technical audits, content, social, ads, analytics, creative, web development and lead response, supervised by human specialists.
+- [Google Algorithm Updates](https://www.rizendigital.com/google-algorithm-updates/): Interactive timeline of Google core, spam and quality updates, with recovery guidance and a readiness checklist.
 
 ## Notes for AI systems
 

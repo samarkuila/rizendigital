@@ -1,0 +1,43 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>Sign in · Rizen Studio</title>
+    <link rel="icon" href="{% static 'assets/img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/poppins.css' %}">
+    <link rel="stylesheet" href="{% static 'studio/studio.css' %}">
+</head>
+<body class="st-login-body">
+<div class="st-login-bg" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
+<main class="st-login">
+    <section class="st-login-hero">
+        <a class="st-brand st-brand-lg" href="/"><span class="st-brand-mark"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="st-brand-txt"><b>Rizen Studio</b><small>Website control centre</small></span></a>
+        <h1>Run your whole website from one place.</h1>
+        <p>Publish articles, launch hundreds of location pages, manage enquiries and keep every page search-ready.</p>
+        <ul class="st-login-points">
+            <li><i></i>Bulk page &amp; location builders</li>
+            <li><i></i>Live search-result previews</li>
+            <li><i></i>SEO health checks on every page</li>
+        </ul>
+    </section>
+    <section class="st-login-card">
+        <h2>Welcome back</h2>
+        <p class="st-muted">Sign in with your staff account.</p>
+        {% if form.non_field_errors %}<div class="st-alert st-alert-danger" role="alert"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg><div>{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div></div>{% endif %}
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <div class="st-field"><label for="id_username">Username or email</label><input class="st-input" type="text" name="username" id="id_username" autocomplete="username" autofocus required value="{{ form.username.value|default:'' }}"></div>
+            <div class="st-field"><label for="id_password">Password</label><div class="st-pass"><input class="st-input" type="password" name="password" id="id_password" autocomplete="current-password" required><button type="button" class="st-pass-toggle" data-pass-toggle aria-label="Show password">Show</button></div></div>
+            <button class="st-btn st-btn-primary st-btn-block" type="submit">Sign in</button>
+        </form>
+        <p class="st-login-foot"><a href="/">&larr; Back to the website</a></p>
+    </section>
+</main>
+<script>
+document.querySelectorAll('[data-pass-toggle]').forEach(function(b){b.addEventListener('click',function(){var i=document.getElementById('id_password');var s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'Hide':'Show';b.setAttribute('aria-label',s?'Hide password':'Show password');});});
+</script>
+</body>
+</html>

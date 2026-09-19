@@ -9,7 +9,7 @@ class StaticViewSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return ('home', 'about', 'contact', 'blog', 'case_studies')
+        return ('home', 'about', 'contact', 'blog', 'case_studies', 'google_updates', 'ai_agents')
 
     def location(self, item):
         return reverse(item)
@@ -24,6 +24,7 @@ class PageSitemap(Sitemap):
             Page.objects.exclude(post_type='Blog')
             .exclude(page_tag='')
             .exclude(page_tag='home')
+            .exclude(seo_noindex=True)
             .order_by('pk')
         )
 
@@ -45,7 +46,7 @@ class BlogSitemap(Sitemap):
     changefreq = 'weekly'
 
     def items(self):
-        return BlogPost.objects.filter(is_published=True)
+        return BlogPost.objects.filter(is_published=True, seo_noindex=False)
 
     def lastmod(self, post):
         return post.updated_at
@@ -56,7 +57,7 @@ class CaseStudySitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return CaseStudy.objects.filter(is_published=True)
+        return CaseStudy.objects.filter(is_published=True, seo_noindex=False)
 
     def lastmod(self, study):
         return study.updated_at
@@ -67,7 +68,7 @@ class LocationSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return LocationPage.objects.filter(is_published=True)
+        return LocationPage.objects.filter(is_published=True, seo_noindex=False)
 
     def lastmod(self, page):
         return page.updated_at

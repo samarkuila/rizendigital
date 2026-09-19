@@ -522,7 +522,8 @@
   .footer-single-2 .footer-social li a {
     font-size: 24px;
   }
-  .footer-list-2 h3 {
+  .footer-list-2 h3,
+  .footer-list-2 h2 {
     font-size: 22px;
     margin-bottom: 10px;
   }
@@ -1222,7 +1223,8 @@
     width: 130px;
     margin-bottom: 10px;
   }
-  .footer-list-2 h3 {
+  .footer-list-2 h3,
+  .footer-list-2 h2 {
     font-size: 22px;
     margin-bottom: 10px;
   }
@@ -1348,7 +1350,8 @@
   .subscribe-area::before {
     width: 70%;
   }
-  .footer-list-2 h3 {
+  .footer-list-2 h3,
+  .footer-list-2 h2 {
     font-size: 22px;
   }
   .footer-list-2 ul li {

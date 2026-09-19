@@ -36,12 +36,23 @@ def breadcrumbs(request):
 
 
 def site_contact(request):
-    """Phone and social links from settings; templates show them only if set."""
-    social = {k: v for k, v in settings.SITE_SOCIAL_LINKS.items() if v}
-    phone = settings.SITE_PHONE
+    """Public contact details: values saved in Rizen Studio win over the environment defaults."""
+    try:
+        from studio.models import SiteSettings
+        db = SiteSettings.as_dict()
+    except Exception:  # table not migrated yet, or DB unavailable
+        db = {}
+    phone = db.get('phone') or settings.SITE_PHONE
+    social = {}
+    for key, env_value in settings.SITE_SOCIAL_LINKS.items():
+        value = db.get(key) or env_value
+        if value:
+            social[key] = value
     return {
         'site_phone': phone,
         'site_phone_display': phone,
+        'site_email': db.get('email') or 'admin@rizendigital.com',
+        'site_address': db.get('address') or 'Kolkata, West Bengal, India',
         'site_social': social,
         'site_same_as': list(social.values()),
     }
