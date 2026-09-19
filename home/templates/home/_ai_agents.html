@@ -23,7 +23,7 @@
 
             <div class="aa-stage">
                 {% for a in agents %}
-                <article class="aa-panel" role="tabpanel" id="aa-panel-{{ a.slug }}" aria-labelledby="aa-tab-{{ a.slug }}" style="--ac: {{ a.color }}" {% if not forloop.first %}hidden{% endif %}>
+                <div class="aa-panel" role="tabpanel" id="aa-panel-{{ a.slug }}" aria-labelledby="aa-tab-{{ a.slug }}" style="--ac: {{ a.color }}" {% if not forloop.first %}hidden{% endif %}>
                     <div class="aa-hero">
                         <div class="aa-avatar-wrap">
                             <div class="aa-avatar" data-tilt>
@@ -67,7 +67,7 @@
                         <a href="{% url 'contact' %}" class="default-btn">Put {{ a.name }} to work</a>
                         {% if not on_agents_page %}<a href="{% url 'ai_agents' %}#aa-{{ a.slug }}" class="aa-more">Meet all the agents &rarr;</a>{% endif %}
                     </div>
-                </article>
+                </div>
                 {% endfor %}
             </div>
         </div>
