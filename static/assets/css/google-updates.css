@@ -76,7 +76,7 @@
 .theme-dark .gu-chip { color: #fff; }
 
 .gu-years { display: flex; align-items: flex-end; gap: 4px; height: 74px; margin-top: 16px; overflow-x: auto; padding-top: 8px; }
-.gu-year { flex: 1 0 22px; height: 100%; border: 0; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer; }
+.gu-year { position: relative; flex: 1 0 22px; height: 100%; border: 0; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer; }
 .gu-year i { display: block; width: 100%; max-width: 22px; height: var(--h); min-height: 6px; background: #c5cbf3; border-radius: 6px 6px 2px 2px; transition: background .2s, transform .2s; }
 .gu-year span { font-size: 11px; color: var(--gu-text); margin-top: 3px; }
 .gu-year:hover i { background: var(--gu-brand); transform: scaleY(1.06); transform-origin: bottom; }

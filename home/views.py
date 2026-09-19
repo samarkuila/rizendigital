@@ -59,8 +59,10 @@ def seo_extras(request, obj, og_type='website'):
 def home(request):
     pages = Page.objects.filter(page_tag='home').first()
     recent_posts = BlogPost.objects.filter(is_published=True)[:3]
-    testimonials = Testimonial.objects.filter(is_published=True)
+    testimonials = Testimonial.objects.filter(is_published=True)[:3]
+    case_studies = CaseStudy.objects.filter(is_published=True)[:3]
     return render(request, 'home/index.html', {
+        'case_studies': case_studies,
         'gu_tabs': _gu_home_tabs(),
         'ai_agents': aad.AGENTS,
         'pages': pages,

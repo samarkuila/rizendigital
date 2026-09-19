@@ -86,6 +86,8 @@
         <link rel="stylesheet" href="{% static 'assets/css/style.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/css/responsive.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/css/theme-dark.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/home-future.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/inner-dark.min.css' %}">
         <!-- Non-critical CSS (scroll animations / video popup): loaded without blocking first paint -->
         <link rel="preload" href="{% static 'assets/css/animate.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <link rel="preload" href="{% static 'assets/css/magnific-popup.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -100,7 +102,7 @@
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
     </head>
-    <body>
+    <body class="{% block body_class %}hf{% endblock %}">
         <a class="skip-link" href="#main-content">Skip to main content</a>
         <!-- Start Preloader -->
         <div class="preloader">
