@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /studio/
+# /studio/ and /admin/ are private. They are NOT disallowed here on purpose: they send "X-Robots-Tag: noindex",
+# and search engines can only obey noindex on pages they are allowed to crawl.
 Disallow: /get-in-touch/
 
 Sitemap: https://www.rizendigital.com/sitemap.xml
