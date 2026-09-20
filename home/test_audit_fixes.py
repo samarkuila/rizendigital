@@ -44,7 +44,7 @@ class AuditFixTests(TestCase):
         self.assertTrue(any('site.bundle.min.css' in b for b in blocking))
 
     def test_analytics_only_when_configured(self):
-        self.assertNotIn('googletagmanager', self.html('/'))
+        self.assertNotIn('googletagmanager.com/gtag/js', self.html('/'))  # the GA4 snippet (GTM is separate)
         with override_settings(SITE_GA_ID='G-TEST12345'):
             h = self.html('/')
         self.assertIn('googletagmanager.com/gtag/js?id=G-TEST12345', h)

@@ -4626,3 +4626,6 @@ html, body { overflow-anchor: none; }
 .wa-float:hover, .wa-float:focus-visible { color: #fff; transform: scale(1.08); box-shadow: 0 8px 26px rgba(37, 211, 102, .55); }
 .wa-float:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 @media (max-width: 767px) { .wa-float { left: 16px; bottom: 20px; width: 52px; height: 52px; } }
+
+/* Google Tag Manager noscript iframe (a class instead of the inline style GTM suggests) */
+.gtm-ns { display: none; visibility: hidden; }

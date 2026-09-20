@@ -216,6 +216,10 @@ SITE_WHATSAPP = os.environ.get('SITE_WHATSAPP', '').strip()
 # Google Analytics 4 measurement ID (e.g. G-ABC123XYZ). Blank = analytics snippet is not added.
 _ga = os.environ.get('GA_MEASUREMENT_ID', '').strip()
 SITE_GA_ID = _ga if re.fullmatch(r'G-[A-Z0-9]{4,20}', _ga) else ''
+# Google Tag Manager container (GTM-XXXXXXX). Set GTM_CONTAINER_ID= (blank) in .env to switch it off.
+# If GA4 is loaded through GTM, leave GA_MEASUREMENT_ID blank so visits are not counted twice.
+_gtm = os.environ.get('GTM_CONTAINER_ID', 'GTM-WL9WHQXF').strip()
+SITE_GTM_ID = _gtm if re.fullmatch(r'GTM-[A-Z0-9]{4,12}', _gtm) else ''
 
 SITE_SOCIAL_LINKS = {
     'facebook': os.environ.get('SITE_FACEBOOK_URL', '').strip(),

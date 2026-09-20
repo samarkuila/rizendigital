@@ -61,5 +61,6 @@ def site_contact(request):
         'site_address': db.get('address') or 'Kolkata, West Bengal, India',
         'site_social': social,
         'ga_id': settings.SITE_GA_ID,
+        'gtm_id': settings.SITE_GTM_ID,
         'site_same_as': list(social.values()),
     }
