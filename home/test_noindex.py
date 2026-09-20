@@ -23,3 +23,12 @@ class NoIndexPrivateAreasTests(TestCase):
     def test_studio_login_page_also_has_meta_noindex(self):
         r = self.client.get('/studio/login/')
         self.assertContains(r, '<meta name="robots" content="noindex, nofollow, noarchive">')
+
+
+class SearchConsoleVerificationTests(TestCase):
+    TAG = '<meta name="google-site-verification" content="pmgLkOyrOA0VeHiIMiz2_NsqhmIZv_yw84aejtRPIgo" />'
+
+    def test_verification_meta_is_in_the_head_of_the_homepage(self):
+        html = self.client.get('/').content.decode()
+        self.assertEqual(html.count(self.TAG), 1)
+        self.assertLess(html.index(self.TAG), html.index('</head>'))
