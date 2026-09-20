@@ -1,0 +1,27 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Audit any web page in seconds{% endblock %}
+{% block lead %}Atlas loads your page for real and checks the technical and on-page SEO basics: titles, headings, indexing, HTTPS, speed, structured data, robots.txt and your sitemap.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-url" method="get" action="{% url 'agent_demo' 'atlas' %}">
+    <label>Website address
+        <input type="text" name="url" value="{{ url }}" maxlength="300" placeholder="e.g. example.com" required autocomplete="off">
+    </label>
+    <button type="submit" class="default-btn">Run Atlas</button>
+</form>
+<p class="sd-note">Atlas fetches one public page plus your robots.txt and sitemap. It only checks public pages, does not log in, and does not store what it finds.</p>
+
+{% if error %}<p class="sd-note sd-warn">{{ error }}</p>{% endif %}
+
+{% if checks %}
+<div class="sd-summary">
+    <div><b>{{ score }}</b><span>{{ grade }} (score out of 100)</span></div>
+    <div><b>{{ counts.fail }}</b><span>issues to fix</span></div>
+    <div><b>{{ counts.warn }}</b><span>improvements</span></div>
+</div>
+<p class="sd-note">Checked <code>{{ final_url }}</code>{% if chain|length > 1 %} after {{ chain|length|add:"-1" }} redirect(s){% endif %}. Found {{ facts.h2 }} H2 and {{ facts.h3 }} H3 headings, {{ facts.images }} images, {{ facts.links_int }} internal and {{ facts.links_ext }} external links.</p>
+<h2>What Atlas found</h2>
+{% include 'home/agent_demos/_checks.html' with items=checks %}
+{% endif %}
+{% endblock %}

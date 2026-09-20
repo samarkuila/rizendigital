@@ -1,0 +1,78 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Know what your ad budget will buy{% endblock %}
+{% block lead %}Enter your budget and numbers. Ledger forecasts clicks, leads, customers and profit, tells you the most you can afford to pay per click, and writes search ads that fit Google&rsquo;s length limits.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="get" action="{% url 'agent_demo' 'ledger' %}">
+    <input type="hidden" name="run" value="1">
+    <div class="sd-grid2">
+        <label>Industry (sets starting CPC and conversion rate)
+            <select name="industry">{% for key, v in industries.items %}<option value="{{ key }}"{% if key == industry %} selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+        </label>
+        <label>Monthly ad budget (Rs) <input type="number" name="budget" value="{{ budget }}" min="1000" step="500"></label>
+        <label>Average cost per click (Rs) <input type="number" name="cpc" value="{{ cpc }}" min="1" step="0.5"></label>
+        <label>Click-to-lead conversion rate (%) <input type="number" name="cr" value="{{ cr }}" min="0.1" max="60" step="0.1"></label>
+        <label>Leads that become customers (%) <input type="number" name="close" value="{{ close }}" min="1" max="100" step="1"></label>
+        <label>Average value per customer (Rs) <input type="number" name="value" value="{{ value }}" min="1" step="100"></label>
+        <label>Profit margin (%) <input type="number" name="margin" value="{{ margin }}" min="1" max="100" step="1"></label>
+    </div>
+    <h3>For the ad copy</h3>
+    <div class="sd-grid2">
+        <label>Business name <input type="text" name="business" value="{{ business }}" maxlength="40" placeholder="e.g. Sharma Dental"></label>
+        <label>Service <input type="text" name="service" value="{{ service }}" maxlength="40" placeholder="e.g. Teeth Whitening"></label>
+        <label>City <input type="text" name="city" value="{{ city }}" maxlength="40" placeholder="e.g. Kolkata"></label>
+        <label>Your strongest selling point <input type="text" name="usp" value="{{ usp }}" maxlength="60" placeholder="e.g. Pain-free, same-day"></label>
+        <label>Call to action <input type="text" name="cta" value="{{ cta }}" maxlength="40" placeholder="e.g. Book a free consultation"></label>
+    </div>
+    <div class="sd-actions"><button type="submit" class="default-btn">Run Ledger</button></div>
+</form>
+<p class="sd-note">Starting CPCs and conversion rates are planning estimates for India. Replace them with your own account numbers for a sharper forecast.</p>
+
+{% if f %}
+<div class="sd-summary">
+    <div><b>Rs {{ f.expected.profit }}</b><span>expected profit per month</span></div>
+    <div><b>Rs {{ break_even_cpc }}</b><span>most you can pay per click and break even</span></div>
+    <div><b>Rs {{ daily }}</b><span>daily budget to set</span></div>
+</div>
+<p class="sd-note {% if f.expected.profit <= 0 %}sd-warn{% endif %}">{{ verdict }} {% if cpc_ok %}Your CPC of Rs {{ cpc }} is below the break-even CPC.{% else %}Your CPC of Rs {{ cpc }} is above the break-even CPC, so every click loses money on average.{% endif %}</p>
+
+<h2>Forecast ({{ label|lower }})</h2>
+<div class="sd-scroll">
+<table class="sd-table">
+    <thead><tr><th></th><th>Cautious</th><th>Expected</th><th>Strong</th></tr></thead>
+    <tbody>
+        <tr><td>Clicks</td><td>{{ f.cautious.clicks }}</td><td>{{ f.expected.clicks }}</td><td>{{ f.strong.clicks }}</td></tr>
+        <tr><td>Leads</td><td>{{ f.cautious.leads }}</td><td>{{ f.expected.leads }}</td><td>{{ f.strong.leads }}</td></tr>
+        <tr><td>Customers</td><td>{{ f.cautious.customers }}</td><td>{{ f.expected.customers }}</td><td>{{ f.strong.customers }}</td></tr>
+        <tr><td>Cost per lead</td><td>Rs {{ f.cautious.cpl|default:"-" }}</td><td>Rs {{ f.expected.cpl|default:"-" }}</td><td>Rs {{ f.strong.cpl|default:"-" }}</td></tr>
+        <tr><td>Cost per customer</td><td>Rs {{ f.cautious.cpa|default:"-" }}</td><td>Rs {{ f.expected.cpa|default:"-" }}</td><td>Rs {{ f.strong.cpa|default:"-" }}</td></tr>
+        <tr><td>Revenue</td><td>Rs {{ f.cautious.revenue }}</td><td>Rs {{ f.expected.revenue }}</td><td>Rs {{ f.strong.revenue }}</td></tr>
+        <tr><td>Return on ad spend</td><td>{{ f.cautious.roas }}x</td><td>{{ f.expected.roas }}x</td><td>{{ f.strong.roas }}x</td></tr>
+        <tr><td><b>Profit after ad spend</b></td><td>Rs {{ f.cautious.profit }}</td><td><b>Rs {{ f.expected.profit }}</b></td><td>Rs {{ f.strong.profit }}</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="sd-note">Cautious assumes CPC is 25% higher and conversion 25% lower. Strong assumes CPC 15% lower and conversion 25% higher.</p>
+
+<h2>Search ad copy</h2>
+<div class="sd-grid2">
+    <div class="sd-card">
+        <h3>Headlines (max 30 characters)</h3>
+        <ul class="sd-copy">{% for h in heads %}<li>{{ h.text }} <span class="sd-len{% if h.trimmed %} sd-trim{% endif %}">{{ h.len }}/30{% if h.trimmed %} trimmed{% endif %}</span></li>{% endfor %}</ul>
+    </div>
+    <div class="sd-card">
+        <h3>Descriptions (max 90 characters)</h3>
+        <ul class="sd-copy">{% for d in descs %}<li>{{ d.text }} <span class="sd-len{% if d.trimmed %} sd-trim{% endif %}">{{ d.len }}/90{% if d.trimmed %} trimmed{% endif %}</span></li>{% endfor %}</ul>
+    </div>
+</div>
+
+<h2>Negative keywords to add on day one</h2>
+<div class="sd-grid2">
+    {% for group, words in negatives.items %}
+    <div class="sd-card"><h3>{{ group }}</h3><p>{% for w in words %}<span class="sd-chip">{{ w }}</span> {% endfor %}</p></div>
+    {% endfor %}
+</div>
+<p class="sd-note">Add these as negative keywords so you do not pay for clicks from people who will never buy. Review real search terms weekly to find more.</p>
+{% endif %}
+{% endblock %}

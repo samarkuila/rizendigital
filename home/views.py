@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import BlogPost, CaseStudy, LocationPage, Page, SubService, Service, Testimonial
+import csv
 import json
 import logging
 import re
 from django.template import Engine, Context
 from admin_app.models import GetTouchWithUs
-from django.http import JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
 from . import ai_agents_data as aad
+from . import scout_demo_data as scout
+from . import scout_llm
+from . import agent_demos
 from . import google_updates_data as gud
 
 logger = logging.getLogger(__name__)
@@ -318,6 +322,56 @@ def google_updates(request):
         'core_count': sum(1 for u in updates if u['type'] == 'core'),
         'first_year': min(u['year'] for u in updates),
     })
+
+
+def scout_demo(request):
+    """Public Scout demo: ranks sample keyword opportunities by service, city and goal (no crawling, no DB writes)."""
+    params = request.GET
+    ran = 'service' in params
+    ctx = {
+        'seo_title': 'Scout Demo: AI SEO Keyword Opportunity Finder | Rizen Digital',
+        'seo_description': 'Try Scout, Rizen Digital\'s SEO research agent. Pick a service, city and goal to see ranked keyword opportunities with intent, difficulty and page ideas.',
+        'demo_services': scout.SERVICES, 'goals': scout.GOALS,
+        'service': params.get('service', 'digital-marketing'), 'city': scout.clean_city(params.get('city')),
+        'goal': params.get('goal', 'leads'), 'ran': ran,
+    }
+    if ran:
+        rows, meta = scout.build_report(ctx['service'], ctx['city'], ctx['goal'])
+        if params.get('format') == 'csv':
+            resp = HttpResponse(content_type='text/csv; charset=utf-8')
+            resp['Content-Disposition'] = 'attachment; filename="scout-opportunities-%s.csv"' % (meta['service'],)
+            w = csv.writer(resp)
+            w.writerow(['Rank', 'Keyword', 'Intent', 'Monthly searches', 'Difficulty', 'CPC (USD)', 'Effort', 'Priority', 'Suggested URL', 'Suggested title'])
+            for r in rows:
+                w.writerow([r['rank'], r['keyword'], r['intent'], r['volume'] if r['volume'] is not None else '',
+                            r['difficulty'] if r['difficulty'] is not None else '', r['cpc'] if r['cpc'] is not None else '',
+                            r['effort'], r['priority'] if r['priority'] is not None else '', '/' + r['slug'] + '/', r['title']])
+            return resp
+        ai = scout_llm.generate(rows, meta, request.META.get('REMOTE_ADDR', ''))
+        if ai:
+            for r in rows:
+                r['brief'] = ai['briefs'].get(r['keyword'])
+        ctx.update({'rows': rows, 'meta': meta, 'groups': scout.group_by_intent(rows), 'top': rows[:3],
+                    'ai_summary': ai['summary'] if ai else ''})
+        ctx['service'], ctx['goal'] = meta['service'], meta['goal']
+    return render(request, 'home/scout_demo.html', ctx)
+
+
+def agent_demo(request, slug):
+    """Interactive demo for one AI agent (Scout has its own view, scout_demo)."""
+    mod = agent_demos.get(slug)
+    agent = next((a for a in aad.AGENTS if a['slug'] == slug), None)
+    if mod is None or agent is None:
+        raise Http404
+    ctx = mod.run(request)
+    if 'response' in ctx:
+        return ctx['response']
+    ctx.update({
+        'agent': agent, 'all_agents': aad.AGENTS,
+        'seo_title': '%s Demo: %s | Rizen Digital' % (agent['name'], agent['role']),
+        'seo_description': '%s Try it with your own details.' % agent['tagline'],
+    })
+    return render(request, 'home/agent_demos/%s.html' % slug, ctx)
 
 
 def ai_agents(request):

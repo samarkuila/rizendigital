@@ -1,0 +1,107 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'assets/css/ai-agents.min.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="inner-banner inner-bg4 aa-page-banner">
+    <div class="container">
+        <div class="inner-title text-center">
+            <span class="aa-eyebrow"><i class="aa-live" aria-hidden="true"></i> Scout &middot; SEO research agent</span>
+            <h1>Find your best keyword opportunities</h1>
+            <p>Pick a service, a city and a goal. Scout ranks search opportunities by demand, difficulty and intent, and suggests the page to build for each.</p>
+        </div>
+    </div>
+</div>
+
+<section class="sd-section">
+    <div class="container">
+        <form class="sd-form" method="get" action="{% url 'scout_demo' %}">
+            <input type="hidden" name="run" value="1">
+            <label>Service
+                <select name="service">
+                    {% for key, s in demo_services.items %}<option value="{{ key }}"{% if key == service %} selected{% endif %}>{{ s.label }}</option>{% endfor %}
+                </select>
+            </label>
+            <label>City <span class="sd-opt">(optional)</span>
+                <input type="text" name="city" value="{{ city }}" maxlength="60" placeholder="e.g. Kolkata" autocomplete="off">
+            </label>
+            <label>Goal
+                <select name="goal">
+                    {% for key, text in goals.items %}<option value="{{ key }}"{% if key == goal %} selected{% endif %}>{{ text }}</option>{% endfor %}
+                </select>
+            </label>
+            <button type="submit" class="default-btn">Run Scout</button>
+        </form>
+        <p class="sd-note">Demo using Rizen Digital&rsquo;s sample market data. Scout does not crawl your website in this demo. Search volumes are monthly estimates.</p>
+
+        {% if ran %}
+        <div class="sd-summary">
+            <div><b>{{ rows|length }}</b><span>opportunities found</span></div>
+            <div><b>{{ meta.total_volume|floatformat:0 }}</b><span>monthly searches covered</span></div>
+            <div><b>{{ meta.quick_wins }}</b><span>quick wins (low difficulty)</span></div>
+        </div>
+
+        {% if meta.city and not meta.measured_city %}
+        <p class="sd-note sd-warn">We have no measured volume for {{ meta.city }}, so the {{ meta.city }} keywords below are suggested page targets without volume figures. The full Scout service measures them for your market.</p>
+        {% endif %}
+
+        {% if ai_summary %}<div class="sd-ai"><b>Scout&rsquo;s read</b><p>{{ ai_summary }}</p></div>{% endif %}
+
+        <div class="sd-groups">
+            {% for g in groups %}<span class="sd-chip sd-{{ g.name|lower }}">{{ g.name }}: {{ g.count }} keyword{{ g.count|pluralize }}, {{ g.volume }} searches/mo</span>{% endfor %}
+        </div>
+
+        <div class="sd-top">
+            <h2>Start here</h2>
+            <div class="sd-top-grid">
+                {% for r in top %}
+                <div class="sd-card">
+                    <span class="sd-rank">#{{ r.rank }}</span>
+                    <h3>{{ r.keyword }}</h3>
+                    <p>{% if r.volume %}{{ r.volume }} searches/mo &middot; {% endif %}{{ r.intent }} intent &middot; {{ r.effort }}</p>
+                    <small>Build: <code>/{{ r.slug }}/</code></small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sd-tablewrap">
+            <div class="sd-tablehead">
+                <h2>Ranked opportunity list</h2>
+                <a class="aa-more" href="?run=1&amp;service={{ service }}&amp;city={{ city|urlencode }}&amp;goal={{ goal }}&amp;format=csv">Download CSV &darr;</a>
+            </div>
+            <div class="sd-scroll">
+            <table class="sd-table">
+                <thead><tr><th>#</th><th>Keyword</th><th>Intent</th><th>Searches/mo</th><th>Difficulty</th><th>Effort</th><th>Priority</th><th>Suggested page</th></tr></thead>
+                <tbody>
+                {% for r in rows %}
+                <tr>
+                    <td>{{ r.rank }}</td>
+                    <td>{{ r.keyword }}</td>
+                    <td><span class="sd-chip sd-{{ r.intent|lower }}">{{ r.intent }}</span>{% if r.intent_guessed %}<sup title="Intent inferred from the keyword">*</sup>{% endif %}</td>
+                    <td>{% if r.volume is not None %}{{ r.volume }}{% else %}&mdash;{% endif %}</td>
+                    <td>{% if r.difficulty is not None %}{{ r.difficulty }}{% else %}&mdash;{% endif %}</td>
+                    <td>{{ r.effort }}</td>
+                    <td>{% if r.priority is not None %}<span class="sd-bar"><i style="width: {{ r.priority }}%"></i></span> {{ r.priority }}{% else %}&mdash;{% endif %}</td>
+                    <td><code>/{{ r.slug }}/</code><br><small>{% if r.brief %}{{ r.brief.title }}{% else %}{{ r.title }}{% endif %}</small>
+                        {% if r.brief %}<details class="sd-brief"><summary>Page brief</summary><p>{{ r.brief.meta_description }}</p><ul>{% for o in r.brief.outline %}<li>{{ o }}</li>{% endfor %}</ul></details>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <p class="sd-note">* Intent inferred from the keyword. Priority balances demand, difficulty and your goal (0&ndash;100). Effort: under 40 difficulty is a quick win, 40&ndash;60 medium, above 60 a long game.</p>
+        </div>
+
+        <div class="sd-cta">
+            <h2>Want this for your own site?</h2>
+            <p>The full Scout service uses your live data, competitors and Search Console, and our specialists turn the list into a plan.</p>
+            <a href="{% url 'contact' %}" class="default-btn">Get my Scout report</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

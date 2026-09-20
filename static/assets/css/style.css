@@ -4610,3 +4610,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Scroll anchoring off: the FAQ script holds the clicked question in place itself */
 html, body { overflow-anchor: none; }
+
+/* Contact modal heading (a <p>, so the page keeps H1 as its first heading) and status message */
+.modal-content .modal-heading { color: #fff; font-weight: 600; line-height: 1.3; font-size: 1.75rem; margin: 0 0 .75rem; }
+.modal-content .modal-msg { color: green; display: none; }
+/* Contact popup: dimmed overlay with a centred card (it previously stretched edge to edge at the top of the page) */
+#contactModal { background: rgba(3, 6, 25, .78); overflow-y: auto; z-index: 100000; padding: 16px; }
+#contactModal .modal-content { max-width: 480px; margin: 5vh auto; padding: 28px 24px 24px; }
+#contactModal .close-btn { position: absolute; top: 8px; right: 14px; background: none; border: 0; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; }
+#contactModal .close-btn:focus-visible { outline: 2px solid #7df9ff; outline-offset: 2px; }
+
+/* Floating WhatsApp button (the only floating contact button), bottom-left so it never covers the scroll-to-top button */
+.wa-float { position: fixed; left: 22px; bottom: 24px; z-index: 9990; width: 56px; height: 56px; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, .35); transition: transform .2s ease, box-shadow .2s ease; }
+.wa-float i { font-size: 34px; line-height: 1; }
+.wa-float:hover, .wa-float:focus-visible { color: #fff; transform: scale(1.08); box-shadow: 0 8px 26px rgba(37, 211, 102, .55); }
+.wa-float:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+@media (max-width: 767px) { .wa-float { left: 16px; bottom: 20px; width: 52px; height: 52px; } }

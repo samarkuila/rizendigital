@@ -1,6 +1,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from . import agent_demos
 from .models import BlogPost, CaseStudy, LocationPage, Page
 
 
@@ -9,10 +10,11 @@ class StaticViewSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return ('home', 'about', 'contact', 'blog', 'case_studies', 'google_updates', 'ai_agents')
+        return ('home', 'about', 'contact', 'blog', 'case_studies', 'google_updates', 'ai_agents', 'scout_demo') + tuple(
+            ('agent_demo', slug) for slug in agent_demos.SLUGS)
 
     def location(self, item):
-        return reverse(item)
+        return reverse(item[0], args=[item[1]]) if isinstance(item, tuple) else reverse(item)
 
 
 class PageSitemap(Sitemap):

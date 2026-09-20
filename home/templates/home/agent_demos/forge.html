@@ -1,0 +1,32 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Catch accessibility and speed problems before launch{% endblock %}
+{% block lead %}Paste a page or component. Forge checks it against accessibility rules (alt text, labels, headings, contrast, keyboard order) and a speed budget, and points to the exact line to fix.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="post" action="{% url 'agent_demo' 'forge' %}">
+    {% csrf_token %}
+    <label>HTML to check (a full page or a single section)
+        <textarea name="html" rows="12" maxlength="120000" class="sd-code" placeholder="&lt;!doctype html&gt; ...">{% if not using_sample %}{{ html }}{% endif %}</textarea>
+    </label>
+    <div class="sd-actions">
+        <button type="submit" class="default-btn">Run Forge</button>
+        <button type="submit" name="use_sample" value="1" class="sd-ghost">Use a sample page with problems</button>
+    </div>
+</form>
+<p class="sd-note">Forge reads the HTML you paste. It does not run scripts, load your site, or store your code. Automated checks catch many issues but not all; a real accessibility review also needs manual testing.</p>
+
+{% if error %}<p class="sd-note sd-warn">{{ error }}</p>{% endif %}
+
+{% if a11y %}
+<div class="sd-summary">
+    <div><b>{{ a11y_score }}</b><span>accessibility score</span></div>
+    <div><b>{{ speed_score }}</b><span>speed and mobile score</span></div>
+    <div><b>{{ counts.fail }}</b><span>issues to fix, {{ counts.warn }} to improve</span></div>
+</div>
+<h2>Accessibility</h2>
+{% include 'home/agent_demos/_checks.html' with items=a11y %}
+<h2>Speed and mobile</h2>
+{% include 'home/agent_demos/_checks.html' with items=speed %}
+{% endif %}
+{% endblock %}

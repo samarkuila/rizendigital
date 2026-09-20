@@ -1,0 +1,58 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Turn daily numbers into clear answers{% endblock %}
+{% block lead %}Paste a daily CSV from Google Analytics or Search Console. Vega draws the trends, compares the two halves of the period, flags unusual days, and checks what happened around real Google core and spam updates.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="post" action="{% url 'agent_demo' 'vega' %}">
+    {% csrf_token %}
+    <label>Daily data as CSV (a <code>date</code> column plus any of <code>sessions</code>, <code>clicks</code>, <code>impressions</code>, <code>conversions</code>; at least 14 days)
+        <textarea name="csv" rows="7" maxlength="200000" placeholder="date,sessions,clicks,impressions,conversions&#10;2026-06-01,412,140,4800,11">{% if not using_sample %}{{ csv }}{% endif %}</textarea>
+    </label>
+    <div class="sd-actions">
+        <button type="submit" class="default-btn">Run Vega</button>
+        <button type="submit" name="use_sample" value="1" class="sd-ghost">Use 90 days of sample data</button>
+    </div>
+</form>
+<p class="sd-note">Your data is analysed in this request and is not saved. {% if using_sample %}You are looking at sample data, not a real site.{% endif %}</p>
+
+{% if error %}<p class="sd-note sd-warn">{{ error }}</p>{% endif %}
+
+{% if report %}
+<p class="sd-note">Period: {{ report.range.0|date:"j M Y" }} to {{ report.range.1|date:"j M Y" }} ({{ report.n }} days). Changes compare the second half of the period with the first half.</p>
+<div class="sd-summary sd-summary-4">
+    {% for c in report.cards %}
+    <div><b>{{ c.total }}</b><span>{{ c.metric }} <em class="{% if c.up %}sd-up{% else %}sd-down{% endif %}">{% if c.up %}&#9650;{% else %}&#9660;{% endif %} {{ c.change }}%</em></span></div>
+    {% endfor %}
+</div>
+{% if report.ratios %}<div class="sd-groups">{% for label, v in report.ratios %}<span class="sd-chip">{{ label }}: {{ v }}</span>{% endfor %}<span class="sd-chip">Strongest day: {{ report.best_day }}</span></div>{% endif %}
+
+{% for ch in report.charts %}
+<div class="sd-chartbox">
+    <h3>{{ ch.metric }}{% if ch.flags %} <small>{{ ch.flags }} unusual day{{ ch.flags|pluralize }} marked</small>{% endif %}</h3>
+    {{ ch.svg|safe }}
+</div>
+{% endfor %}
+<p class="sd-note">Dashed vertical lines mark the start of Google core and spam updates. Round markers are days far outside the previous two weeks&rsquo; normal range.</p>
+
+{% if report.notes %}
+<h2>Google update impact check</h2>
+<div class="sd-scroll">
+<table class="sd-table">
+    <thead><tr><th>Update</th><th>Started</th><th>Sessions, 14 days after vs before</th><th>Verdict</th></tr></thead>
+    <tbody>{% for n in report.notes %}<tr><td>{{ n.update }}</td><td>{{ n.date|date:"j M Y" }}</td><td>{{ n.pct }}%</td><td>Traffic {{ n.verdict }}</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+<p class="sd-note">A drop after an update is a signal to investigate, not proof the update caused it. Check seasonality, tracking changes and your own site changes first.</p>
+{% endif %}
+
+{% if report.alerts %}
+<h2>Alerts</h2>
+<ul class="sd-checks">
+    {% for a in report.alerts %}
+    <li class="sd-check sd-s-warn"><span class="sd-badge">Alert</span><div><b>{{ a.metric }} on {{ a.date|date:"j M Y" }}</b><p>{{ a.value }} vs a normal of about {{ a.base }} ({% if a.pct > 0 %}+{% endif %}{{ a.pct }}%).</p></div></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+{% endblock %}

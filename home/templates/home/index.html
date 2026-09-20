@@ -1,6 +1,6 @@
 {% extends 'home/layout.html' %}
 
-{% load static %}
+{% load static site_extras %}
 
 {% block extra_head %}
 <script>document.documentElement.classList.add('hf-js');</script>
@@ -59,10 +59,10 @@
                     </svg>
                 </div>
                 <ul class="hf-feed" data-hf-feed>
-                    <li class="on"><img src="{% static 'assets/img/agents/scout.svg' %}" width="40" height="40" alt=""><div><b>Scout</b><span>Mapping keyword clusters for your city&hellip;</span></div><i></i></li>
-                    <li><img src="{% static 'assets/img/agents/atlas.svg' %}" width="40" height="40" alt=""><div><b>Atlas</b><span>Auditing site speed and structured data&hellip;</span></div><i></i></li>
-                    <li><img src="{% static 'assets/img/agents/quill.svg' %}" width="40" height="40" alt=""><div><b>Quill</b><span>Drafting a brief for human review&hellip;</span></div><i></i></li>
-                    <li><img src="{% static 'assets/img/agents/vega.svg' %}" width="40" height="40" alt=""><div><b>Vega</b><span>Checking traffic around the latest Google update&hellip;</span></div><i></i></li>
+                    <li class="on"><img src="{% static 'assets/img/agents/scout.svg' %}" width="40" height="40" alt="Scout, SEO research agent"><div><b>Scout</b><span>Mapping keyword clusters for your city&hellip;</span></div><i></i></li>
+                    <li><img src="{% static 'assets/img/agents/atlas.svg' %}" width="40" height="40" alt="Atlas, technical SEO agent"><div><b>Atlas</b><span>Auditing site speed and structured data&hellip;</span></div><i></i></li>
+                    <li><img src="{% static 'assets/img/agents/quill.svg' %}" width="40" height="40" alt="Quill, content strategy agent"><div><b>Quill</b><span>Drafting a brief for human review&hellip;</span></div><i></i></li>
+                    <li><img src="{% static 'assets/img/agents/vega.svg' %}" width="40" height="40" alt="Vega, analytics and reporting agent"><div><b>Vega</b><span>Checking traffic around the latest Google update&hellip;</span></div><i></i></li>
                 </ul>
             </div>
             <span class="hf-float hf-float-1"><i></i>New enquiry</span>
@@ -331,8 +331,8 @@
                 <h2>Contact the Best <span class="hf-grad">Digital Marketing Agency</span> in Kolkata Now!</h2>
                 <p>If you are struggling to take your business online, look no further than Rizen Digital. Our team delivers digital marketing services in Kolkata with an affordable cost, more enquiries and a clearer picture of what is working.</p>
                 <ul class="hf-contact-list">
-                    {% if site_phone %}<li><svg class="hf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:{{ site_phone }}">{{ site_phone_display }}</a></li>{% endif %}
-                    <li><svg class="hf-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:{{ site_email }}">{{ site_email }}</a></li>
+                    
+                    <li><svg class="hf-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><a {% mail_attrs site_email %}><span class="js-mail-text">{{ site_email|mail_masked }}</span></a></li>
                     <li><svg class="hf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>{{ site_address }}</li>
                 </ul>
             </div>

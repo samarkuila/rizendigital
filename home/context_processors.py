@@ -1,3 +1,6 @@
+import re
+from urllib.parse import quote
+
 from django.conf import settings
 from .models import Service, SubService
 
@@ -48,11 +51,15 @@ def site_contact(request):
         value = db.get(key) or env_value
         if value:
             social[key] = value
+    wa_digits = re.sub(r'\D', '', settings.SITE_WHATSAPP or phone or '')
+    wa_message = quote('Hi Rizen Digital, I would like to know more about your services.')
     return {
+        'site_whatsapp_url': 'https://wa.me/%s?text=%s' % (wa_digits, wa_message) if wa_digits else '',
         'site_phone': phone,
         'site_phone_display': phone,
         'site_email': db.get('email') or 'admin@rizendigital.com',
         'site_address': db.get('address') or 'Kolkata, West Bengal, India',
         'site_social': social,
+        'ga_id': settings.SITE_GA_ID,
         'site_same_as': list(social.values()),
     }

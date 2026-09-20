@@ -1,0 +1,60 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Reply to every lead in seconds{% endblock %}
+{% block lead %}Paste a customer enquiry. Echo pulls out who they are and what they want, scores how ready they are to buy, drafts the first reply, and plans the follow-up.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="post" action="{% url 'agent_demo' 'echo' %}">
+    {% csrf_token %}
+    <label>Customer enquiry
+        <textarea name="text" rows="6" maxlength="3000" placeholder="Paste a message from your website form, email or social inbox">{{ text }}</textarea>
+    </label>
+    <div class="sd-actions">
+        <button type="submit" class="default-btn">Run Echo</button>
+        <button type="submit" name="sample" value="hot" class="sd-ghost">Try a hot lead</button>
+        <button type="submit" name="sample" value="warm" class="sd-ghost">Try a warm lead</button>
+        <button type="submit" name="sample" value="cold" class="sd-ghost">Try a poor-fit lead</button>
+    </div>
+</form>
+<p class="sd-note">Nothing you paste here is saved or sent anywhere. The sample enquiries are made-up.</p>
+
+{% if error %}<p class="sd-note sd-warn">{{ error }}</p>{% endif %}
+
+{% if f %}
+<div class="sd-summary">
+    <div><b>{{ tag }}</b><span>lead temperature ({{ score }}/100)</span></div>
+    <div><b>{{ ms }} ms</b><span>to read, score and draft</span></div>
+    <div><b style="font-size: 1.05rem">{{ route }}</b><span>routing</span></div>
+</div>
+
+<div class="sd-grid2">
+    <div class="sd-card">
+        <h3>What Echo understood</h3>
+        <ul class="sd-facts">
+            <li><span>Name</span> {{ f.name|default:"Not given" }}</li>
+            <li><span>Business</span> {{ f.company|default:"Not given" }}</li>
+            <li><span>Location</span> {{ f.location|default:"Not given" }}</li>
+            <li><span>Interested in</span> {% if f.services %}{{ f.services|join:", " }}{% else %}Not clear{% endif %}</li>
+            <li><span>Budget</span> {% if f.budget %}Rs {{ f.budget }}{% else %}Not given{% endif %}</li>
+            <li><span>Timeline</span> {{ f.timeline }}</li>
+            <li><span>Phone</span> {{ f.phone|default:"Not given" }}</li>
+            <li><span>Email</span> {{ f.email|default:"Not given" }}</li>
+        </ul>
+        {% if missing %}<p><small>To ask for: {{ missing|join:", " }}.</small></p>{% endif %}
+    </div>
+    <div class="sd-card">
+        <h3>Why this score</h3>
+        <ul>{% for w in why %}<li>{{ w }}</li>{% empty %}<li>No buying signals found.</li>{% endfor %}</ul>
+        {% if f.red_flags %}<p><small><b>Red flags:</b> {{ f.red_flags|join:"; " }}</small></p>{% endif %}
+    </div>
+</div>
+
+<h2>Instant reply (draft)</h2>
+<blockquote class="sd-quote">{{ reply }}</blockquote>
+<p class="sd-note">A human reviews replies to hot leads before sending. Echo never promises prices or outcomes.</p>
+
+<h2>Follow-up plan</h2>
+<ol class="sd-timeline">{% for when, what in plan %}<li><b>{{ when }}</b> {{ what }}</li>{% endfor %}</ol>
+{% if tag == 'Hot' %}<p class="sd-note">Call slots Echo would offer: {{ slots|join:" or " }}</p>{% endif %}
+{% endif %}
+{% endblock %}

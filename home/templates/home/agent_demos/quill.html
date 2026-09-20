@@ -1,0 +1,62 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Brief it. Draft it. Check it.{% endblock %}
+{% block lead %}Give Quill a topic and it builds a content brief from search intent. Paste a draft and it scores length, readability, keyword use and E-E-A-T signals so an editor knows what to fix.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="post" action="{% url 'agent_demo' 'quill' %}">
+    {% csrf_token %}
+    <div class="sd-grid2">
+        <label>Target keyword <input type="text" name="keyword" value="{{ keyword }}" maxlength="100" placeholder="e.g. seo agency"></label>
+        <label>Topic (optional) <input type="text" name="topic" value="{{ topic }}" maxlength="120" placeholder="e.g. choosing an SEO agency"></label>
+        <label>City (optional) <input type="text" name="city" value="{{ city }}" maxlength="60" placeholder="e.g. Kolkata"></label>
+        <label>Audience (optional) <input type="text" name="audience" value="{{ audience }}" maxlength="80" placeholder="e.g. small business owners"></label>
+    </div>
+    <label>Your draft (optional): plain text, Markdown headings or HTML
+        <textarea name="draft" rows="10" maxlength="20000" placeholder="Paste a draft to get it scored">{{ draft }}</textarea>
+    </label>
+    <div class="sd-actions">
+        <button type="submit" class="default-btn">Run Quill</button>
+        <button type="submit" name="use_sample" value="1" class="sd-ghost">Use a sample draft</button>
+    </div>
+</form>
+
+{% if error %}<p class="sd-note sd-warn">{{ error }}</p>{% endif %}
+
+{% if brief %}
+<h2>Content brief</h2>
+<div class="sd-grid2">
+    <div class="sd-card">
+        <span class="sd-rank">Search intent: {{ brief.intent }}</span>
+        <h3>Title options</h3>
+        <ul>{% for t in brief.titles %}<li>{{ t }}</li>{% endfor %}</ul>
+        <p><small>Suggested URL: <code>/blog/{{ brief.slug }}/</code> &middot; Target length: about {{ brief.target_words }} words</small></p>
+        <p><small>Meta description: {{ brief.meta }}</small></p>
+    </div>
+    <div class="sd-card">
+        <h3>Outline</h3>
+        <ol>{% for o in brief.outline %}<li>{{ o }}</li>{% endfor %}</ol>
+    </div>
+    <div class="sd-card">
+        <h3>Questions to answer (FAQ)</h3>
+        <ul>{% for q in brief.faq %}<li>{{ q }}</li>{% endfor %}</ul>
+    </div>
+    <div class="sd-card">
+        <h3>E-E-A-T checklist for the editor</h3>
+        <ul>{% for e in brief.eeat %}<li>{{ e }}</li>{% endfor %}</ul>
+        <p><small>Link to: {{ brief.links|join:"; " }}</small></p>
+    </div>
+</div>
+{% endif %}
+
+{% if report %}
+<h2>Draft report</h2>
+<div class="sd-summary">
+    <div><b>{{ report.score }}</b><span>draft score out of 100</span></div>
+    <div><b>{{ report.words }}</b><span>words</span></div>
+    <div><b>{{ report.flesch }}</b><span>Flesch reading ease (60+ is plain English)</span></div>
+</div>
+{% include 'home/agent_demos/_checks.html' with items=report.checks %}
+{% if report.headings %}<p class="sd-note">Headings found: {{ report.headings|join:" / " }}</p>{% endif %}
+{% endif %}
+{% endblock %}

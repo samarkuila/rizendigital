@@ -1,6 +1,6 @@
 {% extends 'home/layout.html' %}
 
-{% load static %}
+{% load static site_extras %}
 
 {% block main %}
 
@@ -47,7 +47,7 @@
             <p>We may update this policy occasionally to reflect changes in how we operate or in applicable law. The version published here is always the current one.</p>
 
             <h2>10. Contact us</h2>
-            <p>If you have any questions about this policy or how your information is handled, email us at <a href="mailto:admin@rizendigital.com">admin@rizendigital.com</a>.</p>
+            <p>If you have any questions about this policy or how your information is handled, email us at <a {% mail_attrs "admin@rizendigital.com" %}><span class="js-mail-text">{{ "admin@rizendigital.com"|mail_masked }}</span></a>.</p>
         </div>
     </div>
 </div>

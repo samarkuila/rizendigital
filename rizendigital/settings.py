@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+import re
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -208,7 +209,13 @@ if not DEBUG:
 # Public contact details. Leave blank until real ones exist: the site hides
 # every phone number / social icon that is not set.
 # ---------------------------------------------------------------------------
-SITE_PHONE = os.environ.get('SITE_PHONE', '').strip()  # e.g. +919812345678
+SITE_PHONE = os.environ.get('SITE_PHONE', '').strip()  # e.g. +919812345678 (kept for schema/internal use; not shown on the site)
+# Number customers message on WhatsApp. Blank = use SITE_PHONE. Digits with country code, e.g. 919812345678.
+SITE_WHATSAPP = os.environ.get('SITE_WHATSAPP', '').strip()
+# Google Analytics 4 measurement ID (e.g. G-ABC123XYZ). Blank = analytics snippet is not added.
+_ga = os.environ.get('GA_MEASUREMENT_ID', '').strip()
+SITE_GA_ID = _ga if re.fullmatch(r'G-[A-Z0-9]{4,20}', _ga) else ''
+
 SITE_SOCIAL_LINKS = {
     'facebook': os.environ.get('SITE_FACEBOOK_URL', '').strip(),
     'twitter': os.environ.get('SITE_TWITTER_URL', '').strip(),

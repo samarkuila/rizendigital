@@ -1,0 +1,55 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}A month of social posts, planned in seconds{% endblock %}
+{% block lead %}Tell Pulse your business, platforms and how often you can post. It builds a 30-day calendar with content pillars, hooks, formats, best posting times, captions and hashtags.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="get" action="{% url 'agent_demo' 'pulse' %}">
+    <input type="hidden" name="run" value="1">
+    <div class="sd-grid2">
+        <label>Business name <input type="text" name="business" value="{{ business }}" maxlength="60" placeholder="e.g. Sharma Dental Clinic"></label>
+        <label>Industry
+            <select name="industry">{% for key, v in industries.items %}<option value="{{ key }}"{% if key == industry %} selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+        </label>
+        <label>Posts per week
+            <select name="per_week">{% for n in "234567" %}<option value="{{ n }}"{% if n == per_week %} selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+        </label>
+        <label>Start date <input type="date" name="start" value="{{ start }}"></label>
+    </div>
+    <fieldset class="sd-checkgroup">
+        <legend>Platforms</legend>
+        {% for key, p in platforms.items %}<label><input type="checkbox" name="platform" value="{{ key }}"{% if key in picked %} checked{% endif %}> {{ p.0 }}</label>{% endfor %}
+    </fieldset>
+    <div class="sd-actions"><button type="submit" class="default-btn">Build my calendar</button></div>
+</form>
+<p class="sd-note">Best posting times are common starting points for India, not guarantees. Pulse learns your real best times once it can see your account data.</p>
+
+{% if rows %}
+<div class="sd-summary">
+    <div><b>{{ total }}</b><span>posts planned</span></div>
+    <div><b>{{ picked|length }}</b><span>platform{{ picked|length|pluralize }}</span></div>
+    <div><b>{{ pillar_mix.0.0 }}</b><span>most common pillar</span></div>
+</div>
+<div class="sd-groups">{% for name, n in pillar_mix %}<span class="sd-chip">{{ name }}: {{ n }}</span>{% endfor %}</div>
+<div class="sd-tablehead">
+    <h2>{{ business_name }}: 30-day calendar</h2>
+    <a class="aa-more" href="?run=1&amp;business={{ business|urlencode }}&amp;industry={{ industry }}&amp;per_week={{ per_week }}&amp;start={{ start }}{% for p in picked %}&amp;platform={{ p }}{% endfor %}&amp;format=csv">Download CSV &darr;</a>
+</div>
+<div class="sd-scroll">
+<table class="sd-table">
+    <thead><tr><th>Date</th><th>Platform</th><th>Format</th><th>Pillar</th><th>Hook and caption draft</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr>
+        <td>{{ r.date|date:"D j M" }}<br><small>{{ r.time }}</small></td>
+        <td>{{ r.platform }}</td>
+        <td>{{ r.format }}</td>
+        <td><span class="sd-chip">{{ r.pillar }}</span>{% if r.event %}<br><small>{{ r.event }}</small>{% endif %}</td>
+        <td><b>{{ r.hook }}</b><br><small>{{ r.brief }}</small><details class="sd-brief"><summary>Caption draft</summary><p>{{ r.caption|linebreaksbr }}</p></details></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

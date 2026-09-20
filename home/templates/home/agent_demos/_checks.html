@@ -1,0 +1,12 @@
+<ul class="sd-checks">
+{% for c in items %}
+    <li class="sd-check sd-s-{{ c.status }}">
+        <span class="sd-badge">{% if c.status == 'pass' %}Pass{% elif c.status == 'warn' %}Improve{% else %}Fix{% endif %}</span>
+        <div>
+            <b>{{ c.name }}</b>{% if c.line %} <small>line {{ c.line }}</small>{% endif %}
+            <p>{{ c.detail }}</p>
+            {% if c.fix %}<p class="sd-fix">{{ c.fix }}</p>{% endif %}
+        </div>
+    </li>
+{% endfor %}
+</ul>

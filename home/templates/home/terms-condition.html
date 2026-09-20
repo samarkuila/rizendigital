@@ -1,6 +1,6 @@
 {% extends 'home/layout.html' %}
 
-{% load static %}
+{% load static site_extras %}
 
 {% block main %}
 
@@ -63,7 +63,7 @@
             <p>We may update this page from time to time as our services or applicable regulations change. The version published here is always the current one, and continued use of our services after an update means you accept the revised terms.</p>
 
             <h2>12. Questions about these terms</h2>
-            <p>If anything here needs clarifying, reach out to us at <a href="mailto:admin@rizendigital.com">admin@rizendigital.com</a> and we'll be glad to walk you through it.</p>
+            <p>If anything here needs clarifying, reach out to us at <a {% mail_attrs "admin@rizendigital.com" %}><span class="js-mail-text">{{ "admin@rizendigital.com"|mail_masked }}</span></a> and we'll be glad to walk you through it.</p>
         </div>
     </div>
 </div>

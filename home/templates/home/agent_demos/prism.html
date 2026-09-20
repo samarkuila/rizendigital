@@ -1,0 +1,61 @@
+{% extends 'home/agent_demos/_base.html' %}
+
+{% block h1 %}Explore a brand direction in a minute{% endblock %}
+{% block lead %}Describe the brand and how it should sound. Prism proposes a colour palette with real accessibility contrast checks, a voice guide, taglines and monogram directions, ready for a designer to refine.{% endblock %}
+
+{% block demo %}
+<form class="sd-form sd-form-stack" method="get" action="{% url 'agent_demo' 'prism' %}">
+    <input type="hidden" name="run" value="1">
+    <div class="sd-grid2">
+        <label>Brand name <input type="text" name="brand" value="{{ brand }}" maxlength="40" placeholder="e.g. Green Leaf Cafe"></label>
+        <label>Industry
+            <select name="industry">{% for key, v in industries.items %}<option value="{{ key }}"{% if key == industry %} selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+        </label>
+        <label>Who is it for? <input type="text" name="audience" value="{{ audience }}" maxlength="60" placeholder="e.g. busy young families"></label>
+        <label>Three brand values (comma separated) <input type="text" name="values" value="{{ values }}" maxlength="90" placeholder="e.g. freshness, care, community"></label>
+        <label>Formal &larr; 1 &hellip; 5 &rarr; Friendly
+            <select name="formal">{% for n in "12345" %}<option value="{{ n }}"{% if n == formal %} selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+        </label>
+        <label>Serious &larr; 1 &hellip; 5 &rarr; Playful
+            <select name="playful">{% for n in "12345" %}<option value="{{ n }}"{% if n == playful %} selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+        </label>
+        <label>Calm &larr; 1 &hellip; 5 &rarr; Bold
+            <select name="bold">{% for n in "12345" %}<option value="{{ n }}"{% if n == bold %} selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+        </label>
+    </div>
+    <div class="sd-actions"><button type="submit" class="default-btn">Run Prism</button></div>
+</form>
+
+{% if palette %}
+<h2>{{ name }}: colour palette</h2>
+<div class="sd-swatches">
+    {% for c in palette %}
+    <div class="sd-swatch" style="background: {{ c.hex }}; color: {{ c.text }}">
+        <b>{{ c.name }}</b><span>{{ c.hex }}</span>
+        <small>Text contrast {{ c.ratio }}:1 {% if c.aaa %}(AAA){% elif c.aa %}(AA){% else %}(fails AA){% endif %}</small>
+    </div>
+    {% endfor %}
+</div>
+<div class="sd-groups">
+    {% for p in pairs %}<span class="sd-chip {% if p.aa %}sd-transactional{% else %}sd-warnchip{% endif %}">{{ p.label }}: {{ p.ratio }}:1 {% if p.aa %}passes AA{% else %}fails AA{% endif %}</span>{% endfor %}
+</div>
+<p class="sd-note">Contrast ratios are calculated with the WCAG formula. 4.5:1 or higher is needed for body text.</p>
+
+<h2>Monogram directions</h2>
+<div class="sd-monos">{% for svg in monograms %}<div>{{ svg|safe }}</div>{% endfor %}</div>
+
+<h2>Voice guide</h2>
+<div class="sd-grid2">
+    {% for title, text in principles %}<div class="sd-card"><h3>{{ title }}</h3><p>{{ text }}</p></div>{% endfor %}
+    <div class="sd-card"><h3>Do</h3><ul>{% for d in do %}<li>{{ d }}</li>{% endfor %}</ul></div>
+    <div class="sd-card"><h3>Don&rsquo;t</h3><ul>{% for d in dont %}<li>{{ d }}</li>{% endfor %}</ul></div>
+</div>
+
+<h2>Tagline ideas</h2>
+<ul class="sd-taglines">{% for t in taglines %}<li>{{ t }}</li>{% endfor %}</ul>
+
+<h2>Sample post in this voice</h2>
+<blockquote class="sd-quote">{{ sample }}</blockquote>
+<p class="sd-note">These are starting directions. A designer and copywriter refine them into a finished identity.</p>
+{% endif %}
+{% endblock %}

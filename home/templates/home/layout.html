@@ -1,4 +1,4 @@
-{% load static %}
+{% load static site_extras %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -75,19 +75,9 @@
         <!-- Fonts: self-hosted Poppins (no external request), icon fonts use font-display: swap -->
         <link rel="preload" href="{% static 'assets/fonts/poppins-400.woff2' %}" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="{% static 'assets/fonts/poppins-600.woff2' %}" as="font" type="font/woff2" crossorigin>
-        <link rel="stylesheet" href="{% static 'assets/css/poppins.css' %}">
         <!-- Critical CSS -->
-        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/boxicons.subset.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/site.bundle.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/fonts/flaticon.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/style.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/responsive.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/theme-dark.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/home-future.min.css' %}">
-        <link rel="stylesheet" href="{% static 'assets/css/inner-dark.min.css' %}">
         <!-- Non-critical CSS (scroll animations / video popup): loaded without blocking first paint -->
         <link rel="preload" href="{% static 'assets/css/animate.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <link rel="preload" href="{% static 'assets/css/magnific-popup.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -95,6 +85,12 @@
             <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
             <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.min.css' %}">
         </noscript>
+
+        {% if ga_id %}
+        <!-- Google Analytics 4 (only when GA_MEASUREMENT_ID is set) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_id }}"></script>
+        <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', '{{ ga_id }}');</script>
+        {% endif %}
 
         {% block extra_head %}{% endblock %}
         <!-- Title -->       
@@ -118,8 +114,8 @@
                         <div class="header-content-right">
                             <ul class="header-contact">
                                
-                                <li><a href="mailto:{{ site_email }}"><i class="flaticon-paper-plane"></i> {{ site_email }}</a></li>
-                                {% if site_phone %}<li><a href="tel:{{ site_phone }}"><i class="flaticon-call"></i> {{ site_phone_display }}</a></li>{% endif %}
+                                <li><a {% mail_attrs site_email %}><i class="flaticon-paper-plane"></i> <span class="js-mail-text">{{ site_email|mail_masked }}</span></a></li>
+                                
                             </ul>
                         </div>
                     </div>
@@ -261,9 +257,9 @@
                                     <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
                                         <div class="modal-content">
                                         <button type="button" class="close-btn" onclick="closeModal()" aria-label="Close dialog">&times;</button>
-                                        <h3 id="contactModalTitle">Get in Touch</h3>
+                                        <p class="modal-heading" id="contactModalTitle">Get in Touch</p>
                                         <!-- Message Display Area -->
-                                        <p id="modalMessage" role="status" aria-live="polite" style="color: green; display: none;"></p>
+                                        <p id="modalMessage" class="modal-msg" role="status" aria-live="polite"></p>
 
                                         <form method="post">
                                             {% csrf_token %}
@@ -414,13 +410,10 @@
                     <div class="footer-list-2 ml-20">
                         <h2>Contact Us</h2>
                         <ul>
-                            {% if site_phone %}<li>
-                                <i class='bx bxs-chevron-right'></i>
-                                <a href="tel:{{ site_phone }}">{{ site_phone_display }}</a>
-                            </li>{% endif %}
+                            
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
-                                <a href="mailto:{{ site_email }}">{{ site_email }}</a>
+                                <a {% mail_attrs site_email %}><span class="js-mail-text">{{ site_email|mail_masked }}</span></a>
                             </li>
                             <li>
                                 <i class='bx bxs-chevron-right'></i>
@@ -469,6 +462,15 @@
 <!-- Custom JS -->
 <script src="{% static 'assets/js/custom.min.js' %}"></script>
 {% block extra_scripts %}{% endblock %}
+<script>
+    // Rebuild the contact email in the browser so it never appears as plain text in the page source.
+    document.querySelectorAll("a.js-mail").forEach(function (a) {
+        var addr = a.dataset.u + "\u0040" + a.dataset.d;
+        a.href = "mailto:" + addr;
+        var t = a.querySelector(".js-mail-text");
+        if (t) { t.textContent = addr; }
+    });
+</script>
 <script>
     // Open Modal
     var lastFocus = null;
@@ -544,5 +546,8 @@
     
     
     
+{% if site_whatsapp_url %}
+<a href="{{ site_whatsapp_url }}" class="wa-float" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"><i class="bx bxl-whatsapp" aria-hidden="true"></i></a>
+{% endif %}
 </body>
 </html>
